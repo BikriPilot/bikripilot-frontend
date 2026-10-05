@@ -1,0 +1,84 @@
+{
+  "common": {
+    "brand": "Bikrio",
+    "languageNameBn": "বাংলা",
+    "languageNameEn": "English",
+    "comingSoon": "Coming soon",
+    "placeholderDescription": "A calmer way to manage social-commerce orders, customers, and cash flow.",
+    "goToLogin": "Log in",
+    "switchLanguage": "Switch language",
+    "loading": "Loading",
+    "retry": "Try again",
+    "errorTitle": "Something went wrong",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page you are looking for does not exist.",
+    "backHome": "Back to home"
+  },
+  "nav": {
+    "home": "Home",
+    "inbox": "Inbox",
+    "orders": "Orders",
+    "products": "Products",
+    "customers": "Customers",
+    "ledger": "Ledger",
+    "settings": "Settings"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Please check the highlighted fields.",
+    "BAD_REQUEST": "That request could not be completed.",
+    "UNAUTHENTICATED": "Please log in to continue.",
+    "TOKEN_EXPIRED": "Your session has expired. Please log in again.",
+    "INVALID_CREDENTIALS": "The email or password is incorrect.",
+    "INVALID_TOKEN": "This link is no longer valid.",
+    "EMAIL_ALREADY_USED": "That email is already in use.",
+    "ACCOUNT_SUSPENDED": "This account is suspended.",
+    "ACCOUNT_LOCKED": "This account is temporarily locked.",
+    "TWO_FACTOR_REQUIRED": "Two-step verification is required.",
+    "INVALID_2FA_CODE": "The verification code is incorrect.",
+    "CAPTCHA_FAILED": "Please complete the security check.",
+    "SIGNUP_DISABLED": "New accounts are temporarily unavailable.",
+    "FORBIDDEN": "You do not have access to this.",
+    "PERMISSION_DENIED": "You do not have permission for this action.",
+    "SHOP_SUSPENDED": "This shop is suspended.",
+    "IMPERSONATION_READ_ONLY": "This session is read-only.",
+    "NOT_FOUND": "The requested item was not found.",
+    "CONFLICT": "This action conflicts with current data.",
+    "INVALID_STATUS_TRANSITION": "That status change is not allowed.",
+    "INSUFFICIENT_STOCK": "There is not enough stock.",
+    "FEATURE_NOT_IN_PLAN": "This feature is not included in your plan.",
+    "PLAN_LIMIT_REACHED": "You have reached your plan limit.",
+    "FEATURE_DISABLED": "This feature is disabled.",
+    "MESSAGING_WINDOW_CLOSED": "The messaging window is closed.",
+    "CHANNEL_NEEDS_RECONNECT": "This channel needs to be connected again.",
+    "PROVIDER_ERROR": "The provider is temporarily unavailable.",
+    "COURIER_ERROR": "The courier is temporarily unavailable.",
+    "PAYMENT_ERROR": "The payment could not be completed.",
+    "AI_UNAVAILABLE": "The assistant is temporarily unavailable.",
+    "RATE_LIMITED": "Too many requests. Please try again shortly.",
+    "MAINTENANCE_MODE": "The service is temporarily under maintenance.",
+    "INTERNAL_ERROR": "Something went wrong. Please try again."
+  },
+  "enums": {
+    "OrderStatus": {
+      "DRAFT": "Draft",
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "PACKED": "Packed",
+      "SHIPPED": "Shipped",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "districts": {
+    "Dhaka": "Dhaka",
+    "Chattogram": "Chattogram",
+    "Rajshahi": "Rajshahi",
+    "Khulna": "Khulna",
+    "Sylhet": "Sylhet"
+  },
+  "features": {
+    "ai_assistant": { "name": "AI assistant" },
+    "max_products": { "name": "Products" },
+    "hisab_khata": { "name": "Ledger" }
+  }
+}

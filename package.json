@@ -1,0 +1,49 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "i18n:check": "tsx scripts/i18n-check.ts",
+    "verify": "npm run lint && npm run typecheck && npm run i18n:check && npm test && npm run build"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "latest",
+    "@tanstack/react-query": "^5",
+    "axios": "latest",
+    "dayjs": "latest",
+    "lucide-react": "latest",
+    "next": "16.3.8",
+    "next-intl": "latest",
+    "next-themes": "latest",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "latest",
+    "sonner": "latest",
+    "zod": "^4",
+    "zustand": "^5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "jsdom": "latest",
+    "prettier": "latest",
+    "tailwindcss": "^4",
+    "tsx": "latest",
+    "typescript": "^5",
+    "vitest": "latest"
+  }
+}

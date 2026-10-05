@@ -1,0 +1,7 @@
+export const LIMITS = {
+  PAGE_SIZE_DEFAULT: 20,
+  PAGE_SIZE_MAX: 100,
+  PASSWORD_MIN: 8,
+  NAME_MAX: 100,
+  MESSAGE_TEXT_MAX: 2000,
+} as const;

@@ -1,0 +1,84 @@
+{
+  "common": {
+    "brand": "Bikrio",
+    "languageNameBn": "বাংলা",
+    "languageNameEn": "English",
+    "comingSoon": "শীঘ্রই আসছে",
+    "placeholderDescription": "সোশ্যাল কমার্সের অর্ডার, কাস্টমার আর ক্যাশফ্লো আরও সহজে সামলান।",
+    "goToLogin": "লগ ইন",
+    "switchLanguage": "ভাষা বদলান",
+    "loading": "লোড হচ্ছে",
+    "retry": "আবার চেষ্টা করুন",
+    "errorTitle": "কিছু একটা সমস্যা হয়েছে",
+    "notFoundTitle": "পেজটি পাওয়া যায়নি",
+    "notFoundDescription": "আপনি যে পেজটি খুঁজছেন সেটি নেই।",
+    "backHome": "হোমে ফিরুন"
+  },
+  "nav": {
+    "home": "হোম",
+    "inbox": "ইনবক্স",
+    "orders": "অর্ডার",
+    "products": "প্রোডাক্ট",
+    "customers": "কাস্টমার",
+    "ledger": "হিসাব খাতা",
+    "settings": "সেটিংস"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "দয়া করে দেওয়া তথ্যগুলো ঠিক করুন।",
+    "BAD_REQUEST": "অনুরোধটি সম্পন্ন করা যায়নি।",
+    "UNAUTHENTICATED": "চালিয়ে যেতে লগ ইন করুন।",
+    "TOKEN_EXPIRED": "আপনার সেশন শেষ হয়েছে। আবার লগ ইন করুন।",
+    "INVALID_CREDENTIALS": "ইমেইল বা পাসওয়ার্ড সঠিক নয়।",
+    "INVALID_TOKEN": "এই লিংকটি আর কার্যকর নেই।",
+    "EMAIL_ALREADY_USED": "এই ইমেইলটি ইতিমধ্যে ব্যবহার করা হয়েছে।",
+    "ACCOUNT_SUSPENDED": "এই অ্যাকাউন্ট স্থগিত করা হয়েছে।",
+    "ACCOUNT_LOCKED": "এই অ্যাকাউন্টটি সাময়িকভাবে লক করা হয়েছে।",
+    "TWO_FACTOR_REQUIRED": "টু-স্টেপ যাচাই প্রয়োজন।",
+    "INVALID_2FA_CODE": "যাচাই কোডটি সঠিক নয়।",
+    "CAPTCHA_FAILED": "সিকিউরিটি যাচাই সম্পন্ন করুন।",
+    "SIGNUP_DISABLED": "নতুন অ্যাকাউন্ট এখন তৈরি করা যাচ্ছে না।",
+    "FORBIDDEN": "এটি ব্যবহারের অনুমতি নেই।",
+    "PERMISSION_DENIED": "এই কাজের অনুমতি আপনার নেই।",
+    "SHOP_SUSPENDED": "এই শপ স্থগিত করা হয়েছে।",
+    "IMPERSONATION_READ_ONLY": "এই সেশনটি শুধু পড়ার জন্য।",
+    "NOT_FOUND": "অনুরোধ করা তথ্য পাওয়া যায়নি।",
+    "CONFLICT": "বর্তমান তথ্যের সঙ্গে কাজটি মিলছে না।",
+    "INVALID_STATUS_TRANSITION": "এই স্ট্যাটাস পরিবর্তন করা যাবে না।",
+    "INSUFFICIENT_STOCK": "পর্যাপ্ত স্টক নেই।",
+    "FEATURE_NOT_IN_PLAN": "এই ফিচারটি আপনার প্ল্যানে নেই।",
+    "PLAN_LIMIT_REACHED": "আপনার প্ল্যানের সীমায় পৌঁছে গেছেন।",
+    "FEATURE_DISABLED": "এই ফিচারটি বন্ধ আছে।",
+    "MESSAGING_WINDOW_CLOSED": "মেসেজ পাঠানোর সময়সীমা শেষ।",
+    "CHANNEL_NEEDS_RECONNECT": "এই চ্যানেলটি আবার কানেক্ট করতে হবে।",
+    "PROVIDER_ERROR": "প্রোভাইডারটি সাময়িকভাবে unavailable।",
+    "COURIER_ERROR": "কুরিয়ারটি সাময়িকভাবে unavailable।",
+    "PAYMENT_ERROR": "পেমেন্ট সম্পন্ন করা যায়নি।",
+    "AI_UNAVAILABLE": "অ্যাসিস্ট্যান্টটি সাময়িকভাবে unavailable।",
+    "RATE_LIMITED": "অনেক বেশি অনুরোধ হয়েছে। একটু পর চেষ্টা করুন।",
+    "MAINTENANCE_MODE": "সার্ভিসটি সাময়িক রক্ষণাবেক্ষণে আছে।",
+    "INTERNAL_ERROR": "কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।"
+  },
+  "enums": {
+    "OrderStatus": {
+      "DRAFT": "ড্রাফট",
+      "PENDING": "অপেক্ষমাণ",
+      "CONFIRMED": "নিশ্চিত",
+      "PACKED": "প্যাক করা",
+      "SHIPPED": "পাঠানো হয়েছে",
+      "DELIVERED": "ডেলিভারি হয়েছে",
+      "CANCELLED": "বাতিল"
+    }
+  },
+  "districts": {
+    "Dhaka": "ঢাকা",
+    "Chattogram": "চট্টগ্রাম",
+    "Rajshahi": "রাজশাহী",
+    "Khulna": "খুলনা",
+    "Sylhet": "সিলেট"
+  },
+  "features": {
+    "ai_assistant": { "name": "AI অ্যাসিস্ট্যান্ট" },
+    "max_products": { "name": "প্রোডাক্ট" },
+    "hisab_khata": { "name": "হিসাব খাতা" }
+  }
+}

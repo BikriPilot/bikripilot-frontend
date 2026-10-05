@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+:root {
+  --background: oklch(0.985 0.002 250);
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --foreground: oklch(0.28 0.015 255);
+  --muted: oklch(0.965 0.004 250);
+  --muted-foreground: oklch(0.52 0.015 255);
+  --border: oklch(0.915 0.005 250);
+  --input: oklch(0.915 0.005 250);
+  --primary: oklch(0.55 0.13 255);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-soft: oklch(0.96 0.025 255);
+  --success: oklch(0.6 0.11 155);
+  --success-soft: oklch(0.965 0.03 155);
+  --danger: oklch(0.58 0.14 25);
+  --danger-soft: oklch(0.965 0.025 25);
+  --warning: oklch(0.7 0.12 75);
+  --warning-soft: oklch(0.97 0.035 85);
+  --info: oklch(0.6 0.09 235);
+  --info-soft: oklch(0.965 0.02 235);
+  --radius: 0.625rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-popover: var(--popover);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --font-sans: var(--font-inter), var(--font-hind-siliguri), sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+.dark {
+  --background: oklch(0.18 0.01 255);
+  --card: oklch(0.21 0.01 255);
+  --popover: oklch(0.21 0.01 255);
+  --foreground: oklch(0.93 0.005 255);
+  --muted: oklch(0.25 0.01 255);
+  --muted-foreground: oklch(0.7 0.01 255);
+  --border: oklch(0.3 0.01 255);
+  --input: oklch(0.3 0.01 255);
+  --primary: oklch(0.68 0.12 255);
+  --primary-foreground: oklch(0.18 0.01 255);
+  --primary-soft: oklch(0.28 0.04 255);
+  --info: oklch(0.72 0.08 235);
+  --info-soft: oklch(0.27 0.03 235);
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    var(--font-inter), var(--font-hind-siliguri), "Noto Sans Bengali",
+    sans-serif;
+  line-height: 1.7;
+}
+.font-bangla body,
+body.font-bangla {
+  font-family:
+    var(--font-hind-siliguri), var(--font-inter), "Noto Sans Bengali",
+    sans-serif;
+  line-height: 1.7;
+}
+.font-english body,
+body.font-english {
+  font-family: var(--font-inter), var(--font-hind-siliguri), sans-serif;
+  line-height: 1.5;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    color-mix(in oklch, var(--muted) 70%, white) 50%,
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+  }
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
