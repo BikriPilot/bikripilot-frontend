@@ -44,10 +44,12 @@ api.interceptors.response.use(
     ) {
       config._retry = true;
       refreshPromise ??= api
-        .post<{ data: { accessToken: string } }>("/auth/refresh")
+        .post<{
+          data: { accessToken: string; user: import("@/types/auth").MeDTO };
+        }>("/auth/refresh")
         .then((response) => {
           const token = response.data.data.accessToken;
-          useAuthStore.getState().setAccessToken(token);
+          useAuthStore.getState().setAuth(token, response.data.data.user);
           return token;
         })
         .catch(() => null)

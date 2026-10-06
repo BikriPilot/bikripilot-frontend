@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function Logo() {
+export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       href="/"
@@ -15,7 +15,7 @@ export function Logo() {
         priority
         className="size-9 rounded-lg object-cover"
       />
-      <span>Bikrio</span>
+      {!compact ? <span>Bikrio</span> : null}
     </Link>
   );
 }

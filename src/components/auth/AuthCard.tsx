@@ -1,0 +1,2 @@
+import type { ReactNode } from "react";
+export function AuthCard({ title, description, children }: { title: string; description?: string; children: ReactNode }) { return <section className="rounded-2xl border bg-card p-5 shadow-sm sm:p-7"><h1 className="text-2xl font-semibold">{title}</h1>{description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}<div className="mt-6">{children}</div></section>; }
