@@ -9,6 +9,7 @@ import { FormSkeleton } from "@/components/common/skeletons";
 import { shopsApi } from "@/lib/api/shops.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { toast } from "sonner";
+import { ImageUploader } from "@/components/common/ImageUploader";
 export default function ShopSettingsPage() {
   const t = useTranslations("step8");
   const { shopId } = useCurrentShop();
@@ -59,6 +60,23 @@ export default function ShopSettingsPage() {
           value={value("name")}
           onChange={(event) => setForm({ ...form, name: event.target.value })}
         />
+        <div className="grid gap-2 text-sm font-medium">
+          <span>{t("shopLogo")}</span>
+          <ImageUploader
+            purpose="shop_logo"
+            max={1}
+            value={shop.logoUrl ? [shop.logoUrl] : []}
+            onChange={async (images) => {
+              try {
+                await shopsApi.update(shopId!, { logoUrl: images[0] ?? null });
+                await query.refetch();
+                toast.success(t("saved"));
+              } catch {
+                toast.error(t("genericError"));
+              }
+            }}
+          />
+        </div>
         <Field
           label={t("phone")}
           value={value("phone")}

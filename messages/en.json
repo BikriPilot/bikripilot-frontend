@@ -13,6 +13,8 @@
     "notFoundTitle": "Page not found",
     "notFoundDescription": "The page you are looking for does not exist.",
     "backHome": "Back to home"
+    ,"whatsappSupport": "WhatsApp support",
+    "callSupport": "Call support"
   },
   "nav": {
     "home": "Home",
@@ -81,6 +83,79 @@
     "max_products": { "name": "Products" },
     "hisab_khata": { "name": "Ledger" }
   },
+  "products": {
+    "title": "Products",
+    "description": "Manage your catalog, prices, images, and stock.",
+    "addProduct": "Add product",
+    "addFirst": "Add your first product",
+    "newTitle": "Add product",
+    "editTitle": "Edit product",
+    "formDescription": "Keep product details clear for your team and customers.",
+    "name": "Product name",
+    "description": "Description",
+    "price": "Price (taka)",
+    "compareAtPrice": "Compare-at price (taka)",
+    "cost": "Cost (only you can see)",
+    "sku": "SKU",
+    "category": "Category",
+    "noCategory": "No category",
+    "status": "Status",
+    "active": "Active",
+    "draft": "Draft",
+    "archived": "Archived",
+    "trackStock": "Track stock",
+    "initialStock": "Initial stock",
+    "lowStockThreshold": "Low-stock threshold",
+    "variants": "Variants",
+    "variantsDescription": "Add variants when a product has different options.",
+    "variant": "Variant",
+    "variantName": "Variant name",
+    "variantStock": "Variant stock",
+    "addVariant": "Add variant",
+    "save": "Save product",
+    "saving": "Saving...",
+    "saved": "Product saved",
+    "saveError": "The product could not be saved.",
+    "cancel": "Cancel",
+    "search": "Search products",
+    "importCsv": "Import CSV",
+    "exportCsv": "Export CSV",
+    "template": "CSV template",
+    "imported": "Imported",
+    "importErrors": "Rows with errors",
+    "importError": "The CSV could not be imported.",
+    "product": "Product",
+    "stock": "Stock",
+    "priceLabel": "Price",
+    "inStock": "in stock",
+    "delete": "Delete",
+    "deleted": "Product deleted",
+    "deleteConfirm": "Delete this product?",
+    "deleteError": "The product could not be deleted.",
+    "addImage": "Add image",
+    "removeImage": "Remove image",
+    "uploading": "Uploading...",
+    "uploadError": "Image upload failed.",
+    "shopLogo": "Shop logo"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "description": "See low stock and every stock movement.",
+    "lowStock": "Low stock",
+    "movements": "Movements",
+    "noLowStock": "No products are currently low on stock.",
+    "noMovements": "No stock movements yet.",
+    "inStock": "in stock",
+    "adjust": "Adjust stock",
+    "adjustTitle": "Adjust stock",
+    "change": "Change (+ or -)",
+    "note": "Note",
+    "cancel": "Cancel",
+    "adjusted": "Stock adjusted",
+    "adjustError": "Stock could not be adjusted.",
+    "date": "Date",
+    "reason": "Reason"
+  },
   "step8": {
     "loginTitle": "Welcome back",
     "loginDescription": "Sign in to keep your selling moving.",
@@ -139,6 +214,9 @@
     "profile": "Profile",
     "notifications": "Notifications",
     "search": "Search",
+    "addProduct": "Add product",
+    "shopLogo": "Shop logo",
+    "addFirstProduct": "Add your first product",
     "chooseShop": "Choose shop",
     "openMenu": "Open menu",
     "more": "More",
@@ -233,6 +311,334 @@
     "inviteRole": "Role: {role}",
     "acceptInvite": "Accept invitation",
     "inviteWrongAccount": "Sign in with the invited email address to accept this invitation.",
-    "inviteSignInFirst": "Sign in or create an account with the invited email address."
+    "inviteSignInFirst": "Sign in or create an account with the invited email address.",
+    "help": "Help"
+  },
+  "landing": {
+    "navFeatures": "Features",
+    "navHow": "How it works",
+    "navPricing": "Pricing",
+    "navFaq": "FAQ",
+    "navLogin": "Log in",
+    "footerAbout": "A simpler way to manage conversations, orders, couriers, and cash flow.",
+    "footerContact": "Contact",
+    "footerDeletion": "Data deletion",
+    "footerTrack": "Track order",
+    "copyright": "© {year} Bikrio. All rights reserved.",
+    "footerPrivacy": "Privacy",
+    "footerTerms": "Terms",
+    "footerFacebook": "Facebook page",
+    "launchBadge": "Launch offer: free while we launch",
+    "heroTitle": "Turn Facebook messages into delivered orders.",
+    "heroDescription": "Reply with AI, create orders from chat, book a courier in one tap, and keep your ledger up to date.",
+    "startFree": "Start free",
+    "watchDemo": "Watch the 2-minute demo",
+    "trustLine": "No card needed · Official Meta API · Bangla and English",
+    "mockInbox": "Inbox",
+    "mockCustomer": "Raisa · just now",
+    "mockQuestion": "How much is this panjabi?",
+    "mockReply": "It is BDT 1,250. Delivery inside Dhaka is BDT 60. Send your name, phone, and address to order.",
+    "mockOrder": "Order draft",
+    "mockReady": "Ready",
+    "mockProduct": "Cotton panjabi",
+    "mockBooked": "Booked with Steadfast",
+    "worksWith": "Works with",
+    "problemEyebrow": "The familiar problems",
+    "problemTitle": "More Facebook sales should not mean more chaos.",
+    "problems": {
+      "night": {
+        "title": "Messages pile up at night",
+        "body": "Important customer messages get missed."
+      },
+      "price": {
+        "title": "The same questions repeat",
+        "body": "Time disappears into prices, sizes, and delivery replies."
+      },
+      "copy": {
+        "title": "Copying into courier panels",
+        "body": "Customer details have to be moved from chat into another tool."
+      },
+      "returns": {
+        "title": "Fake orders and returns",
+        "body": "It is hard to see risk before shipping."
+      },
+      "money": {
+        "title": "Courier money gets stuck",
+        "body": "Matching a payout to the right parcels takes time."
+      },
+      "notebook": {
+        "title": "The ledger lives somewhere else",
+        "body": "Due amounts, sales, and expenses never stay together."
+      }
+    },
+    "featureEyebrow": "One workflow",
+    "featureTitle": "Keep the path from chat to cash clear.",
+    "features": {
+      "inbox": {
+        "title": "AI inbox",
+        "body": "Draft quick replies for Bangla, English, and Banglish conversations."
+      },
+      "orders": {
+        "title": "Chat to order",
+        "body": "Turn customer details into an order draft in one click."
+      },
+      "courier": {
+        "title": "One-tap courier booking",
+        "body": "Connect Steadfast, Pathao, or RedX without retyping every address."
+      },
+      "risk": {
+        "title": "Check before shipping",
+        "body": "See past outcomes before deciding how to ship."
+      },
+      "ledger": {
+        "title": "A living ledger",
+        "body": "Orders and courier payouts keep your records current."
+      },
+      "team": {
+        "title": "Team control",
+        "body": "Give each teammate the access their work needs."
+      },
+      "comments": {
+        "title": "Comment to inbox",
+        "body": "Bring post comments into the same conversation workflow."
+      },
+      "automation": {
+        "title": "Helpful automation",
+        "body": "Use saved replies and rules for repeated customer questions."
+      },
+      "reports": {
+        "title": "Sales reports",
+        "body": "See sales, products, inbox activity, and team performance clearly."
+      }
+    },
+    "howEyebrow": "Four simple steps",
+    "howTitle": "Start working today.",
+    "steps": {
+      "connect": {
+        "title": "Connect your Facebook Page",
+        "body": "Use the official Meta API to connect your Page."
+      },
+      "catalogue": {
+        "title": "Add your products",
+        "body": "Enter prices, stock, and delivery details once."
+      },
+      "reply": {
+        "title": "Reply and create orders",
+        "body": "Get an order draft from the conversation."
+      },
+      "deliver": {
+        "title": "Book and reconcile",
+        "body": "Send parcels and match courier payments."
+      }
+    },
+    "workflowEyebrow": "One conversation, one clear next step",
+    "workflowTitle": "From customer message to parcel.",
+    "workflowBody": "You stay in control at every step. AI drafts the work; you approve it.",
+    "workflowMessage": "Can this arrive by tomorrow?",
+    "workflowReply": "Yes, delivery inside Dhaka takes 1–2 days.",
+    "workflowOrder": "Order ready",
+    "workflowBooked": "Customer details complete · low risk · ready to book",
+    "ledgerEyebrow": "Ledger",
+    "ledgerTitle": "Your selling records, kept tidy as you work.",
+    "youGet": "You will get",
+    "youGive": "You will give",
+    "gaveAction": "Record gave",
+    "gotAction": "Record got",
+    "reminderAction": "Send due reminder",
+    "ledgerPoints": {
+      "1": "Entries stay linked to orders and courier payouts.",
+      "2": "Gave and got actions keep balances understandable.",
+      "3": "Send a due reminder when a customer needs a nudge."
+    },
+    "comparison": {
+      "without": {
+        "title": "Without Bikrio",
+        "item1": "Messages and orders in separate notebooks",
+        "item2": "Courier payments matched by hand",
+        "item3": "Teammate work is hard to follow",
+        "item4": "Risk is checked too late",
+        "item5": "Reports take a full evening"
+      },
+      "with": {
+        "title": "With Bikrio",
+        "item1": "A ready order from the conversation",
+        "item2": "Parcels and money in one place",
+        "item3": "Clear access for every teammate",
+        "item4": "Customer history before shipping",
+        "item5": "A clear view of the business"
+      }
+    },
+    "pricingEyebrow": "Plans",
+    "pricingTitle": "Start without the risk.",
+    "comparePlans": "Compare all plans",
+    "launchPricing": "Everything is free during launch. The prices below apply later.",
+    "popular": "Popular",
+    "perMonth": "/month",
+    "unlimited": "Unlimited",
+    "testimonialsTitle": "From sellers using Bikrio",
+    "faqEyebrow": "Common questions",
+    "faqTitle": "What sellers ask before starting.",
+    "faqItems": {
+      "1": {
+        "question": "Is my Facebook Page safe?",
+        "answer": "Bikrio uses the official Meta API and never asks for your Page password."
+      },
+      "2": {
+        "question": "Does AI understand Banglish?",
+        "answer": "Yes. AI is designed for Bangla, English, and Banglish conversations."
+      },
+      "3": {
+        "question": "What happens after the free launch?",
+        "answer": "Your data stays with you, and you can choose from the published plans when billing starts."
+      },
+      "4": {
+        "question": "Which couriers are supported?",
+        "answer": "Connections are designed for Steadfast, Pathao, and RedX."
+      },
+      "5": {
+        "question": "Can my staff have limited access?",
+        "answer": "Yes. Give teammates roles that match their work."
+      },
+      "6": {
+        "question": "Can I cancel any time?",
+        "answer": "Yes. CSV exports help you take your data with you."
+      },
+      "7": {
+        "question": "Who can see my customer data?",
+        "answer": "Only approved members of your shop. Network checks share counts only."
+      },
+      "8": {
+        "question": "Do I need a computer?",
+        "answer": "No. Bikrio works on phones, tablets, and computers."
+      }
+    },
+    "finalTitle": "Sell with more clarity from today.",
+    "finalBody": "Your first shop setup takes only a few minutes."
+  },
+  "pricing": {
+    "eyebrow": "Simple pricing",
+    "title": "A plan that keeps up with your sales.",
+    "description": "Choose what you need. Every plan is free while we launch.",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "startFree": "Start free",
+    "included": "Included",
+    "notIncluded": "Not included",
+    "feature": "Feature",
+    "groups": {
+      "ai": "AI",
+      "inbox": "Inbox and comments",
+      "orders": "Orders and products",
+      "courier": "Courier",
+      "money": "Money",
+      "team": "Team",
+      "analytics": "Analytics",
+      "branding": "Branding"
+    },
+    "billingTitle": "Payments and changes",
+    "billingBody": "When billing opens, you can use bKash, Nagad, cards, and manual transfer. Your data stays when you change plans; a downgrade starts after the current period ends."
+  },
+  "legal": {
+    "reviewNote": "A qualified Bangladeshi legal professional must review these pages before launch.",
+    "privacy": {
+      "title": "Privacy policy",
+      "account": {
+        "title": "Account information",
+        "body": "Your name, email, and phone are used for login, support, and billing. They are kept until you request account deletion."
+      },
+      "shopData": {
+        "title": "Shop and customer data",
+        "body": "Products, orders, ledger entries, customer names, phones, addresses, and messages are processed for your business and kept while the shop exists."
+      },
+      "network": {
+        "title": "Anonymous network counts",
+        "body": "For fraud prevention, anonymous total, received, and returned counts linked to a phone number may be shared between shops. Names, addresses, and shop identities are never shared."
+      },
+      "analytics": {
+        "title": "Website analytics",
+        "body": "We may keep masked IP, device, path, and time to understand website usage."
+      },
+      "ai": {
+        "title": "AI processing",
+        "body": "When you choose to use it, AI processes customer messages and your business information. We send no more data than needed for the task."
+      },
+      "facebook": {
+        "title": "Facebook data",
+        "body": "Facebook Page and Messenger data are used for the inbox and order workflows you request. Disconnecting a Page removes its token."
+      },
+      "deletion": {
+        "title": "Deletion",
+        "body": "Contact support to request shop or customer deletion. A Meta data-deletion callback removes the relevant data."
+      }
+    },
+    "terms": {
+      "title": "Terms of service",
+      "account": {
+        "title": "Your account",
+        "body": "You are responsible for protecting your login and choosing which approved members can access your shop."
+      },
+      "shopData": {
+        "title": "Your shop data",
+        "body": "You keep ownership of your business information. Available exports let you take your data with you."
+      },
+      "network": {
+        "title": "Network protection",
+        "body": "Customer checks may share anonymous order-outcome counts for fraud prevention; people and shops are not identified."
+      },
+      "analytics": {
+        "title": "Visitor analytics",
+        "body": "Bikrio may use visitor analytics with masked IPs to improve the site."
+      },
+      "ai": {
+        "title": "AI use",
+        "body": "You are responsible for reviewing AI replies. AI is not a source of invented prices, stock, or policies."
+      },
+      "facebook": {
+        "title": "Facebook data",
+        "body": "Facebook Page data is used through official permissions and API rules."
+      },
+      "deletion": {
+        "title": "Deletion and closure",
+        "body": "Contact support for deletion or account closure. This page is not final legal advice until reviewed."
+      }
+    },
+    "deletion": {
+      "title": "Data deletion",
+      "intro": "You can request deletion of data held by Bikrio through Meta or directly.",
+      "howTitle": "How to request deletion",
+      "howBody": "Send support your account email, shop name, and the data you want deleted. If Meta gave you a confirmation code, add ?code= to this page URL.",
+      "status": "Status",
+      "statusUnavailable": "The status for this code is not available yet."
+    }
+  },
+  "help": {
+    "title": "Help centre",
+    "description": "Short guides from your first order to courier payments.",
+    "contactTitle": "Need more help?",
+    "contactBody": "Send us your question and we will help with setup.",
+    "contactAction": "Contact support",
+    "phone": "Phone",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "guides": {
+      "connect": {
+        "title": "Connect a Facebook Page",
+        "body": "Open Facebook pages in Settings and follow the official OAuth flow. Never share your password."
+      },
+      "ai": {
+        "title": "Set up AI",
+        "body": "Write your products, prices, delivery, and return policy in Business info. Test drafts before enabling AUTO mode."
+      },
+      "courier": {
+        "title": "Set up a courier",
+        "body": "Add your courier merchant credentials and test the connection. Check the address before booking."
+      },
+      "reconciliation": {
+        "title": "Reconcile COD",
+        "body": "Upload a courier payout CSV and review matched, missing, and amount-mismatch lines."
+      }
+    }
   }
 }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title">
+  <title>Conversation to delivery workflow</title>
+  <rect width="640" height="360" rx="28" fill="#eef4ff"/>
+  <rect x="42" y="54" width="230" height="92" rx="18" fill="#fff" stroke="#d9e2f2"/>
+  <rect x="368" y="54" width="230" height="92" rx="18" fill="#fff" stroke="#d9e2f2"/>
+  <rect x="205" y="214" width="230" height="92" rx="18" fill="#fff" stroke="#d9e2f2"/>
+  <path d="M272 100h92M490 146v40M368 260h-70" stroke="#4f7fd8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="138" cy="100" r="22" fill="#dbe8ff"/><circle cx="464" cy="100" r="22" fill="#dff5e9"/><circle cx="320" cy="260" r="22" fill="#fff0cf"/>
+</svg>

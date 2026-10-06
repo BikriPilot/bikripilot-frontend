@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hind_Siliguri, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { runtimeConfig } from "@/config/runtime";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -18,8 +19,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Bikrio",
-  description: "Facebook selling made easier.",
+  metadataBase: new URL(runtimeConfig.siteUrl),
+  title: "Bikrio — Facebook selling made easy",
+  description: "Turn Facebook messages into delivered orders with Bikrio.",
+  openGraph: {
+    title: "Bikrio — Facebook selling made easy",
+    description: "Turn Facebook messages into delivered orders with Bikrio.",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: "/images/bikrio.png",
     apple: "/images/bikrio.png",

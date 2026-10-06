@@ -64,7 +64,16 @@ export default function DashboardPage() {
                 key={step.key}
                 className="rounded-full bg-primary-soft px-3 py-1 text-sm text-primary"
               >
-                {step.key.replaceAll("_", " ")}
+                {t(
+                  ({
+                    BUSINESS: "onboardingBusiness",
+                    DELIVERY: "onboardingDelivery",
+                    AI: "onboardingAi",
+                    FACEBOOK: "onboardingFacebook",
+                    PRODUCT: "onboardingProduct",
+                    COURIER: "onboardingCourier",
+                  } as Record<string, string>)[step.key] ?? "setupTitle",
+                )}
               </span>
             ))}
           </div>

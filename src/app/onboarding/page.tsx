@@ -198,6 +198,11 @@ export default function OnboardingPage() {
               />
             </div>
           ) : null}
+          {current === "product" ? (
+            <Link href="/dashboard/products/new" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+              {t("addFirstProduct")}
+            </Link>
+          ) : null}
           <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"

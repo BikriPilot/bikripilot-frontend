@@ -6,17 +6,17 @@ import {
   ChevronDown,
   LogOut,
   Menu,
-  Search,
   Store,
   UserCircle,
   X,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { NAV_SECTIONS } from "@/constants/navigation";
+import { NAV_FOOTER_ITEMS, NAV_SECTIONS } from "@/constants/navigation";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { Logo } from "@/components/common/Logo";
 import { SectionSubNav } from "./SectionSubNav";
+import { CommandMenu } from "./CommandMenu";
 import { UpgradeDialog } from "./UpgradeDialog";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { useAuthStore } from "@/stores/authStore";
@@ -59,6 +59,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="absolute bottom-4 left-3 right-3">
+          {NAV_FOOTER_ITEMS.map(({ href, icon: Icon, key, labelKey }) => (
+            <Link
+              key={key}
+              href={href}
+              className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground hover:bg-muted"
+            >
+              <Icon size={18} />
+              {t(labelKey)}
+            </Link>
+          ))}
           <Link
             href="/dashboard/profile"
             className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground hover:bg-muted"
@@ -81,14 +91,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           >
             <Menu size={19} />
           </button>
-          <button
-            type="button"
-            className="hidden h-10 items-center gap-2 rounded-lg border px-3 text-sm text-muted-foreground xl:flex"
-          >
-            <Search size={16} />
-            {t("search")}
-            <kbd className="rounded bg-muted px-1.5 text-xs">Ctrl K</kbd>
-          </button>
+          <CommandMenu />
           <button
             type="button"
             className="flex items-center gap-2 rounded-lg px-2 text-sm font-medium hover:bg-muted"
@@ -186,6 +189,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     {t(labelKey)}
                   </Link>
                 ))}
+              {NAV_FOOTER_ITEMS.map(({ href, icon: Icon, key, labelKey }) => (
+                <Link
+                  key={key}
+                  href={href}
+                  onClick={() => setMoreOpen(false)}
+                  className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-muted"
+                >
+                  <Icon size={18} />
+                  {t(labelKey)}
+                </Link>
+              ))}
               <Link
                 href="/dashboard/profile"
                 onClick={() => setMoreOpen(false)}

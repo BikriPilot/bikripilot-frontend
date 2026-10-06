@@ -21,28 +21,28 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         type="button"
         onClick={() => setLocale("bn")}
         className={cn(
-          "h-7 rounded-full px-3 text-xs font-semibold transition-colors",
+          `h-7 rounded-full ${compact ? "px-2" : "px-3"} text-xs font-semibold transition-colors`,
           locale === "bn"
             ? "bg-primary-soft text-primary"
             : "text-muted-foreground hover:text-foreground",
         )}
         aria-pressed={locale === "bn"}
       >
-        {compact ? "বাং" : "বাংলা"}
+        বাংলা
       </button>
       <span className="text-border">|</span>
       <button
         type="button"
         onClick={() => setLocale("en")}
         className={cn(
-          "h-7 rounded-full px-3 text-xs font-semibold transition-colors",
+          `h-7 rounded-full ${compact ? "px-2" : "px-3"} text-xs font-semibold transition-colors`,
           locale === "en"
             ? "bg-primary-soft text-primary"
             : "text-muted-foreground hover:text-foreground",
         )}
         aria-pressed={locale === "en"}
       >
-        EN
+        English
       </button>
     </div>
   );
