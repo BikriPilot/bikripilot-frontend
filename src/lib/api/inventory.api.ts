@@ -9,4 +9,6 @@ export const inventoryApi = {
     api.get<{ data: InventoryMovementDTO[]; meta: PageMeta }>(path(shopId, "/inventory/movements"), { params }).then((r) => r.data),
   adjust: (shopId: string, body: { productId: string; variantId?: string; change: number; reason: "ADJUSTMENT" | "DAMAGED"; note?: string }) =>
     api.post<{ data: InventoryMovementDTO }>(path(shopId, "/inventory/adjust"), body).then((r) => r.data.data),
+  purchase: (shopId: string, body: Record<string, unknown>) =>
+    api.post<{ data: unknown }>(path(shopId, "/inventory/purchase"), body).then((r) => r.data.data),
 };

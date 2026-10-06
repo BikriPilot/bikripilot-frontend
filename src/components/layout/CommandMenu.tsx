@@ -14,6 +14,7 @@ const items = [
   ["profile", "/dashboard/profile"],
   ["help", "/dashboard/help"],
   ["addProduct", "/dashboard/products/new"],
+  ["recordGave", "/dashboard/hisab"],
 ] as const;
 
 export function CommandMenu() {

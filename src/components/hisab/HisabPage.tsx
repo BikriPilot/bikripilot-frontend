@@ -1,0 +1,22 @@
+"use client";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { PageHeader } from "@/components/common/PageHeader";
+import { ErrorState, EmptyState } from "@/components/common/PageStates";
+import { HisabSkeleton } from "@/components/common/skeletons";
+import { formatMoney } from "@/lib/money";
+import { useHisab, usePartyLedger } from "@/hooks/queries/useHisab";
+import { PartyList } from "./PartyList";
+import { PartyLedger } from "./PartyLedger";
+import { hisabApi } from "@/lib/api/hisab.api";
+import type { PartyDTO, PartyKind } from "@/types/hisab";
+import { toast } from "sonner";
+export default function HisabPage() {
+  const t = useTranslations("hisab"); const { shopId, summary, parties, accounts, addParty, addEntry } = useHisab(); const [selected, setSelected] = useState<string>(); const [adding, setAdding] = useState(false);
+  const selectedParty = parties.data?.data.find(p => p.id === selected) ?? parties.data?.data[0]; const ledger = usePartyLedger(selectedParty?.id);
+  if (summary.isPending || parties.isPending) return <HisabSkeleton />; if (summary.isError || parties.isError || !summary.data || !parties.data) return <ErrorState onRetry={() => { void summary.refetch(); void parties.refetch(); }} />;
+  const create = async (e: React.FormEvent<HTMLFormElement>) => { e.preventDefault(); const form = new FormData(e.currentTarget); try { const party = await addParty.mutateAsync({ kind: String(form.get("kind")) as PartyKind, name: String(form.get("name")), phone: String(form.get("phone") || "") || undefined }); setSelected(party.id); setAdding(false); toast.success(t("saved")); } catch { toast.error(t("saveError")); } };
+  const remind = async (party: PartyDTO) => { try { const reminder = await hisabApi.reminders(shopId!, party.id, { channel: "WHATSAPP_LINK" }); if (reminder.whatsappUrl) window.open(reminder.whatsappUrl, "_blank", "noopener,noreferrer"); } catch { toast.error(t("saveError")); } };
+  return <div className="space-y-6"><PageHeader title={t("title")} description={t("description")} /><div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label={t("totalReceivable")} value={formatMoney(summary.data.totalReceivablePaisa)} tone="text-success" /><Stat label={t("totalPayable")} value={formatMoney(summary.data.totalPayablePaisa)} tone="text-danger" /><Stat label={t("todaySales")} value={formatMoney(summary.data.todaySalesPaisa)} /><Stat label={t("cashInHand")} value={formatMoney(summary.data.cashInHandPaisa)} /></div><div className="grid gap-4 lg:grid-cols-[minmax(260px,360px)_1fr]"><PartyList parties={parties.data.data} selectedId={selectedParty?.id} onSelect={setSelected} onAdd={() => setAdding(true)} onRemind={remind} t={t} />{selectedParty && ledger.data ? <PartyLedger party={selectedParty} entries={ledger.data.data} accounts={accounts.data ?? []} onEntry={body => void addEntry.mutateAsync({ partyId: selectedParty.id, body }).then(() => toast.success(t("saved"))).catch(() => toast.error(t("saveError")))} busy={addEntry.isPending} t={t} /> : <EmptyState title={t("selectParty")} />}</div>{adding ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"><form onSubmit={create} className="w-full max-w-md space-y-4 rounded-2xl bg-card p-5"><h2 className="text-lg font-semibold">{t("addParty")}</h2><select name="kind" className="h-11 w-full rounded-lg border bg-card px-3"><option value="CUSTOMER">{t("customer")}</option><option value="SUPPLIER">{t("supplier")}</option><option value="OTHER">{t("other")}</option></select><input name="name" required placeholder={t("name")} className="h-11 w-full rounded-lg border bg-card px-3" /><input name="phone" placeholder={t("phone")} inputMode="tel" className="h-11 w-full rounded-lg border bg-card px-3" /><div className="flex gap-2"><button type="button" onClick={() => setAdding(false)} className="min-h-11 flex-1 rounded-lg border">{t("cancel")}</button><button disabled={addParty.isPending} className="min-h-11 flex-1 rounded-lg bg-primary text-primary-foreground">{addParty.isPending ? t("saving") : t("save")}</button></div></form></div> : null}</div>;
+}
+function Stat({ label, value, tone = "" }: { label: string; value: string; tone?: string }) { return <div className="rounded-2xl border bg-card p-4"><p className="text-sm text-muted-foreground">{label}</p><p className={`mt-1 text-xl font-semibold ${tone}`}>{value}</p></div>; }

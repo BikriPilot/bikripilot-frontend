@@ -87,6 +87,7 @@
     "title": "প্রোডাক্ট",
     "description": "আপনার ক্যাটালগ, দাম, ছবি ও স্টক সামলান।",
     "addProduct": "প্রোডাক্ট যোগ করুন",
+    "recordGave": "দিলাম / পেলাম রেকর্ড করুন",
     "addFirst": "প্রথম প্রোডাক্ট যোগ করুন",
     "newTitle": "প্রোডাক্ট যোগ করুন",
     "editTitle": "প্রোডাক্ট সম্পাদনা",
@@ -154,7 +155,25 @@
     "adjusted": "স্টক সমন্বয় হয়েছে",
     "adjustError": "স্টক সমন্বয় করা যায়নি।",
     "date": "তারিখ",
-    "reason": "কারণ"
+    "reason": "কারণ",
+    "purchase": "স্টক কিনুন",
+    "purchaseTitle": "স্টক ক্রয়",
+    "quantity": "পরিমাণ",
+    "unitCost": "ইউনিট ক্রয়মূল্য (টাকা)",
+    "purchased": "স্টক ক্রয় হয়েছে",
+    "purchaseError": "স্টক ক্রয় করা যায়নি।"
+  },
+  "hisab": {
+    "title": "হিসাব খাতা", "description": "কাস্টমার, সাপ্লায়ার ও ক্যাশের হিসাব এক জায়গায় রাখুন।",
+    "totalReceivable": "মোট পাবো", "totalPayable": "মোট দেবো", "todaySales": "আজকের বিক্রি", "cashInHand": "হাতে নগদ",
+    "parties": "পার্টি", "addParty": "পার্টি যোগ করুন", "emptyParties": "এখনও কোনো পার্টি নেই।", "selectParty": "একজন পার্টি বাছুন",
+    "noPhone": "ফোন নেই", "customer": "কাস্টমার", "supplier": "সাপ্লায়ার", "other": "অন্যান্য", "name": "নাম", "phone": "ফোন",
+    "gave": "দিলাম", "got": "পেলাম", "youllGet": "পাবো", "youllGive": "দেবো", "settled": "হিসাব মিল", "statement": "স্টেটমেন্ট",
+    "date": "তারিখ", "note": "বিবরণ", "balance": "ব্যালেন্স", "emptyEntries": "এখনও কোনো লেনদেন নেই।", "cashMoved": "ক্যাশ সরানো হয়নি",
+    "cancel": "বাতিল", "save": "সেভ করুন", "saving": "সেভ হচ্ছে...", "saved": "সেভ হয়েছে", "saveError": "সেভ করা যায়নি।", "print": "প্রিন্ট / PDF",
+    "opening": "শুরুর ব্যালেন্স", "closing": "শেষ ব্যালেন্স", "settingsTitle": "হিসাব সেটিংস", "settingsDescription": "তাগাদার মেসেজ টেমপ্লেট বদলান।",
+    "tagadaTemplate": "তাগাদা টেমপ্লেট", "tagadaPlaceholder": "প্রিয় {name}, আপনার বাকি ৳{amount}।", "tagadaVariables": "ব্যবহার করুন: {name}, {shopName}, {amount}, {shopPhone}, {footer}",
+    "settingsHisab": "হিসাব"
   },
   "step8": {
     "loginTitle": "আবার স্বাগতম",
@@ -669,7 +688,8 @@
         "delete": "ডিলিট",
         "deleteConfirm": "এই কাস্টমার ডিলিট করবেন?",
         "deleted": "কাস্টমার ডিলিট হয়েছে",
-        "deleteError": "কাস্টমার ডিলিট করা যায়নি।"
+        "deleteError": "কাস্টমার ডিলিট করা যায়নি।",
+        "openInHisab": "হিসাব খাতায় খুলুন"
       }
     }
   }

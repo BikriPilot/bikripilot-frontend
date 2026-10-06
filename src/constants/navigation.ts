@@ -1,4 +1,4 @@
-import { Home, LifeBuoy, Package, Settings, Users, type LucideIcon } from "lucide-react";
+import { Home, LifeBuoy, Package, Settings, Users, BookOpen, type LucideIcon } from "lucide-react";
 export interface SubNavItem {
   key: string;
   href: string;
@@ -15,6 +15,10 @@ export interface NavSection {
   subNav: SubNavItem[];
 }
 export const NAV_SECTIONS: NavSection[] = [
+  {
+    key: "hisab", href: "/dashboard/hisab", icon: BookOpen, labelKey: "hisab", mobile: "bottom",
+    subNav: [{ key: "hisab", href: "/dashboard/hisab", labelKey: "hisab", permission: "hisab.read", exact: true }],
+  },
   {
     key: "customers",
     href: "/dashboard/customers",
@@ -76,6 +80,7 @@ export const NAV_SECTIONS: NavSection[] = [
         labelKey: "billing",
         permission: "billing.read",
       },
+      { key: "hisabSettings", href: "/dashboard/settings/hisab", labelKey: "settingsHisab", permission: "hisab.read" },
     ],
   },
 ];

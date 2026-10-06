@@ -87,6 +87,7 @@
     "title": "Products",
     "description": "Manage your catalog, prices, images, and stock.",
     "addProduct": "Add product",
+    "recordGave": "Record gave / got",
     "addFirst": "Add your first product",
     "newTitle": "Add product",
     "editTitle": "Edit product",
@@ -154,7 +155,25 @@
     "adjusted": "Stock adjusted",
     "adjustError": "Stock could not be adjusted.",
     "date": "Date",
-    "reason": "Reason"
+    "reason": "Reason",
+    "purchase": "Buy stock",
+    "purchaseTitle": "Stock purchase",
+    "quantity": "Quantity",
+    "unitCost": "Unit cost (taka)",
+    "purchased": "Stock purchased",
+    "purchaseError": "The stock purchase could not be completed."
+  },
+  "hisab": {
+    "title": "Ledger", "description": "Keep customer, supplier, and cash records in one place.",
+    "totalReceivable": "You'll get", "totalPayable": "You'll give", "todaySales": "Today's sales", "cashInHand": "Cash in hand",
+    "parties": "Parties", "addParty": "Add party", "emptyParties": "No parties yet.", "selectParty": "Select a party",
+    "noPhone": "No phone", "customer": "Customer", "supplier": "Supplier", "other": "Other", "name": "Name", "phone": "Phone",
+    "gave": "You gave", "got": "You got", "youllGet": "You'll get", "youllGive": "You'll give", "settled": "Settled", "statement": "Statement",
+    "date": "Date", "note": "Note", "balance": "Balance", "emptyEntries": "No entries yet.", "cashMoved": "No cash account",
+    "cancel": "Cancel", "save": "Save", "saving": "Saving...", "saved": "Saved", "saveError": "Could not save.", "print": "Print / PDF",
+    "opening": "Opening balance", "closing": "Closing balance", "settingsTitle": "Ledger settings", "settingsDescription": "Change the due reminder message template.",
+    "tagadaTemplate": "Due reminder template", "tagadaPlaceholder": "Dear {name}, your due balance is BDT {amount}.", "tagadaVariables": "Use: {name}, {shopName}, {amount}, {shopPhone}, {footer}",
+    "settingsHisab": "Ledger"
   },
   "step8": {
     "loginTitle": "Welcome back",
@@ -669,7 +688,8 @@
         "delete": "Delete",
         "deleteConfirm": "Delete this customer?",
         "deleted": "Customer deleted",
-        "deleteError": "The customer could not be deleted."
+        "deleteError": "The customer could not be deleted.",
+        "openInHisab": "Open in Ledger"
       }
     }
   }
