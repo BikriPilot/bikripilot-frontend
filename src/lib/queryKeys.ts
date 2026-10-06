@@ -4,4 +4,5 @@ export const queryKeys = {
   products: (shopId: string) => ["products", shopId] as const,
   inventory: (shopId: string) => ["inventory", shopId] as const,
   hisab: (shopId: string) => ["hisab", shopId] as const,
+  orders: (shopId: string) => ["orders", shopId] as const,
 };
