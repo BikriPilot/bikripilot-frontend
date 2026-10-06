@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Bell,
   ChevronDown,
   LogOut,
   Menu,
@@ -21,6 +20,7 @@ import { UpgradeDialog } from "./UpgradeDialog";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { useAuthStore } from "@/stores/authStore";
 import { authApi } from "@/lib/api/auth.api";
+import { NotificationBell } from "./NotificationBell";
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -103,13 +103,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher compact />
-          <Link
-            href="/dashboard/notifications"
-            className="grid size-10 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
-            aria-label={t("notifications")}
-          >
-            <Bell size={18} />
-          </Link>
+          <NotificationBell />
           <Link
             href="/dashboard/profile"
             className="hidden size-10 place-items-center rounded-full bg-primary-soft text-primary sm:grid"

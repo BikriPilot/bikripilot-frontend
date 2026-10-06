@@ -203,6 +203,11 @@ export default function OnboardingPage() {
               {t("addFirstProduct")}
             </Link>
           ) : null}
+          {current === "facebook" ? (
+            <Link href="/dashboard/channels" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+              {t("connectFacebook")}
+            </Link>
+          ) : null}
           <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"

@@ -38,7 +38,11 @@ export default function LoginPage() {
     setBusy(true);
     setError("");
     try {
-      const result = await authApi.login({ ...form, email: form.email.trim() });
+      const result = await authApi.login({
+        email: form.email.trim(),
+        password: form.password,
+        ...(form.turnstileToken ? { turnstileToken: form.turnstileToken } : {}),
+      });
       if ("twoFactorRequired" in result) setChallenge(result.twoFactorToken);
       else {
         setAuth(result.accessToken, result.user);

@@ -85,6 +85,7 @@ export const NAV_SECTIONS: NavSection[] = [
         permission: "billing.read",
       },
       { key: "hisabSettings", href: "/dashboard/settings/hisab", labelKey: "settingsHisab", permission: "hisab.read" },
+      { key: "channels", href: "/dashboard/channels", labelKey: "settingsChannels", permission: "shop.read" },
     ],
   },
 ];

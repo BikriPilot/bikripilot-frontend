@@ -5,4 +5,5 @@ export const queryKeys = {
   inventory: (shopId: string) => ["inventory", shopId] as const,
   hisab: (shopId: string) => ["hisab", shopId] as const,
   orders: (shopId: string) => ["orders", shopId] as const,
+  notifications: ["notifications"] as const,
 };
