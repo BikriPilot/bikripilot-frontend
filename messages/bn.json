@@ -638,6 +638,38 @@
       "reconciliation": {
         "title": "COD হিসাব মিলান",
         "body": "Courier payout CSV upload করে matched, missing এবং amount mismatch review করুন।"
+      },
+      "customers": {
+        "title": "কাস্টমার",
+        "description": "কাস্টমারের তথ্য, অর্ডার ইতিহাস ও নোট এক জায়গায় রাখুন।",
+        "add": "কাস্টমার যোগ করুন",
+        "addFirst": "প্রথম কাস্টমার যোগ করুন",
+        "search": "নাম বা ফোন দিয়ে খুঁজুন",
+        "export": "CSV এক্সপোর্ট",
+        "empty": "এখনও কোনো কাস্টমার নেই।",
+        "name": "নাম",
+        "phone": "ফোন",
+        "email": "ইমেইল",
+        "address": "ঠিকানা",
+        "area": "এলাকা",
+        "notes": "নোট",
+        "orders": "অর্ডার",
+        "delivered": "ডেলিভারি",
+        "spent": "খরচ",
+        "active": "সক্রিয়",
+        "blocked": "ব্লক করা",
+        "unnamed": "নামহীন কাস্টমার",
+        "noPhone": "ফোন নম্বর নেই",
+        "edit": "সম্পাদনা",
+        "save": "কাস্টমার সেভ করুন",
+        "saved": "কাস্টমার সেভ হয়েছে",
+        "saveError": "কাস্টমার সেভ করা যায়নি।",
+        "block": "ব্লক",
+        "unblock": "আনব্লক",
+        "delete": "ডিলিট",
+        "deleteConfirm": "এই কাস্টমার ডিলিট করবেন?",
+        "deleted": "কাস্টমার ডিলিট হয়েছে",
+        "deleteError": "কাস্টমার ডিলিট করা যায়নি।"
       }
     }
   }

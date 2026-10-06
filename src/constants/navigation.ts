@@ -1,4 +1,4 @@
-import { Home, LifeBuoy, Package, Settings, type LucideIcon } from "lucide-react";
+import { Home, LifeBuoy, Package, Settings, Users, type LucideIcon } from "lucide-react";
 export interface SubNavItem {
   key: string;
   href: string;
@@ -15,6 +15,16 @@ export interface NavSection {
   subNav: SubNavItem[];
 }
 export const NAV_SECTIONS: NavSection[] = [
+  {
+    key: "customers",
+    href: "/dashboard/customers",
+    icon: Users,
+    labelKey: "customers",
+    mobile: "more",
+    subNav: [
+      { key: "customers", href: "/dashboard/customers", labelKey: "customers", permission: "customer.read", exact: true },
+    ],
+  },
   {
     key: "products",
     href: "/dashboard/products",
