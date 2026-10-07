@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { X, ShoppingBag } from "lucide-react";
+import { X, ShoppingBag, Sparkles, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { useOrderMutations } from "@/hooks/queries/useOrders";
+import { useInboxMutations } from "@/hooks/queries/useInbox";
 import { BD_DISTRICTS, suggestDeliveryZone } from "@/constants/districts";
 import type { DeliveryZoneValue } from "@/constants/enums";
 
@@ -36,6 +37,7 @@ export function CreateOrderSheet({
     limit: 100,
   });
   const orderMutations = useOrderMutations();
+  const inboxMutations = useInboxMutations(conversationId);
 
   const [name, setName] = useState(customerName ?? "");
   const [phone, setPhone] = useState(customerPhone ?? "");
@@ -47,8 +49,44 @@ export function CreateOrderSheet({
   const [selectedProductId, setSelectedProductId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [note, setNote] = useState("");
+  const [isExtracting, setIsExtracting] = useState(false);
 
   if (!open) return null;
+
+  const handleAutoFillAi = async () => {
+    setIsExtracting(true);
+    try {
+      const extracted = await inboxMutations.extractOrderWithAi.mutateAsync(false);
+      if (extracted.customerName) setName(extracted.customerName);
+      if (extracted.phone) setPhone(extracted.phone);
+      if (extracted.address) setAddr(extracted.address);
+      if (extracted.district) {
+        setDist(extracted.district);
+        setZone(suggestDeliveryZone(extracted.district));
+      }
+      if (extracted.items && extracted.items.length > 0) {
+        const item = extracted.items[0];
+        if (item.quantity) setQuantity(item.quantity);
+        if (item.productId) {
+          setSelectedProductId(item.productId);
+        } else if (item.productName) {
+          const matched = productsData?.data.find(
+            (p) =>
+              p.name.toLowerCase().includes(item.productName.toLowerCase()) ||
+              item.productName.toLowerCase().includes(p.name.toLowerCase()),
+          );
+          if (matched) {
+            setSelectedProductId(matched.id);
+          }
+        }
+      }
+      toast.success(t("extractedWithAiSuccess"));
+    } catch {
+      toast.error(t("extractionFailed"));
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleDistrictChange = (d: string) => {
     setDist(d);
@@ -106,14 +144,30 @@ export function CreateOrderSheet({
             <ShoppingBag size={18} className="text-primary" />
             <span>{t("createOrder")}</span>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
-            aria-label="Close"
-          >
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={isExtracting || inboxMutations.extractOrderWithAi.isPending}
+              onClick={handleAutoFillAi}
+              className="flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary-soft px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+              title={t("autoFillFromChat")}
+            >
+              {isExtracting ? (
+                <Loader2 size={13} className="animate-spin" />
+              ) : (
+                <Sparkles size={13} />
+              )}
+              <span>{t("autoFillFromChat")}</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">

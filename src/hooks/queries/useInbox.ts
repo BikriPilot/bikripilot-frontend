@@ -496,6 +496,56 @@ export function useInboxMutations(conversationId?: string | null) {
     },
   });
 
+  const generateAiDraftMutation = useMutation({
+    mutationFn: (instructions?: string) =>
+      inboxApi.generateAiDraft(shopId!, conversationId!, instructions),
+    onSuccess: () => {
+      if (!shopId || !conversationId) return;
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversation(shopId, conversationId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversations(shopId),
+      });
+    },
+  });
+
+  const extractOrderWithAiMutation = useMutation({
+    mutationFn: (autoCreateDraftOrder?: boolean) =>
+      inboxApi.extractOrderWithAi(shopId!, conversationId!, autoCreateDraftOrder),
+    onSuccess: () => {
+      if (!shopId || !conversationId) return;
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversationOrders(shopId, conversationId),
+      });
+    },
+  });
+
+  const summarizeConversationMutation = useMutation({
+    mutationFn: () =>
+      inboxApi.summarizeConversation(shopId!, conversationId!),
+    onSuccess: () => {
+      if (!shopId || !conversationId) return;
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversation(shopId, conversationId),
+      });
+    },
+  });
+
+  const discardAiDraftMutation = useMutation({
+    mutationFn: () =>
+      inboxApi.discardAiDraft(shopId!, conversationId!),
+    onSuccess: () => {
+      if (!shopId || !conversationId) return;
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversation(shopId, conversationId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.conversations(shopId),
+      });
+    },
+  });
+
   return {
     sendMessage: sendMessageMutation,
     retryMessage: retryMessageMutation,
@@ -505,5 +555,9 @@ export function useInboxMutations(conversationId?: string | null) {
     createSavedReply: createSavedReplyMutation,
     updateSavedReply: updateSavedReplyMutation,
     deleteSavedReply: deleteSavedReplyMutation,
+    generateAiDraft: generateAiDraftMutation,
+    extractOrderWithAi: extractOrderWithAiMutation,
+    summarizeConversation: summarizeConversationMutation,
+    discardAiDraft: discardAiDraftMutation,
   };
 }

@@ -13,6 +13,7 @@ import type {
   CursorMeta,
 } from "@/types/inbox";
 import type { OrderListItemDTO } from "@/types/order";
+import type { AiDraftDTO, AiOrderExtractionDTO, AiSummaryDTO } from "@/types/ai";
 
 const path = (shopId: string, suffix = "") => `/shops/${shopId}${suffix}`;
 
@@ -127,5 +128,44 @@ export const inboxApi = {
   deleteSavedReply: (shopId: string, replyId: string) =>
     api
       .delete(path(shopId, `/saved-replies/${replyId}`))
+      .then((r) => r.data),
+
+  generateAiDraft: (
+    shopId: string,
+    conversationId: string,
+    instructions?: string,
+  ) =>
+    api
+      .post<{ data: AiDraftDTO }>(
+        path(shopId, `/conversations/${conversationId}/ai/draft`),
+        instructions ? { instructions } : {},
+      )
+      .then((r) => r.data.data),
+
+  extractOrderWithAi: (
+    shopId: string,
+    conversationId: string,
+    autoCreateDraftOrder?: boolean,
+  ) =>
+    api
+      .post<{ data: AiOrderExtractionDTO }>(
+        path(shopId, `/conversations/${conversationId}/ai/extract-order`),
+        typeof autoCreateDraftOrder === "boolean"
+          ? { autoCreateDraftOrder }
+          : {},
+      )
+      .then((r) => r.data.data),
+
+  summarizeConversation: (shopId: string, conversationId: string) =>
+    api
+      .post<{ data: AiSummaryDTO }>(
+        path(shopId, `/conversations/${conversationId}/ai/summary`),
+        {},
+      )
+      .then((r) => r.data.data),
+
+  discardAiDraft: (shopId: string, conversationId: string) =>
+    api
+      .post(path(shopId, `/conversations/${conversationId}/ai/discard-draft`), {})
       .then((r) => r.data),
 };

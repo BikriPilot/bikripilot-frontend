@@ -9,6 +9,8 @@ import {
   ExternalLink,
   X,
   User,
+  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -16,6 +18,8 @@ import { useConversationOrders } from "@/hooks/queries/useInbox";
 import { formatMoney } from "@/lib/money";
 import { NotesPanel } from "./NotesPanel";
 import { CreateOrderSheet } from "./CreateOrderSheet";
+import { AiOrderExtractDialog } from "./AiOrderExtractDialog";
+import { RiskCheckDialog } from "@/components/risk/RiskCheckDialog";
 import type { ConversationDTO } from "@/types/inbox";
 
 interface CustomerPanelProps {
@@ -32,8 +36,11 @@ export function CustomerPanel({
   isMobileOrDrawer = false,
 }: CustomerPanelProps) {
   const t = useTranslations("inbox");
+  const tRisk = useTranslations("risk");
   const [activeTab, setActiveTab] = useState<"orders" | "notes">("orders");
   const [createOrderOpen, setCreateOrderOpen] = useState(false);
+  const [aiExtractOpen, setAiExtractOpen] = useState(false);
+  const [riskDialogOpen, setRiskDialogOpen] = useState(false);
 
   const { data: pastOrders = [], isLoading: loadingOrders } =
     useConversationOrders(conversation.id);
@@ -81,25 +88,47 @@ export function CustomerPanel({
           </div>
 
           {customer.phone && (
-            <a
-              href={`tel:${customer.phone}`}
-              className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors"
-            >
-              <Phone size={12} className="text-primary" />
-              <span>{customer.phone}</span>
-            </a>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              <a
+                href={`tel:${customer.phone}`}
+                className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+              >
+                <Phone size={12} className="text-primary" />
+                <span>{customer.phone}</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => setRiskDialogOpen(true)}
+                className="inline-flex items-center gap-1 rounded-full border bg-background px-2.5 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                title={tRisk("checkButton")}
+              >
+                <ShieldCheck size={12} className="text-primary" />
+                <span>{tRisk("checkButton")}</span>
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Quick action: Create Order */}
-        <button
-          type="button"
-          onClick={() => setCreateOrderOpen(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 shadow-xs"
-        >
-          <Plus size={15} />
-          <span>{t("createOrder")}</span>
-        </button>
+        {/* Quick action: Create Order & Extract with AI */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setCreateOrderOpen(true)}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 shadow-xs"
+          >
+            <Plus size={15} />
+            <span>{t("createOrder")}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setAiExtractOpen(true)}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-primary/30 bg-primary-soft px-3 py-2.5 text-xs font-semibold text-primary hover:bg-primary/10 shadow-xs transition-colors"
+            title={t("aiOrderExtraction")}
+          >
+            <Sparkles size={14} />
+            <span>{t("extractWithAi")}</span>
+          </button>
+        </div>
 
         {/* Tabs: Orders / Notes */}
         <div className="border-b">
@@ -191,6 +220,18 @@ export function CustomerPanel({
         customerPhone={customer.phone}
         customerId={customer.id}
         conversationId={conversation.id}
+      />
+
+      <AiOrderExtractDialog
+        open={aiExtractOpen}
+        onClose={() => setAiExtractOpen(false)}
+        conversationId={conversation.id}
+      />
+
+      <RiskCheckDialog
+        open={riskDialogOpen}
+        onClose={() => setRiskDialogOpen(false)}
+        phone={customer.phone ?? undefined}
       />
     </div>
   );

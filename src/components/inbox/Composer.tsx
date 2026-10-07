@@ -7,6 +7,7 @@ import {
   X,
   Loader2,
   FileText,
+  Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -15,15 +16,20 @@ import { useInboxMutations } from "@/hooks/queries/useInbox";
 import { uploadsApi } from "@/lib/api/uploads.api";
 import { SavedReplyPicker } from "./SavedReplyPicker";
 import { SavedReplyDialog } from "./SavedReplyDialog";
+import { AiDraftBar } from "./AiDraftBar";
+import type { ConversationDTO } from "@/types/inbox";
+import type { AiDraftDTO } from "@/types/ai";
 
 interface ComposerProps {
   conversationId: string;
+  conversation?: ConversationDTO;
   isWindowClosed?: boolean;
   useHumanAgentTag?: boolean;
 }
 
 export function Composer({
   conversationId,
+  conversation,
   isWindowClosed = false,
   useHumanAgentTag = false,
 }: ComposerProps) {
@@ -38,6 +44,11 @@ export function Composer({
   const [pickerOpen, setPickerOpen] = useState(false);
   const [manageRepliesOpen, setManageRepliesOpen] = useState(false);
   const [pickerQuery, setPickerQuery] = useState("");
+
+  const [localDraftData, setLocalDraftData] = useState<AiDraftDTO | null>(null);
+  const [activeAiRunId, setActiveAiRunId] = useState<string | null>(null);
+  const [originalDraftText, setOriginalDraftText] = useState<string>("");
+  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -115,9 +126,15 @@ export function Composer({
     const currentText = text.trim();
     const currentAttachment = attachedImage;
 
+    const isEdited = activeAiRunId ? currentText !== originalDraftText : undefined;
+    const runIdToSend = activeAiRunId || undefined;
+
     setText("");
     setAttachedImage(null);
     setPickerOpen(false);
+    setActiveAiRunId(null);
+    setOriginalDraftText("");
+    setLocalDraftData(null);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
     try {
@@ -128,10 +145,40 @@ export function Composer({
           ? [{ type: "image", url: currentAttachment }]
           : undefined,
         useHumanAgentTag,
+        aiRunId: runIdToSend,
+        aiEdited: isEdited,
       });
     } catch {
       toast.error(t("sendFailed"));
     }
+  };
+
+  const handleGenerateAiDraft = async () => {
+    if (disabled || isGeneratingDraft || mutations.generateAiDraft.isPending) return;
+    setIsGeneratingDraft(true);
+    try {
+      const draft = await mutations.generateAiDraft.mutateAsync(undefined);
+      setLocalDraftData(draft);
+      if (draft.aiRunId) {
+        setActiveAiRunId(draft.aiRunId);
+      }
+      if (draft.text) {
+        setOriginalDraftText(draft.text);
+      }
+    } catch {
+      toast.error(t("failedToGenerateDraft") || "Failed to generate AI draft");
+    } finally {
+      setIsGeneratingDraft(false);
+    }
+  };
+
+  const handleUseDraft = (draftText: string, runId?: string | null) => {
+    setText(draftText);
+    if (runId) {
+      setActiveAiRunId(runId);
+      setOriginalDraftText(draftText);
+    }
+    textareaRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -143,9 +190,26 @@ export function Composer({
   };
 
   const disabled = isWindowClosed || mutations.sendMessage.isPending || isUploading;
+  const hasAiDraft = Boolean(localDraftData || conversation?.aiDraftText);
 
   return (
     <div className="relative border-t bg-card p-3">
+      {hasAiDraft && (
+        <AiDraftBar
+          conversationId={conversationId}
+          draftText={localDraftData?.text || conversation?.aiDraftText}
+          draftRunId={localDraftData?.aiRunId || conversation?.aiDraftRunId}
+          draftData={localDraftData}
+          onUseDraft={handleUseDraft}
+          onDiscard={() => {
+            setLocalDraftData(null);
+            setActiveAiRunId(null);
+            setOriginalDraftText("");
+          }}
+          disabled={disabled}
+        />
+      )}
+
       {pickerOpen && (
         <SavedReplyPicker
           query={pickerQuery}
@@ -209,6 +273,19 @@ export function Composer({
             title={t("savedReplies")}
           >
             <FileText size={18} />
+          </button>
+          <button
+            type="button"
+            disabled={disabled || isGeneratingDraft || mutations.generateAiDraft.isPending}
+            onClick={handleGenerateAiDraft}
+            className="grid size-8 place-items-center rounded-lg hover:bg-muted hover:text-foreground text-primary disabled:opacity-50 transition-colors"
+            title={t("generateAiDraft")}
+          >
+            {isGeneratingDraft || mutations.generateAiDraft.isPending ? (
+              <Loader2 size={16} className="animate-spin text-primary" />
+            ) : (
+              <Sparkles size={18} />
+            )}
           </button>
         </div>
 

@@ -1,3 +1,5 @@
+import type { ShipmentSummaryDTO } from "@/types/courier";
+
 export type OrderStatus =
   | "DRAFT" | "PENDING" | "CONFIRMED" | "PACKED" | "SHIPPED"
   | "DELIVERED" | "PARTIALLY_DELIVERED" | "RETURNED" | "CANCELLED";
@@ -14,14 +16,14 @@ export interface OrderListItemDTO {
   id: string; orderNumber: string; status: OrderStatus; source: OrderSource;
   customerName: string; customerPhone: string; district: string | null; totalPaisa: number;
   codAmountPaisa: number; paymentStatus: PaymentStatus; itemCount: number; firstItemName: string | null;
-  readinessScore: number; isDuplicateSuspect: boolean; riskLevel: string | null; shipment: unknown | null; createdAt: string;
+  readinessScore: number; isDuplicateSuspect: boolean; riskLevel: string | null; shipment: ShipmentSummaryDTO | null; createdAt: string;
 }
 export interface OrderDTO extends OrderListItemDTO {
   customerId: string; conversationId: string | null; customerAltPhone: string | null; address: string;
   area: string | null; deliveryZone: string; items: OrderItemDTO[]; subtotalPaisa: number;
   discountPaisa: number; deliveryChargePaisa: number; advancePaidPaisa: number; paymentMethod: PaymentMethod;
   note: string | null; internalNote: string | null; missingFields: string[]; duplicateOfOrderId: string | null;
-  riskScore: number | null; aiExtracted: boolean; aiExtractedFields: string[]; activeShipment: unknown | null;
+  riskScore: number | null; aiExtracted: boolean; aiExtractedFields: string[]; activeShipment: ShipmentSummaryDTO | null;
   statusEvents: { id: string; fromStatus: OrderStatus | null; toStatus: OrderStatus; source: string; note: string | null; createdAt: string }[];
   allowedTransitions: OrderStatus[]; createdAt: string; updatedAt: string;
   confirmedAt: string | null; shippedAt: string | null; deliveredAt: string | null; returnedAt: string | null;

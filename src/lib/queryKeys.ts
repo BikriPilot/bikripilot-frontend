@@ -37,4 +37,20 @@ export const queryKeys = {
   aiUsage: (shopId?: string | null) => ["ai-usage", shopId] as const,
   knowledge: (shopId?: string | null, type?: string | null) =>
     ["knowledge", shopId, type] as const,
+  couriers: (shopId?: string | null) => ["couriers", shopId] as const,
+  courierLocations: (
+    shopId?: string | null,
+    courierId?: string | null,
+    type?: string,
+    parentId?: string | number,
+    district?: string,
+  ) => ["courier-locations", shopId, courierId, type, parentId, district] as const,
+  shipments: (shopId?: string | null, query?: unknown) =>
+    ["shipments", shopId, query] as const,
+  shipment: (shopId?: string | null, shipmentId?: string | null) =>
+    ["shipment", shopId, shipmentId] as const,
+  riskCheck: (shopId?: string | null, phone?: string | null) =>
+    ["risk-check", shopId, phone] as const,
+  riskHistory: (shopId?: string | null, query?: unknown) =>
+    ["risk-history", shopId, query] as const,
 };

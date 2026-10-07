@@ -106,6 +106,12 @@ export interface AiDraftDTO {
   handoffReason: string | null;
   blockedReason: string | null;
   productIds: string[];
+  suggestedQuickReplies?: string[];
+}
+
+export interface AiSummaryDTO {
+  summary: string;
+  summaryUpdatedAt: string;
 }
 
 export interface OrderMissingField {

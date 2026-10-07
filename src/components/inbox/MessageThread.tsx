@@ -10,6 +10,11 @@ import {
   User,
   Bot,
   BotOff,
+  Sparkles,
+  ShoppingCart,
+  RefreshCw,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -25,6 +30,7 @@ import { Composer } from "./Composer";
 import { AssignSelect } from "./AssignSelect";
 import { TagEditor } from "./TagEditor";
 import { ImageViewerModal } from "./ImageViewerModal";
+import { AiOrderExtractDialog } from "./AiOrderExtractDialog";
 import type { MessageDTO } from "@/types/inbox";
 
 interface MessageThreadProps {
@@ -56,6 +62,8 @@ export function MessageThread({
   const [useHumanAgentTag, setUseHumanAgentTag] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [extractDialogOpen, setExtractDialogOpen] = useState(false);
+  const [isSummarizing, setIsSummarizing] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomAnchorRef = useRef<HTMLDivElement>(null);
@@ -123,6 +131,20 @@ export function MessageThread({
       setMenuOpen(false);
     } catch {
       toast.error(t("updateFailed"));
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    if (isSummarizing || mutations.summarizeConversation.isPending) return;
+    setIsSummarizing(true);
+    try {
+      await mutations.summarizeConversation.mutateAsync();
+      toast.success(t("summaryGenerated"));
+      setMenuOpen(false);
+    } catch {
+      toast.error(t("summaryFailed"));
+    } finally {
+      setIsSummarizing(false);
     }
   };
 
@@ -258,9 +280,34 @@ export function MessageThread({
 
             {menuOpen && (
               <div
-                className="absolute right-0 top-full mt-1 w-48 rounded-xl border bg-card p-1.5 shadow-xl z-30 text-xs"
+                className="absolute right-0 top-full mt-1 w-52 rounded-xl border bg-card p-1.5 shadow-xl z-30 text-xs"
                 onClick={(e) => e.stopPropagation()}
               >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExtractDialogOpen(true);
+                    setMenuOpen(false);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left hover:bg-muted"
+                >
+                  <ShoppingCart size={15} className="text-primary" />
+                  <span>{t("extractOrderWithAi")}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleGenerateSummary}
+                  disabled={isSummarizing || mutations.summarizeConversation.isPending}
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left hover:bg-muted disabled:opacity-50"
+                >
+                  {isSummarizing ? (
+                    <Loader2 size={15} className="animate-spin text-primary" />
+                  ) : (
+                    <Sparkles size={15} className="text-primary" />
+                  )}
+                  <span>{t("summarizeWithAi")}</span>
+                </button>
+                <div className="my-1 border-t" />
                 <button
                   type="button"
                   onClick={handleToggleAiDisabled}
@@ -298,6 +345,55 @@ export function MessageThread({
           )}
         </div>
       </header>
+
+      {/* Human Review Warning Banner */}
+      {conversation.needsHuman && (
+        <div className="flex items-center gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-900">
+          <AlertTriangle size={15} className="shrink-0 text-amber-600" />
+          <span className="font-semibold">{t("humanReviewRecommended")}:</span>
+          <span className="truncate">
+            {conversation.needsHumanReason || t("humanHandoffNotice")}
+          </span>
+        </div>
+      )}
+
+      {/* AI Conversation Summary Card */}
+      {conversation.summary && (
+        <div className="border-b bg-muted/40 px-4 py-2.5 text-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 font-medium text-foreground">
+              <Sparkles size={14} className="text-primary" />
+              <span>{t("conversationSummary")}</span>
+              {conversation.summaryUpdatedAt && (
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  •{" "}
+                  {new Date(conversation.summaryUpdatedAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              disabled={isSummarizing || mutations.summarizeConversation.isPending}
+              onClick={handleGenerateSummary}
+              className="flex items-center gap-1 text-[11px] text-primary hover:underline disabled:opacity-50"
+              title={t("refreshSummary")}
+            >
+              {isSummarizing ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <RefreshCw size={11} />
+              )}
+              <span>{t("refreshSummary")}</span>
+            </button>
+          </div>
+          <p className="mt-1 leading-relaxed text-muted-foreground">
+            {conversation.summary}
+          </p>
+        </div>
+      )}
 
       {/* Messages Feed */}
       <div
@@ -354,6 +450,7 @@ export function MessageThread({
       {/* Composer */}
       <Composer
         conversationId={conversationId}
+        conversation={conversation}
         isWindowClosed={isClosed}
         useHumanAgentTag={useHumanAgentTag}
       />
@@ -362,6 +459,13 @@ export function MessageThread({
       <ImageViewerModal
         url={selectedImageUrl}
         onClose={() => setSelectedImageUrl(null)}
+      />
+
+      {/* AI Order Extraction Modal */}
+      <AiOrderExtractDialog
+        open={extractDialogOpen}
+        onClose={() => setExtractDialogOpen(false)}
+        conversationId={conversationId}
       />
     </div>
   );

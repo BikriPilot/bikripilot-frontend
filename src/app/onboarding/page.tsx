@@ -216,6 +216,11 @@ export default function OnboardingPage() {
               {t("connectFacebook")}
             </Link>
           ) : null}
+          {current === "courier" ? (
+            <Link href="/dashboard/couriers" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+              {t("connectCourier")}
+            </Link>
+          ) : null}
           <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
