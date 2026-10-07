@@ -198,6 +198,14 @@ export default function OnboardingPage() {
               />
             </div>
           ) : null}
+          {current === "ai" ? (
+            <Link
+              href="/dashboard/ai"
+              className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
+              {t("tellAiAboutBusiness")}
+            </Link>
+          ) : null}
           {current === "product" ? (
             <Link href="/dashboard/products/new" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
               {t("addFirstProduct")}

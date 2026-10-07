@@ -8,6 +8,8 @@ export const PERMISSIONS = {
   COMMENT_READ: "comment.read",
   COMMENT_REPLY: "comment.reply",
   AUTOMATION_MANAGE: "automation.manage",
+  AI_USE: "ai.use",
+  AI_MANAGE: "ai.manage",
   ORDER_READ: "order.read",
   PRODUCT_READ: "product.read",
   CUSTOMER_READ: "customer.read",

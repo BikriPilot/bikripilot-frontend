@@ -32,4 +32,9 @@ export const queryKeys = {
     limit?: number,
   ) => ["channel-posts", shopId, channelId, limit] as const,
   channels: (shopId?: string | null) => ["channels", shopId] as const,
+  aiSettings: (shopId?: string | null) => ["ai-settings", shopId] as const,
+  aiReadiness: (shopId?: string | null) => ["ai-readiness", shopId] as const,
+  aiUsage: (shopId?: string | null) => ["ai-usage", shopId] as const,
+  knowledge: (shopId?: string | null, type?: string | null) =>
+    ["knowledge", shopId, type] as const,
 };

@@ -7,6 +7,7 @@ import {
   Users,
   BookOpen,
   ShoppingCart,
+  Bot,
   type LucideIcon,
 } from "lucide-react";
 
@@ -135,6 +136,46 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: "home",
     mobile: "bottom",
     subNav: [],
+  },
+  {
+    key: "ai",
+    href: "/dashboard/ai",
+    icon: Bot,
+    labelKey: "ai",
+    mobile: "more",
+    subNav: [
+      {
+        key: "businessInfo",
+        href: "/dashboard/ai",
+        labelKey: "businessInfo",
+        permission: "ai.use",
+        exact: true,
+      },
+      {
+        key: "settings",
+        href: "/dashboard/ai/settings",
+        labelKey: "settings",
+        permission: "ai.use",
+      },
+      {
+        key: "knowledge",
+        href: "/dashboard/ai/knowledge",
+        labelKey: "knowledge",
+        permission: "ai.use",
+      },
+      {
+        key: "playground",
+        href: "/dashboard/ai/playground",
+        labelKey: "playground",
+        permission: "ai.use",
+      },
+      {
+        key: "usage",
+        href: "/dashboard/ai/usage",
+        labelKey: "usage",
+        permission: "ai.use",
+      },
+    ],
   },
   {
     key: "settings",
