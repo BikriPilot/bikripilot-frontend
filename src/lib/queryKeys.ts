@@ -20,4 +20,16 @@ export const queryKeys = {
   ) => ["conversation-orders", shopId, conversationId] as const,
   savedReplies: (shopId?: string | null, search?: string) =>
     ["saved-replies", shopId, search] as const,
+  comments: (shopId?: string | null, query?: unknown) =>
+    ["comments", shopId, query] as const,
+  commentRules: (shopId?: string | null) =>
+    ["comment-rules", shopId] as const,
+  postLinks: (shopId?: string | null, postId?: string) =>
+    ["post-links", shopId, postId] as const,
+  channelPosts: (
+    shopId?: string | null,
+    channelId?: string | null,
+    limit?: number,
+  ) => ["channel-posts", shopId, channelId, limit] as const,
+  channels: (shopId?: string | null) => ["channels", shopId] as const,
 };

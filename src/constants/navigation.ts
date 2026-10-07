@@ -44,6 +44,18 @@ export const NAV_SECTIONS: NavSection[] = [
         permission: "inbox.read",
         exact: true,
       },
+      {
+        key: "comments",
+        href: "/dashboard/comments",
+        labelKey: "comments",
+        permission: "comment.read",
+      },
+      {
+        key: "automation",
+        href: "/dashboard/automation",
+        labelKey: "automation",
+        permission: "automation.manage",
+      },
     ],
   },
   {
