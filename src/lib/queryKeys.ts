@@ -22,8 +22,7 @@ export const queryKeys = {
     ["saved-replies", shopId, search] as const,
   comments: (shopId?: string | null, query?: unknown) =>
     ["comments", shopId, query] as const,
-  commentRules: (shopId?: string | null) =>
-    ["comment-rules", shopId] as const,
+  commentRules: (shopId?: string | null) => ["comment-rules", shopId] as const,
   postLinks: (shopId?: string | null, postId?: string) =>
     ["post-links", shopId, postId] as const,
   channelPosts: (
@@ -44,7 +43,8 @@ export const queryKeys = {
     type?: string,
     parentId?: string | number,
     district?: string,
-  ) => ["courier-locations", shopId, courierId, type, parentId, district] as const,
+  ) =>
+    ["courier-locations", shopId, courierId, type, parentId, district] as const,
   shipments: (shopId?: string | null, query?: unknown) =>
     ["shipments", shopId, query] as const,
   shipment: (shopId?: string | null, shipmentId?: string | null) =>
@@ -53,4 +53,12 @@ export const queryKeys = {
     ["risk-check", shopId, phone] as const,
   riskHistory: (shopId?: string | null, query?: unknown) =>
     ["risk-history", shopId, query] as const,
+  reconciliationSummary: (shopId?: string | null) =>
+    ["reconciliation-summary", shopId] as const,
+  unpaidShipments: (shopId?: string | null, query?: unknown) =>
+    ["unpaid-shipments", shopId, query] as const,
+  payouts: (shopId?: string | null, query?: unknown) =>
+    ["payouts", shopId, query] as const,
+  payout: (shopId?: string | null, payoutId?: string | null) =>
+    ["payout", shopId, payoutId] as const,
 };

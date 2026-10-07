@@ -101,6 +101,12 @@ export const NAV_SECTIONS: NavSection[] = [
         permission: "hisab.read",
         exact: true,
       },
+      {
+        key: "codPayouts",
+        href: "/dashboard/reconciliation",
+        labelKey: "codPayouts",
+        permission: "hisab.read",
+      },
     ],
   },
   {
