@@ -4,8 +4,10 @@ export const ORDER_TRANSITIONS: Record<OrderStatusValue, OrderStatusValue[]> = {
   PENDING: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["PACKED", "SHIPPED", "CANCELLED"],
   PACKED: ["CONFIRMED", "SHIPPED", "CANCELLED"],
-  SHIPPED: ["DELIVERED"],
+  SHIPPED: ["DELIVERED", "PARTIALLY_DELIVERED", "RETURNED"],
   DELIVERED: [],
+  PARTIALLY_DELIVERED: ["RETURNED"],
+  RETURNED: [],
   CANCELLED: [],
 };
 export const canTransition = (from: OrderStatusValue, to: OrderStatusValue) =>

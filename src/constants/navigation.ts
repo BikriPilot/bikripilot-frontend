@@ -1,4 +1,15 @@
-import { Home, LifeBuoy, Package, Settings, Users, BookOpen, ShoppingCart, type LucideIcon } from "lucide-react";
+import {
+  Home,
+  LifeBuoy,
+  MessageSquare,
+  Package,
+  Settings,
+  Users,
+  BookOpen,
+  ShoppingCart,
+  type LucideIcon,
+} from "lucide-react";
+
 export interface SubNavItem {
   key: string;
   href: string;
@@ -6,22 +17,66 @@ export interface SubNavItem {
   permission?: string;
   exact?: boolean;
 }
+
 export interface NavSection {
   key: string;
   href: string;
   icon: LucideIcon;
   labelKey: string;
   mobile: "bottom" | "more";
+  badge?: "unreadConversations" | "pendingOrders";
   subNav: SubNavItem[];
 }
+
 export const NAV_SECTIONS: NavSection[] = [
   {
-    key: "orders", href: "/dashboard/orders", icon: ShoppingCart, labelKey: "orders", mobile: "bottom",
-    subNav: [{ key: "orders", href: "/dashboard/orders", labelKey: "orders", permission: "order.read", exact: true }],
+    key: "inbox",
+    href: "/dashboard/inbox",
+    icon: MessageSquare,
+    labelKey: "inbox",
+    mobile: "bottom",
+    badge: "unreadConversations",
+    subNav: [
+      {
+        key: "messages",
+        href: "/dashboard/inbox",
+        labelKey: "messages",
+        permission: "inbox.read",
+        exact: true,
+      },
+    ],
   },
   {
-    key: "hisab", href: "/dashboard/hisab", icon: BookOpen, labelKey: "hisab", mobile: "bottom",
-    subNav: [{ key: "hisab", href: "/dashboard/hisab", labelKey: "hisab", permission: "hisab.read", exact: true }],
+    key: "orders",
+    href: "/dashboard/orders",
+    icon: ShoppingCart,
+    labelKey: "orders",
+    mobile: "bottom",
+    subNav: [
+      {
+        key: "orders",
+        href: "/dashboard/orders",
+        labelKey: "orders",
+        permission: "order.read",
+        exact: true,
+      },
+    ],
+  },
+  {
+    key: "hisab",
+    href: "/dashboard/hisab",
+    icon: BookOpen,
+    labelKey: "hisab",
+    mobile: "bottom",
+    subNav: [
+      {
+        key: "hisab",
+        href: "/dashboard/hisab",
+        labelKey: "hisab",
+        permission: "hisab.read",
+        exact: true,
+      },
+    ],
   },
   {
     key: "customers",
@@ -30,7 +85,13 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: "customers",
     mobile: "more",
     subNav: [
-      { key: "customers", href: "/dashboard/customers", labelKey: "customers", permission: "customer.read", exact: true },
+      {
+        key: "customers",
+        href: "/dashboard/customers",
+        labelKey: "customers",
+        permission: "customer.read",
+        exact: true,
+      },
     ],
   },
   {
@@ -40,8 +101,19 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: "products",
     mobile: "bottom",
     subNav: [
-      { key: "products", href: "/dashboard/products", labelKey: "products", permission: "product.read", exact: true },
-      { key: "inventory", href: "/dashboard/inventory", labelKey: "inventory", permission: "product.read" },
+      {
+        key: "products",
+        href: "/dashboard/products",
+        labelKey: "products",
+        permission: "product.read",
+        exact: true,
+      },
+      {
+        key: "inventory",
+        href: "/dashboard/inventory",
+        labelKey: "inventory",
+        permission: "product.read",
+      },
     ],
   },
   {
@@ -84,8 +156,18 @@ export const NAV_SECTIONS: NavSection[] = [
         labelKey: "billing",
         permission: "billing.read",
       },
-      { key: "hisabSettings", href: "/dashboard/settings/hisab", labelKey: "settingsHisab", permission: "hisab.read" },
-      { key: "channels", href: "/dashboard/channels", labelKey: "settingsChannels", permission: "shop.read" },
+      {
+        key: "hisabSettings",
+        href: "/dashboard/settings/hisab",
+        labelKey: "settingsHisab",
+        permission: "hisab.read",
+      },
+      {
+        key: "channels",
+        href: "/dashboard/channels",
+        labelKey: "settingsChannels",
+        permission: "shop.read",
+      },
     ],
   },
 ];

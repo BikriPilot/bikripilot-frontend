@@ -37,6 +37,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     }
   };
   const sections = NAV_SECTIONS;
+  const isChatThreadMobile = Boolean(
+    pathname &&
+    pathname.startsWith("/dashboard/inbox/") &&
+    pathname !== "/dashboard/inbox"
+  );
   const isActive = (href: string) =>
     href === "/dashboard" ? pathname === href : pathname.startsWith(href);
   return (
@@ -54,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm ${isActive(href) ? "bg-primary-soft font-semibold text-primary" : "text-muted-foreground hover:bg-muted"}`}
             >
               <Icon size={18} />
-              {t(labelKey)}
+              <span className="flex-1">{t(labelKey)}</span>
             </Link>
           ))}
         </nav>
@@ -78,7 +83,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </Link>
         </div>
       </aside>
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-card/95 px-4 backdrop-blur md:ml-60">
+      <header
+        className={`sticky top-0 z-30 h-14 items-center justify-between border-b bg-card/95 px-4 backdrop-blur md:ml-60 ${
+          isChatThreadMobile ? "hidden md:flex" : "flex"
+        }`}
+      >
         <div className="flex items-center gap-3">
           <div className="md:hidden">
             <Logo compact />
@@ -122,12 +131,22 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <div className="md:ml-60">
-        <SectionSubNav />
-        <main className="mx-auto max-w-[1440px] p-4 pb-24 md:p-6 md:pb-8">
+        {!isChatThreadMobile && <SectionSubNav />}
+        <main
+          className={`mx-auto max-w-[1440px] ${
+            isChatThreadMobile
+              ? "p-0 pb-0 h-dvh md:h-auto md:p-6 md:pb-8"
+              : "p-4 pb-24 md:p-6 md:pb-8"
+          }`}
+        >
           {children}
         </main>
       </div>
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
+      <nav
+        className={`fixed inset-x-0 bottom-0 z-30 grid-cols-5 border-t bg-card pb-[env(safe-area-inset-bottom)] md:hidden ${
+          isChatThreadMobile ? "hidden" : "grid"
+        }`}
+      >
         {sections
           .filter((section) => section.mobile === "bottom")
           .map(({ href, icon: Icon, key, labelKey }) => (

@@ -9,7 +9,11 @@ export interface UploadResultDTO {
 }
 
 export const uploadsApi = {
-  image: (shopId: string, file: File, purpose: "product" | "shop_logo") => {
+  image: (
+    shopId: string,
+    file: File,
+    purpose: "product" | "shop_logo" | "shop" | "inbox" | "hisab",
+  ) => {
     const body = new FormData();
     body.append("file", file);
     body.append("purpose", purpose);
