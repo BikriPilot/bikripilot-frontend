@@ -19,9 +19,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { publicServerApi } from "@/lib/api/public.api";
 import type { SiteContent } from "@/types/content";
 import type { PublicPlan } from "@/types/plan";
+import { formatMoney } from "@/lib/money";
 
-const money = (paisa: number) =>
-  `৳${new Intl.NumberFormat("en-IN").format(Math.round(paisa / 100))}`;
 const localized = (locale: string, bn: string | null, en: string | null) =>
   locale === "bn" ? bn || en || "" : en || bn || "";
 
@@ -445,7 +444,7 @@ function PricingSection({
                 {localized(locale, plan.descriptionBn, plan.descriptionEn)}
               </p>
               <p className="mt-6 text-3xl font-semibold">
-                {money(plan.priceMonthlyPaisa)}
+                {formatMoney(plan.priceMonthlyPaisa)}
                 <span className="text-sm font-normal text-muted-foreground">
                   {t("perMonth")}
                 </span>
@@ -458,12 +457,7 @@ function PricingSection({
               </Link>
               <ul className="mt-6 space-y-3 text-sm">
                 {plan.features
-                  .filter(
-                    (feature) =>
-                      feature.enabled ||
-                      feature.unlimited ||
-                      feature.limit !== null,
-                  )
+                  .filter((feature) => feature.enabled)
                   .slice(0, 5)
                   .map((feature) => (
                     <li key={feature.key} className="flex gap-2">

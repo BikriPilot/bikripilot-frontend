@@ -12,7 +12,9 @@ export async function PublicFooter({
     <footer className="border-t bg-card">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="text-lg font-semibold">Bikrio</p>
+          <p className="text-lg font-semibold">
+            {config?.platformName ?? "Bikrio"}
+          </p>
           <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
             {t("footerAbout")}
           </p>
@@ -34,6 +36,9 @@ export async function PublicFooter({
           </Link>
           <Link href="/data-deletion" className="hover:text-foreground">
             {t("footerDeletion")}
+          </Link>
+          <Link href="/track" className="hover:text-foreground">
+            {t("footerTracking")}
           </Link>
         </div>
         <div className="grid content-start gap-3 text-sm text-muted-foreground">

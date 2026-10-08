@@ -802,6 +802,8 @@
     }
   },
   "landing": {
+    "navMenu": "Open navigation menu",
+    "footerTracking": "Track an order",
     "navFeatures": "Features",
     "navHow": "How it works",
     "navPricing": "Pricing",

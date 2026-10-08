@@ -40,7 +40,10 @@ export async function PublicNavbar() {
             </Link>
           </div>
           <details className="relative lg:hidden">
-            <summary className="grid size-11 list-none cursor-pointer place-items-center rounded-lg border [&::-webkit-details-marker]:hidden">
+            <summary
+              aria-label={t("navMenu")}
+              className="grid size-11 list-none cursor-pointer place-items-center rounded-lg border [&::-webkit-details-marker]:hidden"
+            >
               <Menu className="size-5" />
               <X className="hidden size-5 [[open]>&]:block" />
             </summary>

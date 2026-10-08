@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Fragment, useState } from "react";
 import type { PublicPlan, PublicPlanFeature } from "@/types/plan";
-
-const money = (paisa: number) =>
-  `৳${new Intl.NumberFormat("en-IN").format(Math.round(paisa / 100))}`;
+import { formatMoney } from "@/lib/money";
 
 export function PricingComparison({ plans }: { plans: PublicPlan[] }) {
   const locale = useLocale();
@@ -59,7 +57,7 @@ export function PricingComparison({ plans }: { plans: PublicPlan[] }) {
                 : plan.descriptionEn || plan.descriptionBn}
             </p>
             <p className="mt-6 text-3xl font-semibold">
-              {money(
+              {formatMoney(
                 cycle === "monthly"
                   ? plan.priceMonthlyPaisa
                   : plan.priceYearlyPaisa,
@@ -117,7 +115,12 @@ export function PricingComparison({ plans }: { plans: PublicPlan[] }) {
                           key={plan.id}
                           className="px-5 py-4 text-muted-foreground"
                         >
-                          {value?.unlimited ? (
+                          {!value?.enabled ? (
+                            <Minus
+                              className="size-4"
+                              aria-label={t("notIncluded")}
+                            />
+                          ) : value.unlimited ? (
                             t("unlimited")
                           ) : value?.limit !== null &&
                             value?.limit !== undefined ? (
