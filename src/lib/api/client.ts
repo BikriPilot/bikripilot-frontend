@@ -108,7 +108,7 @@ api.interceptors.request.use((config) => {
 });
 api.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError<{ error?: ApiErrorBody }>) => {
+  async (error: AxiosError<{ message?: string; error?: ApiErrorBody }>) => {
     const body = error.response?.data?.error;
     const config = error.config as
       (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
@@ -124,7 +124,9 @@ api.interceptors.response.use(
       refreshPromise ??= api
         .post<{
           data: { accessToken: string; user: import("@/types/auth").MeDTO };
-        }>("/auth/refresh")
+        }>("/auth/refresh", undefined, {
+          headers: { "X-Requested-With": "bikrio-web" },
+        })
         .then((response) => {
           const token = response.data.data.accessToken;
           useAuthStore.getState().setAuth(token, response.data.data.user);
@@ -145,14 +147,26 @@ api.interceptors.response.use(
           `/login?next=${encodeURIComponent(window.location.pathname)}`,
         );
     }
-    if (body?.code && PLAN_ERROR_CODES.includes(body.code))
-      useUiStore
-        .getState()
-        .openUpgrade({ feature: String(body.details ?? "") });
+    if (body?.code && PLAN_ERROR_CODES.includes(body.code)) {
+      const details =
+        body.details && typeof body.details === "object"
+          ? (body.details as {
+              feature?: unknown;
+              limit?: unknown;
+              used?: unknown;
+            })
+          : {};
+      useUiStore.getState().openUpgrade({
+        feature:
+          typeof details.feature === "string" ? details.feature : undefined,
+        limit: typeof details.limit === "number" ? details.limit : undefined,
+        used: typeof details.used === "number" ? details.used : undefined,
+      });
+    }
     throw new ApiClientError({
       status: error.response?.status ?? 0,
       code: body?.code ?? "UNKNOWN_ERROR",
-      message: body?.message ?? error.message,
+      message: error.response?.data?.message ?? body?.message ?? error.message,
       details: body?.details,
     });
   },

@@ -14,6 +14,7 @@ export const getSocket = () => {
 };
 
 export const connectSocket = (token: string) => {
+  if (!token.trim()) return null;
   const instance = getSocket();
   if (!instance) return null;
   instance.auth = { token };

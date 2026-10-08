@@ -1,12 +1,16 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
-const apiOrigin =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "") ??
-  "http://localhost:4000";
-const socketOrigin =
-  process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000";
-const socketConnectOrigin = socketOrigin.replace(/^http/, "ws");
+const apiOrigin = new URL(
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1",
+).origin;
+const socketOrigin = new URL(
+  process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000",
+).origin;
+const socketConnectUrl = new URL(socketOrigin);
+socketConnectUrl.protocol =
+  socketConnectUrl.protocol === "https:" ? "wss:" : "ws:";
+const socketConnectOrigin = socketConnectUrl.origin;
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
@@ -39,6 +43,7 @@ if (process.env.NODE_ENV === "production")
   });
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
   },
