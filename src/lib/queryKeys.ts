@@ -61,4 +61,24 @@ export const queryKeys = {
     ["payouts", shopId, query] as const,
   payout: (shopId?: string | null, payoutId?: string | null) =>
     ["payout", shopId, payoutId] as const,
+  dashboard: (shopId?: string | null) => ["dashboard", shopId] as const,
+  analyticsOverview: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "overview", range] as const,
+  analyticsTrend: (
+    shopId?: string | null,
+    range?: unknown,
+    interval?: string,
+  ) => ["analytics", shopId, "trend", range, interval] as const,
+  analyticsStatus: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "status", range] as const,
+  analyticsProducts: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "products", range] as const,
+  analyticsSources: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "sources", range] as const,
+  analyticsInbox: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "inbox", range] as const,
+  analyticsProfit: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "profit", range] as const,
+  analyticsTeam: (shopId?: string | null, range?: unknown) =>
+    ["analytics", shopId, "team", range] as const,
 };

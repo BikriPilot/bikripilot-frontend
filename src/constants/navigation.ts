@@ -8,6 +8,7 @@ import {
   BookOpen,
   ShoppingCart,
   Bot,
+  BarChart3,
   type LucideIcon,
 } from "lucide-react";
 
@@ -159,6 +160,14 @@ export const NAV_SECTIONS: NavSection[] = [
     icon: Home,
     labelKey: "home",
     mobile: "bottom",
+    subNav: [],
+  },
+  {
+    key: "analytics",
+    href: "/dashboard/analytics",
+    icon: BarChart3,
+    labelKey: "analytics",
+    mobile: "more",
     subNav: [],
   },
   {
