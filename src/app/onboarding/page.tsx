@@ -10,6 +10,7 @@ import { ErrorState } from "@/components/common/PageStates";
 import { shopsApi } from "@/lib/api/shops.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { toast } from "sonner";
+import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 export default function OnboardingPage() {
   const t = useTranslations("step8");
   const router = useRouter();
@@ -91,7 +92,10 @@ export default function OnboardingPage() {
     );
   return (
     <AuthGuard>
-      <main className="mx-auto max-w-2xl">
+      <main className="mx-auto max-w-2xl p-4 sm:p-6">
+        <div className="mb-5 flex justify-end">
+          <LanguageSwitcher />
+        </div>
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
@@ -99,10 +103,12 @@ export default function OnboardingPage() {
             </p>
             <button
               type="button"
+              disabled={!shopId || busy}
               onClick={() =>
                 void shopsApi
                   .completeOnboarding(shopId!, true)
                   .then(() => router.replace("/dashboard"))
+                  .catch(() => toast.error(t("genericError")))
               }
               className="text-sm font-semibold text-primary"
             >
@@ -207,17 +213,26 @@ export default function OnboardingPage() {
             </Link>
           ) : null}
           {current === "product" ? (
-            <Link href="/dashboard/products/new" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+            <Link
+              href="/dashboard/products/new"
+              className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
               {t("addFirstProduct")}
             </Link>
           ) : null}
           {current === "facebook" ? (
-            <Link href="/dashboard/channels" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+            <Link
+              href="/dashboard/channels"
+              className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
               {t("connectFacebook")}
             </Link>
           ) : null}
           {current === "courier" ? (
-            <Link href="/dashboard/couriers" className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
+            <Link
+              href="/dashboard/couriers"
+              className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
               {t("connectCourier")}
             </Link>
           ) : null}

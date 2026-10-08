@@ -4,25 +4,38 @@ import { Search, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { NAV_SECTIONS } from "@/constants/navigation";
+import { useCurrentShop } from "@/hooks/useCurrentShop";
 
-const items = [
-  ["home", "/dashboard"],
-  ["settings", "/dashboard/settings"],
-  ["team", "/dashboard/team"],
-  ["billing", "/dashboard/billing"],
-  ["profile", "/dashboard/profile"],
-  ["help", "/dashboard/help"],
-  ["addProduct", "/dashboard/products/new"],
-  ["newOrder", "/dashboard/orders/new"],
-  ["recordGave", "/dashboard/hisab"],
-  ["checkPhone", "/dashboard/risk"],
+const actions = [
+  ["profile", "/dashboard/profile", null],
+  ["help", "/dashboard/help", null],
+  ["addProduct", "/dashboard/products/new", "product.write"],
+  ["newOrder", "/dashboard/orders/new", "order.write"],
+  ["recordGave", "/dashboard/hisab", "hisab.write"],
+  ["checkPhone", "/dashboard/risk", "risk.check"],
 ] as const;
 
 export function CommandMenu() {
   const t = useTranslations("step8");
-  const router = useRouter();
+  const { can } = useCurrentShop();
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const pages = NAV_SECTIONS.filter(
+    (section) => !section.permission || can(section.permission),
+  ).flatMap((section) =>
+    section.subNav.length
+      ? section.subNav
+          .filter((item) => !item.permission || can(item.permission))
+          .map((item) => [item.labelKey, item.href] as const)
+      : [[section.labelKey, section.href] as const],
+  );
+  const items = [
+    ...pages,
+    ...actions.filter(([, , permission]) => !permission || can(permission)),
+  ].filter(([key]) =>
+    t(key).toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+  );
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -41,12 +54,14 @@ export function CommandMenu() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="hidden h-10 items-center gap-2 rounded-lg border px-3 text-sm text-muted-foreground hover:bg-muted xl:flex"
+        className="flex h-10 items-center gap-2 rounded-lg border px-3 text-sm text-muted-foreground hover:bg-muted"
         aria-label={t("search")}
       >
         <Search size={16} />
-        {t("search")}
-        <kbd className="rounded bg-muted px-1.5 text-xs">Ctrl K</kbd>
+        <span className="hidden xl:inline">{t("search")}</span>
+        <kbd className="hidden rounded bg-muted px-1.5 text-xs xl:inline">
+          Ctrl K
+        </kbd>
       </button>
       {open ? (
         <div
@@ -57,14 +72,19 @@ export function CommandMenu() {
             role="dialog"
             aria-modal="true"
             aria-label={t("search")}
-            className="mx-auto mt-[12vh] w-full max-w-lg rounded-2xl border bg-card p-3 shadow-2xl"
+            className="mx-auto mt-[12vh] w-full max-w-lg rounded-lg border bg-card p-3 shadow-sm"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center gap-2 border-b px-2 pb-3">
               <Search className="size-4 text-muted-foreground" />
-              <span className="flex-1 text-sm text-muted-foreground">
-                {t("search")}
-              </span>
+              <input
+                autoFocus
+                aria-label={t("search")}
+                placeholder={t("search")}
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className="h-11 min-w-0 flex-1 bg-transparent text-base outline-none"
+              />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -74,7 +94,7 @@ export function CommandMenu() {
                 <X className="size-4" />
               </button>
             </div>
-            <nav className="mt-2 grid gap-1">
+            <nav className="mt-2 grid max-h-[60vh] gap-1 overflow-y-auto">
               {items.map(([key, href]) => (
                 <Link
                   key={href}
@@ -86,9 +106,6 @@ export function CommandMenu() {
                 </Link>
               ))}
             </nav>
-            <button type="button" onClick={() => { setOpen(false); router.push("/dashboard/products/new"); }} className="mt-2 w-full rounded-lg border px-3 py-3 text-left text-sm font-medium hover:bg-muted">
-              {t("addProduct")}
-            </button>
           </div>
         </div>
       ) : null}

@@ -3,6 +3,8 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { authApi } from "@/lib/api/auth.api";
+import { useAuthStore } from "@/stores/authStore";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
@@ -10,6 +12,17 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("common");
   const setLocale = (nextLocale: "bn" | "en") => {
     document.cookie = `bk_locale=${nextLocale}; Max-Age=31536000; Path=/; SameSite=Lax`;
+    const auth = useAuthStore.getState();
+    if (auth.accessToken && auth.user && !auth.user.impersonation) {
+      void authApi
+        .updateMe({ locale: nextLocale })
+        .then((user) => {
+          if (useAuthStore.getState().user?.id === user.id) {
+            useAuthStore.getState().setUser(user);
+          }
+        })
+        .catch(() => {});
+    }
     router.refresh();
   };
   return (
@@ -28,7 +41,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         )}
         aria-pressed={locale === "bn"}
       >
-        বাংলা
+        {compact ? "বাং" : "বাংলা"}
       </button>
       <span className="text-border">|</span>
       <button
@@ -42,7 +55,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         )}
         aria-pressed={locale === "en"}
       >
-        English
+        {compact ? "EN" : "English"}
       </button>
     </div>
   );

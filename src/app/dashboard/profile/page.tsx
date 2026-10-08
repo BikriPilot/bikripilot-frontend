@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -14,8 +14,10 @@ import { toast } from "sonner";
 export default function ProfilePage() {
   const t = useTranslations("step8");
   const searchParams = useSearchParams();
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const clearAuth = useAuthStore((state) => state.clear);
   const sessions = useQuery({
     queryKey: ["sessions"],
     queryFn: authApi.sessions,
@@ -227,7 +229,13 @@ export default function ProfilePage() {
         <button
           type="button"
           onClick={() =>
-            void authApi.logoutAll().then(() => toast.success(t("saved")))
+            void authApi
+              .logoutAll()
+              .then(() => {
+                clearAuth();
+                router.replace("/login");
+              })
+              .catch(() => toast.error(t("genericError")))
           }
           className="mt-4 min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger"
         >

@@ -22,6 +22,7 @@ export interface SubNavItem {
 
 export interface NavSection {
   key: string;
+  permission?: string;
   href: string;
   icon: LucideIcon;
   labelKey: string;
@@ -33,6 +34,7 @@ export interface NavSection {
 export const NAV_SECTIONS: NavSection[] = [
   {
     key: "inbox",
+    permission: "inbox.read",
     href: "/dashboard/inbox",
     icon: MessageSquare,
     labelKey: "inbox",
@@ -62,6 +64,7 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "orders",
+    permission: "order.read",
     href: "/dashboard/orders",
     icon: ShoppingCart,
     labelKey: "orders",
@@ -90,6 +93,7 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "hisab",
+    permission: "hisab.read",
     href: "/dashboard/hisab",
     icon: BookOpen,
     labelKey: "hisab",
@@ -112,6 +116,7 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "customers",
+    permission: "customer.read",
     href: "/dashboard/customers",
     icon: Users,
     labelKey: "customers",
@@ -128,16 +133,17 @@ export const NAV_SECTIONS: NavSection[] = [
         key: "risk",
         href: "/dashboard/risk",
         labelKey: "riskCheck",
-        permission: "customer.read",
+        permission: "risk.check",
       },
     ],
   },
   {
     key: "products",
+    permission: "product.read",
     href: "/dashboard/products",
     icon: Package,
     labelKey: "products",
-    mobile: "bottom",
+    mobile: "more",
     subNav: [
       {
         key: "products",
@@ -164,6 +170,7 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "analytics",
+    permission: "analytics.read",
     href: "/dashboard/analytics",
     icon: BarChart3,
     labelKey: "analytics",
@@ -172,6 +179,7 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "ai",
+    permission: "ai.use",
     href: "/dashboard/ai",
     icon: Bot,
     labelKey: "ai",

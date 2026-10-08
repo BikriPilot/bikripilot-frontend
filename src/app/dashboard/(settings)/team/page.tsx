@@ -10,16 +10,16 @@ import { shopsApi } from "@/lib/api/shops.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import type { ShopRole } from "@/types/auth";
 import { toast } from "sonner";
-const roles: ShopRole[] = [
-  "MANAGER",
-  "AGENT",
-  "FULFILMENT",
-  "ACCOUNTANT",
-  "VIEWER",
-];
+import { ASSIGNABLE_ROLES_BY } from "@/constants/permissions";
+import { Trash2, X } from "lucide-react";
 export default function TeamPage() {
   const t = useTranslations("step8");
-  const { shopId, can } = useCurrentShop();
+  const { shopId, can, role: actorRole } = useCurrentShop();
+  const roleText = useTranslations("admin.roles");
+  const assignableRoles =
+    actorRole === "OWNER" || actorRole === "MANAGER"
+      ? ASSIGNABLE_ROLES_BY[actorRole]
+      : [];
   const members = useQuery({
     queryKey: ["members", shopId],
     queryFn: () => shopsApi.members(shopId!),
@@ -34,6 +34,35 @@ export default function TeamPage() {
   const [role, setRole] = useState<ShopRole>("AGENT");
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [removal, setRemoval] = useState<{ id: string; name: string } | null>(
+    null,
+  );
+  const updateRole = async (memberId: string, nextRole: string) => {
+    setBusy(true);
+    try {
+      await shopsApi.updateMember(shopId!, memberId, nextRole);
+      await members.refetch();
+      toast.success(t("saved"));
+    } catch {
+      toast.error(t("genericError"));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const remove = async () => {
+    if (!removal) return;
+    setBusy(true);
+    try {
+      await shopsApi.removeMember(shopId!, removal.id);
+      setRemoval(null);
+      await members.refetch();
+      toast.success(t("saved"));
+    } catch {
+      toast.error(t("genericError"));
+    } finally {
+      setBusy(false);
+    }
+  };
   if (members.isPending || invites.isPending)
     return <TableSkeleton rows={5} cols={4} />;
   if (members.isError || invites.isError)
@@ -96,8 +125,10 @@ export default function TeamPage() {
               value={role}
               onChange={(event) => setRole(event.target.value as ShopRole)}
             >
-              {roles.map((item) => (
-                <option key={item}>{item}</option>
+              {assignableRoles.map((item) => (
+                <option key={item} value={item}>
+                  {roleText(item)}
+                </option>
               ))}
             </select>
           </label>
@@ -133,9 +164,44 @@ export default function TeamPage() {
                     {member.email}
                   </p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  {member.role}
-                </span>
+                <div className="flex items-center gap-2">
+                  {can("team.manage") &&
+                  member.role !== "OWNER" &&
+                  !(actorRole === "MANAGER" && member.role === "MANAGER") ? (
+                    <>
+                      <select
+                        aria-label={`${t("role")}: ${member.name}`}
+                        value={member.role}
+                        disabled={busy}
+                        onChange={(event) =>
+                          void updateRole(member.id, event.target.value)
+                        }
+                        className="h-11 rounded-lg border bg-background px-2 text-sm"
+                      >
+                        {assignableRoles.map((item) => (
+                          <option key={item} value={item}>
+                            {roleText(item)}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        aria-label={t("removeMember")}
+                        disabled={busy}
+                        onClick={() =>
+                          setRemoval({ id: member.id, name: member.name })
+                        }
+                        className="grid size-11 place-items-center rounded-lg text-danger hover:bg-danger-soft"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">
+                      {roleText(member.role)}
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -155,13 +221,66 @@ export default function TeamPage() {
                 className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <span>{inviteItem.email}</span>
-                <span className="text-sm text-muted-foreground">
-                  {inviteItem.role}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">
+                    {roleText(inviteItem.role)}
+                  </span>
+                  {can("team.manage") && inviteItem.status === "PENDING" ? (
+                    <button
+                      type="button"
+                      aria-label={t("revokeInvite")}
+                      disabled={busy}
+                      onClick={() => {
+                        setBusy(true);
+                        void shopsApi
+                          .revokeInvitation(shopId!, inviteItem.id)
+                          .then(() => invites.refetch())
+                          .catch(() => toast.error(t("genericError")))
+                          .finally(() => setBusy(false));
+                      }}
+                      className="grid size-11 place-items-center rounded-lg hover:bg-muted"
+                    >
+                      <X size={18} />
+                    </button>
+                  ) : null}
+                </div>
               </div>
             ))}
           </div>
         </section>
+      ) : null}
+      {removal ? (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-foreground/30 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("removeMember")}
+        >
+          <div className="w-full max-w-md rounded-lg border bg-card p-5">
+            <h2 className="text-lg font-semibold">{t("removeMember")}</h2>
+            <p className="mt-2 text-sm">
+              {t("confirmRemoveMember", { name: removal.name })}
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setRemoval(null)}
+                className="min-h-11 rounded-lg border px-4"
+              >
+                {t("close")}
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void remove()}
+                className="min-h-11 rounded-lg bg-danger px-4 text-primary-foreground"
+              >
+                {t("removeMember")}
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );

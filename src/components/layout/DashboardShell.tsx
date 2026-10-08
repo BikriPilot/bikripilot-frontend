@@ -1,15 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  ChevronDown,
-  LogOut,
-  Menu,
-  Store,
-  UserCircle,
-  X,
-} from "lucide-react";
+import { LogOut, Menu, Store, UserCircle, X } from "lucide-react";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { NAV_FOOTER_ITEMS, NAV_SECTIONS } from "@/constants/navigation";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
@@ -21,11 +15,14 @@ import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { useAuthStore } from "@/stores/authStore";
 import { authApi } from "@/lib/api/auth.api";
 import { NotificationBell } from "./NotificationBell";
+import { useShopStore } from "@/stores/shopStore";
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("step8");
-  const { shop } = useCurrentShop();
+  const { shop, can } = useCurrentShop();
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
   const clear = useAuthStore((state) => state.clear);
   const [moreOpen, setMoreOpen] = useState(false);
   const logout = async () => {
@@ -36,14 +33,26 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       router.replace("/login");
     }
   };
-  const sections = NAV_SECTIONS;
+  const sections = NAV_SECTIONS.filter(
+    (section) => !section.permission || can(section.permission),
+  );
   const isChatThreadMobile = Boolean(
     pathname &&
     pathname.startsWith("/dashboard/inbox/") &&
-    pathname !== "/dashboard/inbox"
+    pathname !== "/dashboard/inbox",
   );
   const isActive = (href: string) =>
-    href === "/dashboard" ? pathname === href : pathname.startsWith(href);
+    href === "/dashboard"
+      ? pathname === href
+      : pathname.startsWith(href) ||
+        Boolean(
+          sections
+            .find((section) => section.href === href)
+            ?.subNav.some(
+              (item) =>
+                pathname === item.href || pathname.startsWith(`${item.href}/`),
+            ),
+        );
   return (
     <div className="min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 border-r bg-card md:block xl:w-60">
@@ -88,10 +97,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           isChatThreadMobile ? "hidden md:flex" : "flex"
         }`}
       >
-        <div className="flex items-center gap-3">
-          <div className="md:hidden">
-            <Logo compact />
-          </div>
+        <div className="flex min-w-0 items-center gap-1 md:gap-3">
           <button
             type="button"
             onClick={() => setMoreOpen(true)}
@@ -101,16 +107,27 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Menu size={19} />
           </button>
           <CommandMenu />
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-lg px-2 text-sm font-medium hover:bg-muted"
-          >
-            <Store size={16} />
-            {shop?.shopName ?? t("chooseShop")}
-            <ChevronDown size={15} />
-          </button>
+          <label className="flex min-w-0 items-center gap-2">
+            <Store size={16} className="hidden shrink-0 md:block" />
+            <select
+              aria-label={t("chooseShop")}
+              value={shop?.shopId ?? ""}
+              onChange={(event) => {
+                useShopStore.getState().setCurrentShopId(event.target.value);
+                queryClient.clear();
+                router.push("/dashboard");
+              }}
+              className="h-11 w-20 min-w-0 rounded-lg bg-transparent text-sm md:w-auto md:max-w-60"
+            >
+              {user?.memberships.map((membership) => (
+                <option key={membership.shopId} value={membership.shopId}>
+                  {membership.shopName}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1 md:gap-2">
           <LanguageSwitcher compact />
           <NotificationBell />
           <Link

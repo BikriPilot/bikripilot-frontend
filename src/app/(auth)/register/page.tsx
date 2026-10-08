@@ -10,6 +10,7 @@ import { authApi } from "@/lib/api/auth.api";
 import { ApiClientError } from "@/lib/api/client";
 import { useAuthStore } from "@/stores/authStore";
 import { BD_DISTRICTS } from "@/constants/districts";
+import { BUSINESS_CATEGORIES } from "@/constants/enums";
 export default function RegisterPage() {
   const t = useTranslations("step8");
   const router = useRouter();
@@ -112,6 +113,23 @@ export default function RegisterPage() {
                 update("facebookPageUrl", event.target.value)
               }
             />
+            <label className="grid gap-1.5 text-sm font-medium">
+              <span>{t("businessCategory")}</span>
+              <select
+                className="h-11 rounded-lg border bg-card px-3 text-base"
+                value={form.businessCategory}
+                onChange={(event) =>
+                  update("businessCategory", event.target.value)
+                }
+              >
+                <option value="" />
+                {BUSINESS_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {t(`categories.${category}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="grid gap-1.5 text-sm font-medium">
               <span>{t("district")}</span>
               <select

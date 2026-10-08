@@ -10,9 +10,11 @@ import { shopsApi } from "@/lib/api/shops.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import type { ShopSettingsDTO } from "@/types/shop";
 import { toast } from "sonner";
+import { PAYMENT_METHODS } from "@/constants/enums";
 export default function DeliverySettingsPage() {
   const t = useTranslations("step8");
-  const { shopId } = useCurrentShop();
+  const enumText = useTranslations("enums.PaymentMethod");
+  const { shopId, can } = useCurrentShop();
   const query = useQuery({
     queryKey: ["settings", shopId],
     queryFn: () => shopsApi.settings(shopId!),
@@ -21,7 +23,13 @@ export default function DeliverySettingsPage() {
   type FormState = Partial<
     Pick<
       ShopSettingsDTO,
-      "orderPrefix" | "duplicateWindowHours" | "allowOversell"
+      | "orderPrefix"
+      | "duplicateWindowHours"
+      | "allowOversell"
+      | "defaultPaymentMethod"
+      | "lowStockThreshold"
+      | "invoiceNote"
+      | "publicTrackingEnabled"
     >
   > & {
     freeDeliveryMinPaisa?: string;
@@ -64,10 +72,27 @@ export default function DeliverySettingsPage() {
           ? { duplicateWindowHours: Number(form.duplicateWindowHours) }
           : {}),
         ...(form.freeDeliveryMinPaisa !== undefined
-          ? { freeDeliveryMinPaisa: Number(form.freeDeliveryMinPaisa) * 100 }
+          ? {
+              freeDeliveryMinPaisa:
+                form.freeDeliveryMinPaisa.trim() === ""
+                  ? null
+                  : Math.round(Number(form.freeDeliveryMinPaisa) * 100),
+            }
           : {}),
         ...(form.allowOversell !== undefined
           ? { allowOversell: form.allowOversell }
+          : {}),
+        ...(form.defaultPaymentMethod !== undefined
+          ? { defaultPaymentMethod: form.defaultPaymentMethod }
+          : {}),
+        ...(form.lowStockThreshold !== undefined
+          ? { lowStockThreshold: form.lowStockThreshold }
+          : {}),
+        ...(form.invoiceNote !== undefined
+          ? { invoiceNote: form.invoiceNote?.trim() || null }
+          : {}),
+        ...(form.publicTrackingEnabled !== undefined
+          ? { publicTrackingEnabled: form.publicTrackingEnabled }
           : {}),
       };
       await shopsApi.updateSettings(shopId!, body);
@@ -150,7 +175,7 @@ export default function DeliverySettingsPage() {
           inputMode="decimal"
           value={
             form.freeDeliveryMinPaisa !== undefined
-              ? String(Number(form.freeDeliveryMinPaisa) / 100)
+              ? form.freeDeliveryMinPaisa
               : settings.freeDeliveryMinPaisa === null
                 ? ""
                 : String(settings.freeDeliveryMinPaisa / 100)
@@ -159,6 +184,54 @@ export default function DeliverySettingsPage() {
             setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
           }
         />
+        <label className="grid gap-2 text-sm">
+          {t("defaultPaymentMethod")}
+          <select
+            value={form.defaultPaymentMethod ?? settings.defaultPaymentMethod}
+            onChange={(event) =>
+              setForm({ ...form, defaultPaymentMethod: event.target.value })
+            }
+            className="h-11 rounded-lg border bg-background px-3 text-base"
+          >
+            {PAYMENT_METHODS.map((method) => (
+              <option key={method} value={method}>
+                {enumText(method)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Field
+          label={t("lowStockThreshold")}
+          type="number"
+          min={0}
+          step={1}
+          value={form.lowStockThreshold ?? settings.lowStockThreshold}
+          onChange={(event) =>
+            setForm({ ...form, lowStockThreshold: Number(event.target.value) })
+          }
+        />
+        <label className="grid gap-2 text-sm">
+          {t("invoiceNote")}
+          <textarea
+            value={form.invoiceNote ?? settings.invoiceNote ?? ""}
+            onChange={(event) =>
+              setForm({ ...form, invoiceNote: event.target.value })
+            }
+            className="min-h-24 rounded-lg border bg-background p-3 text-base"
+          />
+        </label>
+        <label className="flex min-h-11 items-center gap-3 text-sm">
+          <input
+            type="checkbox"
+            checked={
+              form.publicTrackingEnabled ?? settings.publicTrackingEnabled
+            }
+            onChange={(event) =>
+              setForm({ ...form, publicTrackingEnabled: event.target.checked })
+            }
+          />
+          {t("publicTrackingEnabled")}
+        </label>
         <label className="flex min-h-11 items-center gap-3 text-sm">
           <input
             type="checkbox"
@@ -171,7 +244,7 @@ export default function DeliverySettingsPage() {
           {t("allowOversell")}
         </label>
         <button
-          disabled={busy}
+          disabled={busy || !can("shop.manage")}
           className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
         >
           {busy ? t("loading") : t("saveChanges")}

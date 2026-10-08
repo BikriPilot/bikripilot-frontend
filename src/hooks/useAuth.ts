@@ -4,6 +4,15 @@ import { useRouter } from "next/navigation";
 import { authApi } from "@/lib/api/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { useShopStore } from "@/stores/shopStore";
+let bootstrapPromise: ReturnType<typeof authApi.refresh> | null = null;
+
+const bootstrapSession = () => {
+  bootstrapPromise ??= authApi.refresh().finally(() => {
+    bootstrapPromise = null;
+  });
+  return bootstrapPromise;
+};
+
 export function useAuth(required = true) {
   const router = useRouter();
   const { user, accessToken, setAuth, clear } = useAuthStore();
@@ -11,8 +20,7 @@ export function useAuth(required = true) {
   useEffect(() => {
     if (user) return;
     let active = true;
-    authApi
-      .refresh()
+    bootstrapSession()
       .then((result) => {
         if (active) {
           setAuth(result.accessToken, result.user);
@@ -42,5 +50,5 @@ export function useAuth(required = true) {
     )
       useShopStore.getState().setCurrentShopId(user.memberships[0].shopId);
   }, [user]);
-  return { user, accessToken, isBootstrapping };
+  return { user, accessToken, isBootstrapping: !user && isBootstrapping };
 }
