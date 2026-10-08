@@ -18,8 +18,15 @@ export function SocketProvider() {
   const invalidateRealtimeQueries = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: queryKeys.notifications });
     if (currentShopId) {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.products(currentShopId) });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.orders(currentShopId) });
+      void queryClient.invalidateQueries({
+        queryKey: ["entitlements", currentShopId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.products(currentShopId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.orders(currentShopId),
+      });
     }
   }, [currentShopId, queryClient]);
 
@@ -35,6 +42,7 @@ export function SocketProvider() {
     return () => {
       socket.off("connect", invalidateRealtimeQueries);
       socket.off("connect_error", invalidateRealtimeQueries);
+      disconnectSocket();
     };
   }, [invalidateRealtimeQueries, token]);
 
@@ -54,13 +62,26 @@ export function SocketProvider() {
     const refreshNotifications = () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.notifications });
     };
+    const refreshEntitlements = () => {
+      if (!shopId) return;
+      void queryClient.invalidateQueries({
+        queryKey: ["entitlements", shopId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["subscription", shopId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["billing-invoices", shopId],
+      });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.billingPlans });
+    };
     socket.on(SOCKET_EVENTS.NOTIFICATION_NEW, refreshNotifications);
-    socket.on(SOCKET_EVENTS.ENTITLEMENTS_CHANGED, refreshNotifications);
+    socket.on(SOCKET_EVENTS.ENTITLEMENTS_CHANGED, refreshEntitlements);
     return () => {
       socket.off(SOCKET_EVENTS.NOTIFICATION_NEW, refreshNotifications);
-      socket.off(SOCKET_EVENTS.ENTITLEMENTS_CHANGED, refreshNotifications);
+      socket.off(SOCKET_EVENTS.ENTITLEMENTS_CHANGED, refreshEntitlements);
     };
-  }, [queryClient, token]);
+  }, [queryClient, token, shopId]);
 
   return null;
 }
