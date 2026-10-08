@@ -41,6 +41,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/dashboard/inbox/") &&
     pathname !== "/dashboard/inbox",
   );
+  const isPrint =
+    pathname.includes("/print") ||
+    pathname.startsWith("/dashboard/hisab/statement/");
   const isActive = (href: string) =>
     href === "/dashboard"
       ? pathname === href
@@ -53,6 +56,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 pathname === item.href || pathname.startsWith(`${item.href}/`),
             ),
         );
+  if (isPrint)
+    return <div className="min-h-screen bg-background">{children}</div>;
   return (
     <div className="min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 border-r bg-card md:block xl:w-60">
