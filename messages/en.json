@@ -16,6 +16,169 @@
     "whatsappSupport": "WhatsApp support",
     "callSupport": "Call support"
   },
+  "billing": {
+    "title": "Billing",
+    "description": "Manage your plan, payment settings, and invoices.",
+    "currentPlan": "Current plan",
+    "popular": "Popular",
+    "plansTitle": "Available plans",
+    "plansDescription": "Compare plans and preview the total before checkout.",
+    "billingCycle": "Billing cycle",
+    "choosePlan": "Review plan",
+    "checking": "Checking...",
+    "submitting": "Submitting...",
+    "close": "Close",
+    "actionError": "We could not complete that request. Try again.",
+    "settingsSaved": "Billing settings updated.",
+    "downgradeScheduled": "Your plan change is scheduled.",
+    "downgradeCancelled": "The scheduled plan change was cancelled.",
+    "confirmCancel": "Cancel renewal at the end of the current period? Your current plan remains active until then.",
+    "scheduleDowngrade": "Schedule plan change",
+    "cycles": {
+      "MONTHLY": "Monthly",
+      "YEARLY": "Yearly"
+    },
+    "priceSuffix": {
+      "MONTHLY": "per month",
+      "YEARLY": "per year"
+    },
+    "kinds": {
+      "NEW": "New plan",
+      "RENEWAL": "Renewal",
+      "UPGRADE": "Upgrade",
+      "DOWNGRADE": "Scheduled downgrade"
+    },
+    "sources": {
+      "SIGNUP": "Sign-up",
+      "LAUNCH": "Launch access",
+      "PAYMENT": "Payment",
+      "ADMIN": "Administrator",
+      "DOWNGRADE": "Plan change"
+    },
+    "subscriptionStatuses": {
+      "TRIALING": "Trial",
+      "ACTIVE": "Active",
+      "PAST_DUE": "Payment due",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired"
+    },
+    "subscription": {
+      "source": "Plan source",
+      "periodEnd": "Current period ends",
+      "billingCycle": "Billing cycle",
+      "noEndDate": "No end date",
+      "autoRenew": "Renewal invoices and reminders",
+      "cancelAtEnd": "Cancel at period end",
+      "pendingDowngrade": "{plan} starts on {date}.",
+      "keepPlan": "Keep current plan"
+    },
+    "usage": {
+      "title": "Plan usage",
+      "period": "Usage for {period}",
+      "unlimited": "Unlimited",
+      "usedOf": "{used} / {limit}"
+    },
+    "features": {
+      "ai_assistant": "AI assistant",
+      "ai_auto_reply": "AI auto-replies",
+      "ai_order_extraction": "Order extraction",
+      "ai_replies_per_month": "AI replies per month",
+      "comment_automation": "Comment automation",
+      "max_channels": "Connected pages",
+      "orders_per_month": "Orders per month",
+      "max_products": "Products",
+      "csv_export": "CSV export",
+      "courier_integration": "Courier integration",
+      "risk_checks_per_month": "Customer checks per month",
+      "hisab_khata": "Ledger",
+      "sms_per_month": "SMS per month",
+      "cod_reconciliation": "COD reconciliation",
+      "max_team_members": "Team members",
+      "advanced_analytics": "Advanced analytics",
+      "remove_branding": "Remove branding"
+    },
+    "launch": {
+      "title": "Free during launch",
+      "description": "All plans are available at no charge during launch. Checkout is disabled; your usage is still recorded.",
+      "checkoutDisabled": "Checkout is unavailable during the free launch period."
+    },
+    "preview": {
+      "title": "Price preview",
+      "price": "Plan price",
+      "discount": "Coupon discount",
+      "credit": "Unused plan credit",
+      "total": "Due now",
+      "starts": "Period starts",
+      "ends": "Period ends",
+      "creditMessage": "{amount} credit from {plan} is applied."
+    },
+    "coupon": {
+      "label": "Coupon code",
+      "apply": "Apply",
+      "applied": "Coupon applied. {amount} discount.",
+      "invalid": "This coupon cannot be used for this plan."
+    },
+    "checkout": {
+      "title": "Review and pay",
+      "description": "Check the plan, dates, and final amount before continuing.",
+      "provider": "Payment method",
+      "noProviders": "No payment methods are available right now.",
+      "continue": "Continue to payment"
+    },
+    "providers": {
+      "SSLCOMMERZ": "Card, bKash, Nagad, or bank",
+      "BKASH": "bKash",
+      "MANUAL": "Manual transfer"
+    },
+    "manual": {
+      "title": "Transfer and submit details",
+      "amount": "Amount to send",
+      "reference": "Payment reference",
+      "method": "Sent with",
+      "senderNumber": "Sender phone number",
+      "transactionId": "Transaction ID",
+      "invalidPhone": "Enter a valid Bangladesh mobile number.",
+      "invalidTransactionId": "Use letters, numbers, and hyphens only.",
+      "submit": "Submit payment details",
+      "submittedTitle": "Payment details submitted",
+      "submittedBody": "Your payment is waiting for review. We will update your plan after approval."
+    },
+    "paymentReturn": {
+      "confirmingTitle": "Confirming your payment",
+      "confirmingBody": "This page checks for an update for up to one minute.",
+      "pendingTitle": "Payment confirmation is taking longer",
+      "pendingBody": "Your plan will update automatically after the payment provider confirms it. You can check again now.",
+      "paidTitle": "Payment confirmed",
+      "paidBody": "Your plan and limits are up to date.",
+      "statusError": "We could not refresh the invoice status.",
+      "checkAgain": "Check again"
+    },
+    "renewal": {
+      "title": "Renewal invoice due",
+      "description": "Invoice {number} for {plan} is due by {date}.",
+      "loading": "Loading renewal invoice details...",
+      "details": "Invoice details",
+      "payNow": "Pay renewal"
+    },
+    "invoice": {
+      "title": "Invoices",
+      "description": "Your billing history and printable receipts.",
+      "empty": "No invoices yet.",
+      "number": "Invoice",
+      "kind": "Type",
+      "period": "Period",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions",
+      "print": "Print invoice",
+      "statuses": {
+        "PENDING": "Pending",
+        "PAID": "Paid",
+        "CANCELLED": "Cancelled",
+        "REFUNDED": "Refunded"
+      }
+    }
+  },
   "nav": {
     "home": "Home",
     "inbox": "Inbox",

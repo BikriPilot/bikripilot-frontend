@@ -1,5 +1,13 @@
 export const queryKeys = {
   publicConfig: ["public-config"] as const,
+  billingPlans: ["billing-plans"] as const,
+  billingProviders: ["billing-providers"] as const,
+  billingInvoices: (shopId: string | null, page = 1) =>
+    ["billing-invoices", shopId, page] as const,
+  billingInvoice: (shopId: string | null, invoiceId: string | null) =>
+    ["billing-invoice", shopId, invoiceId] as const,
+  billingPreview: (shopId: string | null, input?: unknown) =>
+    ["billing-preview", shopId, input] as const,
   me: ["me"] as const,
   products: (shopId: string) => ["products", shopId] as const,
   inventory: (shopId: string) => ["inventory", shopId] as const,
