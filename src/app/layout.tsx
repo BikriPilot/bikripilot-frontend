@@ -3,6 +3,8 @@ import { Hind_Siliguri, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { runtimeConfig } from "@/config/runtime";
+import { ImpersonationBanner } from "@/components/admin/ImpersonationBanner";
+import { VisitTracker } from "@/components/layout/VisitTracker";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -46,7 +48,11 @@ export default async function RootLayout({
     >
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider messages={messages}>
-          <Providers>{children}</Providers>
+          <Providers>
+            <VisitTracker />
+            <ImpersonationBanner />
+            {children}
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

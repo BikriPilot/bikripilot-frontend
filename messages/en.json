@@ -506,7 +506,8 @@
     "tagadaTemplate": "Due reminder template",
     "tagadaPlaceholder": "Dear {name}, your due balance is BDT {amount}.",
     "tagadaVariables": "Use: {name}, {shopName}, {amount}, {shopPhone}, {footer}",
-    "settingsHisab": "Ledger"
+    "settingsHisab": "Ledger",
+    "settingsAudit": "Audit log"
   },
   "orders": {
     "title": "Orders",
@@ -1899,5 +1900,547 @@
     "dialogTitle": "Customer risk check",
     "dialogSubtitle": "Verify delivery success rate and return history",
     "analyzingRisk": "Analyzing customer risk..."
+  },
+  "admin": {
+    "adminLabel": "Admin",
+    "navigationLabel": "Admin navigation",
+    "platformConsole": "Platform console",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "console": "Admin console",
+    "logout": "Log out",
+    "backToShop": "Back to shop",
+    "readOnly": "Read-only access",
+    "exit": "Exit impersonation",
+    "viewing": "Viewing {shop}",
+    "twoFactorRequired": {
+      "title": "Enable 2FA for your admin account",
+      "description": "Enable two-factor authentication from Profile security settings to use the admin panel.",
+      "action": "Open security settings"
+    },
+    "environment": {
+      "local": "Local",
+      "staging": "Staging",
+      "production": "Production"
+    },
+    "groups": {
+      "workspace": "Workspace",
+      "revenue": "Revenue",
+      "operations": "Operations"
+    },
+    "nav": {
+      "overview": "Overview",
+      "shops": "Shops",
+      "users": "Users",
+      "orders": "All orders",
+      "visitors": "Visitors",
+      "plans": "Plans",
+      "features": "Features",
+      "payments": "Payments",
+      "coupons": "Coupons",
+      "announcements": "Announcements",
+      "content": "Website content",
+      "settings": "Settings",
+      "system": "System",
+      "usage": "Usage & AI cost",
+      "auditLogs": "Audit logs"
+    },
+    "pages": {
+      "overview": {
+        "title": "Overview",
+        "description": "Bikrio platform activity, revenue, and system health."
+      },
+      "shops": {
+        "title": "Shops",
+        "description": "Manage shops, subscriptions, and activity."
+      },
+      "shopDetail": {
+        "title": "Shop details",
+        "description": "Review the shop profile, limits, members, and connections."
+      },
+      "users": {
+        "title": "Users",
+        "description": "Manage accounts, access, and security."
+      },
+      "orders": {
+        "title": "All orders",
+        "description": "Find and review orders across every shop."
+      },
+      "orderDetail": {
+        "title": "Order details",
+        "description": "Platform-wide order information and timeline."
+      },
+      "visitors": {
+        "title": "Website visitors",
+        "description": "First-party visits, referrers, and privacy-protected IP statistics."
+      },
+      "plans": {
+        "title": "Plans",
+        "description": "Manage subscription plans and feature limits."
+      },
+      "planDetail": {
+        "title": "Plan editor",
+        "description": "Edit a plan's features and limits."
+      },
+      "features": {
+        "title": "Features",
+        "description": "Manage the feature registry and global switches."
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "Review manual payments, refunds, and invoices."
+      },
+      "coupons": {
+        "title": "Coupons",
+        "description": "Create and manage promotional coupons."
+      },
+      "announcements": {
+        "title": "Announcements",
+        "description": "Publish targeted announcements for shops."
+      },
+      "content": {
+        "title": "Website content",
+        "description": "Manage FAQs and testimonials."
+      },
+      "settings": {
+        "title": "Platform settings",
+        "description": "Registration, billing, AI, integrations, and security settings."
+      },
+      "auditLogs": {
+        "title": "Audit logs",
+        "description": "Review changes made across the platform."
+      },
+      "system": {
+        "title": "System",
+        "description": "Inspect webhooks, background jobs, and health."
+      },
+      "usage": {
+        "title": "Usage & AI cost",
+        "description": "Monitor usage and AI cost by shop."
+      },
+      "shopAudit": {
+        "title": "Shop audit log",
+        "description": "History of changes made in this shop."
+      }
+    },
+    "common": {
+      "yes": "Yes",
+      "no": "No",
+      "on": "On",
+      "off": "Off",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "active": "Active",
+      "inactive": "Inactive",
+      "public": "Public",
+      "hidden": "Hidden"
+    },
+    "actions": {
+      "open": "Open",
+      "view": "View",
+      "edit": "Edit",
+      "editPlan": "Edit plan",
+      "createPlan": "Create plan",
+      "createCoupon": "Create coupon",
+      "createAnnouncement": "Create announcement",
+      "createContent": "Add content",
+      "save": "Save",
+      "saveGroup": "Save group",
+      "saving": "Saving...",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close",
+      "refresh": "Refresh",
+      "export": "Download CSV",
+      "backToShops": "Back to shops",
+      "backToOrders": "Back to orders",
+      "backToPlans": "Back to plans",
+      "block": "Block",
+      "unblock": "Unblock",
+      "suspend": "Suspend",
+      "reactivate": "Reactivate",
+      "impersonate": "View as support",
+      "extend": "Extend",
+      "addOverride": "Add override",
+      "remove": "Remove",
+      "delete": "Delete",
+      "deleteShop": "Delete shop",
+      "approve": "Approve",
+      "reject": "Reject",
+      "recheck": "Recheck",
+      "markRefunded": "Mark refunded",
+      "archive": "Archive",
+      "enable": "Enable",
+      "disable": "Disable",
+      "unlock": "Unlock",
+      "revokeSessions": "Revoke all sessions",
+      "replay": "Replay",
+      "retryFailed": "Retry failed jobs",
+      "diff": "View changes",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "messages": {
+      "saved": "Changes saved.",
+      "blocked": "User blocked.",
+      "unblocked": "User unblocked.",
+      "approved": "Payment approved.",
+      "deleted": "Deleted.",
+      "actionFailed": "The action failed. Please try again.",
+      "slugMismatch": "Enter the exact shop slug to confirm."
+    },
+    "confirmations": {
+      "planAffects": "This change applies immediately to {count} shops on this plan. Continue?",
+      "dangerousSettings": "You are changing {count} sensitive settings. Continue?",
+      "paymentRecheck": "Check this payment with the gateway now?",
+      "markRefunded": "Confirm that the refund is complete?",
+      "deleteCoupon": "Delete this coupon?",
+      "deleteAnnouncement": "Delete this announcement?",
+      "deleteContent": "Delete this content?",
+      "unlockUser": "Unlock this account?",
+      "revokeSessions": "Revoke all sessions for this user?",
+      "retryJobs": "Retry failed jobs in this queue?",
+      "replayWebhook": "Queue this webhook for replay?",
+      "archivePlan": "Archive this plan?"
+    },
+    "dialogs": {
+      "confirmAction": "Confirm this action",
+      "user": {
+        "block": "Block user",
+        "unblock": "Unblock user",
+        "reset2fa": "Reset 2FA"
+      },
+      "payment": {
+        "approve": "Approve payment",
+        "reject": "Reject payment",
+        "refund": "Mark refunded"
+      },
+      "shop": {
+        "status": "Change shop status",
+        "impersonate": "View as support",
+        "extend": "Extend subscription",
+        "delete": "Delete shop",
+        "override": "Feature override"
+      },
+      "plan": { "create": "Create plan", "edit": "Edit plan" },
+      "coupon": { "create": "Create coupon", "edit": "Edit coupon" },
+      "announcement": {
+        "create": "Create announcement",
+        "edit": "Edit announcement"
+      },
+      "content": { "create": "Add content", "edit": "Edit content" }
+    },
+    "fields": {
+      "reason": "Reason",
+      "note": "Note",
+      "suspendOwnedShops": "Suspend owned shops too",
+      "reactivateOwnedShops": "Reactivate owned shops too",
+      "status": "Status",
+      "days": "Days",
+      "confirmSlug": "Enter the shop slug to confirm",
+      "featureKey": "Feature key",
+      "enabledOverride": "Enable feature",
+      "limit": "Limit",
+      "unlimited": "Unlimited",
+      "expiresAt": "Expires at",
+      "planKey": "Plan key",
+      "nameEn": "Name (English)",
+      "nameBn": "Name (Bangla)",
+      "monthlyPriceTaka": "Monthly price (taka)",
+      "yearlyPriceTaka": "Yearly price (taka)",
+      "trialDays": "Trial days",
+      "publicPlan": "Show publicly",
+      "defaultPlan": "Default plan",
+      "archived": "Archived",
+      "code": "Coupon code",
+      "couponType": "Coupon type",
+      "value": "Value",
+      "maxRedemptions": "Maximum redemptions",
+      "validFrom": "Valid from",
+      "validUntil": "Valid until",
+      "planKeys": "Plan keys (comma-separated)",
+      "billingCycles": "Billing cycles (comma-separated)",
+      "active": "Active",
+      "titleEn": "Title (English)",
+      "titleBn": "Title (Bangla)",
+      "bodyEn": "Body (English)",
+      "bodyBn": "Body (Bangla)",
+      "variant": "Variant",
+      "audience": "Audience",
+      "shopId": "Shop ID",
+      "linkUrl": "Link URL",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at",
+      "dismissible": "Dismissible",
+      "contentType": "Content type",
+      "authorName": "Author name",
+      "authorRole": "Author role",
+      "avatarUrl": "Avatar URL",
+      "rating": "Rating",
+      "sortOrder": "Sort order",
+      "from": "From",
+      "to": "To",
+      "period": "Period"
+    },
+    "columns": {
+      "shop": "Shop",
+      "owner": "Owner",
+      "plan": "Plan",
+      "ordersThisMonth": "Orders this month",
+      "created": "Created",
+      "user": "User",
+      "phone": "Phone",
+      "status": "Status",
+      "role": "Role",
+      "security": "Security",
+      "account": "Account",
+      "path": "Path",
+      "views": "Views",
+      "referrer": "Referrer",
+      "ip": "IP address",
+      "visits": "Visits",
+      "uniquePaths": "Unique paths",
+      "device": "Device",
+      "lastSeen": "Last seen",
+      "actor": "Actor",
+      "action": "Action",
+      "entity": "Entity",
+      "shopId": "Shop ID",
+      "amount": "Amount",
+      "method": "Method",
+      "transaction": "Transaction",
+      "invoice": "Invoice",
+      "customer": "Customer",
+      "order": "Order",
+      "cod": "COD",
+      "total": "Total",
+      "address": "Address",
+      "district": "District",
+      "source": "Source",
+      "channel": "Channel",
+      "subscription": "Subscription",
+      "periodEnd": "Period ends",
+      "shops": "Shops",
+      "feature": "Feature",
+      "type": "Type",
+      "resetPeriod": "Reset period",
+      "group": "Group",
+      "globalSwitch": "Global switch",
+      "active": "Active",
+      "name": "Name",
+      "category": "Category",
+      "product": "Product",
+      "quantity": "Quantity",
+      "discount": "Discount",
+      "code": "Code",
+      "redemptions": "Redemptions",
+      "validity": "Validity",
+      "title": "Title",
+      "variant": "Variant",
+      "author": "Author",
+      "body": "Body",
+      "facebook": "Facebook",
+      "website": "Website",
+      "attempts": "Attempts",
+      "error": "Error",
+      "event": "Event",
+      "received": "Received",
+      "queue": "Queue",
+      "completed": "Completed",
+      "failed": "Failed",
+      "retry": "Retry",
+      "usage": "Usage",
+      "period": "Period",
+      "runs": "Runs",
+      "tokens": "Tokens",
+      "costUsd": "Cost (USD)",
+      "blocked": "Blocked",
+      "changes": "Changes",
+      "country": "Country",
+      "lockedUntil": "Locked until {date}",
+      "sortOrder": "Sort order"
+    },
+    "overview": {
+      "adminAccess": "Protected admin access",
+      "totalShops": "Total shops",
+      "shopBreakdown": "Active {active} · suspended {suspended}",
+      "users": "Users",
+      "new7Days": "New in the last 7 days: {count}",
+      "mrr": "Monthly recurring revenue",
+      "thisMonthRevenue": "This month: {amount}",
+      "ordersToday": "Orders today",
+      "visitorsToday": "Visitors today: {count}",
+      "signups": "Signups",
+      "last30Days": "Last 30 days",
+      "systemStatus": "System health",
+      "failedWebhooks": "Failed webhooks (24h)",
+      "failedJobs": "Failed jobs (24h)",
+      "launchMode": "Free launch mode",
+      "maintenance": "Maintenance mode",
+      "appVersion": "App version",
+      "integrations": "Integration status",
+      "planDistribution": "Shops by plan",
+      "activity": "Activity",
+      "ordersThisMonth": "Orders this month",
+      "deliveredThisMonth": "Delivered this month",
+      "gmvThisMonth": "GMV this month",
+      "aiCost": "AI cost this month",
+      "pendingPayments": "Payments pending review",
+      "needsRefund": "Refund required"
+    },
+    "planGrid": {
+      "title": "Plan feature grid",
+      "affects": "Affects {count} subscribed shops immediately",
+      "overviewHint": "Compare each feature's limit and status across plans.",
+      "unlimited": "Unlimited",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "inPlan": "Included in plan",
+      "limitFor": "Limit for {feature}"
+    },
+    "plans": {
+      "subscribers": "{count} subscribers",
+      "default": "Default",
+      "launch": "Launch plan",
+      "archived": "Archived",
+      "visibility": "Visibility"
+    },
+    "features": {
+      "title": "Platform features",
+      "unused": "Unused in code"
+    },
+    "shopStats": {
+      "products": "Products",
+      "customers": "Customers",
+      "orders": "Orders",
+      "conversations": "Conversations"
+    },
+    "shopDetail": {
+      "overrides": "Feature overrides",
+      "overrideHint": "Provide a reason for each override.",
+      "members": "Members",
+      "channels": "Connected channels"
+    },
+    "settings": {
+      "secretNotice": "Only whether a secret is configured is shown; secret values are never displayed."
+    },
+    "visitors": {
+      "range": "Date range",
+      "days": { "1": "Today", "7": "Last 7 days", "30": "Last 30 days" },
+      "pageViews": "Page views",
+      "uniqueVisitors": "Unique visitors",
+      "uniqueIps": "Unique IPs",
+      "signups": "Signups",
+      "trend": "Daily traffic",
+      "topPages": "Top pages",
+      "referrers": "Referrers",
+      "ipList": "Visits by IP",
+      "recent": "Recent visits",
+      "campaigns": "Campaigns",
+      "campaign": "Campaign",
+      "devices": "Devices",
+      "countries": "Countries"
+    },
+    "orderDetail": { "items": "Order items", "timeline": "Order timeline" },
+    "tabs": {
+      "pending": "Pending review",
+      "refunds": "Needs refund",
+      "all": "All payments",
+      "invoices": "Invoices",
+      "FAQ": "FAQs",
+      "TESTIMONIAL": "Testimonials",
+      "webhooks": "Webhooks",
+      "jobs": "Job queues",
+      "health": "Health",
+      "usage": "Usage",
+      "ai": "AI cost",
+      "analytics": "Analytics",
+      "billing": "Billing",
+      "integrations": "Integrations",
+      "landing": "Landing page",
+      "platform": "Platform",
+      "security": "Security",
+      "sms": "SMS"
+    },
+    "roles": {
+      "USER": "User",
+      "SUPPORT": "Support",
+      "SUPER_ADMIN": "Super admin",
+      "OWNER": "Owner",
+      "MANAGER": "Manager",
+      "AGENT": "Agent",
+      "FULFILMENT": "Fulfilment",
+      "ACCOUNTANT": "Accountant",
+      "VIEWER": "Viewer"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "SUSPENDED": "Suspended",
+      "TRIALING": "Trial",
+      "PAST_DUE": "Past due",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired",
+      "PENDING_VERIFICATION": "Pending review",
+      "INITIATED": "Initiated",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "REJECTED": "Rejected",
+      "PROCESSED": "Processed",
+      "IGNORED": "Ignored",
+      "PENDING": "Pending",
+      "DRAFT": "Draft",
+      "CONFIRMED": "Confirmed",
+      "SHIPPED": "Shipped",
+      "DELIVERED": "Delivered",
+      "RETURNED": "Returned",
+      "CLOSED": "Closed"
+    },
+    "couponTypes": {
+      "PERCENT": "Percentage discount",
+      "FIXED": "Fixed discount"
+    },
+    "variants": {
+      "INFO": "Information",
+      "WARNING": "Warning",
+      "SUCCESS": "Success"
+    },
+    "audiences": { "ALL": "All shops", "PLAN": "Plan", "SHOP": "Shop" },
+    "contentTypes": { "FAQ": "FAQ", "TESTIMONIAL": "Testimonial" },
+    "search": {
+      "shops": "Search shops, owners, or email",
+      "users": "Search name, email, or phone",
+      "orders": "Search order number or phone",
+      "audit": "Search audit actions",
+      "auditLogs": "Search audit logs"
+    },
+    "empty": {
+      "noAnnouncements": "No announcements found.",
+      "noContent": "No content found.",
+      "noCoupons": "No coupons found.",
+      "noFeatures": "No features found.",
+      "noItems": "No items found.",
+      "noMembers": "No members found.",
+      "noChannels": "No connected channels.",
+      "noOrders": "No orders found.",
+      "noPayments": "No payments found.",
+      "noShops": "No shops found.",
+      "noUsers": "No users found.",
+      "noOverrides": "No overrides for this shop.",
+      "noVisits": "No visits found for this period.",
+      "noAuditLogs": "No audit logs found.",
+      "noUsage": "No usage found for these filters."
+    },
+    "pagination": {
+      "total": "{count} total",
+      "previous": "Previous",
+      "page": "Page {page}",
+      "next": "Next"
+    },
+    "system": {
+      "webhooks": "Webhooks",
+      "jobs": "Job queues",
+      "healthPath": "Health check"
+    },
+    "billing": { "month": "month", "year": "year" }
   }
 }

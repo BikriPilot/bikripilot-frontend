@@ -260,6 +260,12 @@ export const NAV_SECTIONS: NavSection[] = [
         labelKey: "settingsRisk",
         permission: "shop.read",
       },
+      {
+        key: "audit",
+        href: "/dashboard/settings/audit",
+        labelKey: "settingsAudit",
+        permission: "audit.read",
+      },
     ],
   },
 ];

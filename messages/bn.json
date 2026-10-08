@@ -506,7 +506,8 @@
     "tagadaTemplate": "তাগাদা টেমপ্লেট",
     "tagadaPlaceholder": "প্রিয় {name}, আপনার বাকি ৳{amount}।",
     "tagadaVariables": "ব্যবহার করুন: {name}, {shopName}, {amount}, {shopPhone}, {footer}",
-    "settingsHisab": "হিসাব"
+    "settingsHisab": "হিসাব",
+    "settingsAudit": "অডিট লগ"
   },
   "orders": {
     "title": "অর্ডার",
@@ -1899,5 +1900,542 @@
     "dialogTitle": "কাস্টমার ঝুঁকি যাচাই",
     "dialogSubtitle": "ডেলিভারি গ্রহণের হার ও রিটার্ন ইতিহাস যাচাই করুন",
     "analyzingRisk": "কাস্টমার ঝুঁকি বিশ্লেষণ করা হচ্ছে..."
+  },
+  "admin": {
+    "adminLabel": "অ্যাডমিন",
+    "navigationLabel": "অ্যাডমিন নেভিগেশন",
+    "platformConsole": "প্ল্যাটফর্ম কনসোল",
+    "openMenu": "মেনু খুলুন",
+    "closeMenu": "মেনু বন্ধ করুন",
+    "console": "অ্যাডমিন কনসোল",
+    "logout": "লগ আউট",
+    "backToShop": "শপে ফিরুন",
+    "readOnly": "শুধু দেখার অনুমতি",
+    "exit": "ইমপারসোনেশন থেকে বের হন",
+    "viewing": "আপনি {shop} শপটি দেখছেন",
+    "twoFactorRequired": {
+      "title": "অ্যাডমিন অ্যাকাউন্টে 2FA চালু করুন",
+      "description": "অ্যাডমিন প্যানেল ব্যবহার করতে প্রোফাইলের নিরাপত্তা সেটিংস থেকে দুই-ধাপ যাচাইকরণ চালু করতে হবে।",
+      "action": "নিরাপত্তা সেটিংসে যান"
+    },
+    "environment": {
+      "local": "লোকাল",
+      "staging": "স্টেজিং",
+      "production": "প্রোডাকশন"
+    },
+    "groups": {
+      "workspace": "ওয়ার্কস্পেস",
+      "revenue": "রাজস্ব",
+      "operations": "পরিচালনা"
+    },
+    "nav": {
+      "overview": "সারসংক্ষেপ",
+      "shops": "শপ",
+      "users": "ব্যবহারকারী",
+      "orders": "সব অর্ডার",
+      "visitors": "ভিজিটর",
+      "plans": "প্ল্যান",
+      "features": "ফিচার",
+      "payments": "পেমেন্ট",
+      "coupons": "কুপন",
+      "announcements": "ঘোষণা",
+      "content": "ওয়েবসাইট কনটেন্ট",
+      "settings": "সেটিংস",
+      "system": "সিস্টেম",
+      "usage": "ব্যবহার ও AI খরচ",
+      "auditLogs": "অডিট লগ"
+    },
+    "pages": {
+      "overview": {
+        "title": "সারসংক্ষেপ",
+        "description": "Bikrio প্ল্যাটফর্মের কার্যক্রম, রাজস্ব ও সিস্টেমের অবস্থা।"
+      },
+      "shops": {
+        "title": "শপ",
+        "description": "সব শপ, সাবস্ক্রিপশন ও কার্যক্রম পরিচালনা করুন।"
+      },
+      "shopDetail": {
+        "title": "শপের বিস্তারিত",
+        "description": "শপের প্রোফাইল, সীমা, সদস্য ও সংযোগ দেখুন।"
+      },
+      "users": {
+        "title": "ব্যবহারকারী",
+        "description": "অ্যাকাউন্ট, প্রবেশাধিকার ও নিরাপত্তা পরিচালনা করুন।"
+      },
+      "orders": {
+        "title": "সব অর্ডার",
+        "description": "সব শপের অর্ডার খুঁজুন ও পর্যালোচনা করুন।"
+      },
+      "orderDetail": {
+        "title": "অর্ডারের বিস্তারিত",
+        "description": "প্ল্যাটফর্মজুড়ে অর্ডারের তথ্য ও সময়রেখা।"
+      },
+      "visitors": {
+        "title": "ওয়েবসাইট ভিজিটর",
+        "description": "প্রথম-পক্ষের ভিজিট, রেফারার ও গোপনীয়তা-সুরক্ষিত IP পরিসংখ্যান।"
+      },
+      "plans": {
+        "title": "প্ল্যান",
+        "description": "সাবস্ক্রিপশন প্ল্যান এবং ফিচার সীমা পরিচালনা করুন।"
+      },
+      "planDetail": {
+        "title": "প্ল্যান সম্পাদক",
+        "description": "প্ল্যানের ফিচার ও সীমা সম্পাদনা করুন।"
+      },
+      "features": {
+        "title": "ফিচার",
+        "description": "ফিচার রেজিস্ট্রি ও গ্লোবাল সুইচ পরিচালনা করুন।"
+      },
+      "payments": {
+        "title": "পেমেন্ট",
+        "description": "ম্যানুয়াল পেমেন্ট পর্যালোচনা, রিফান্ড ও ইনভয়েস।"
+      },
+      "coupons": {
+        "title": "কুপন",
+        "description": "প্রচারমূলক কুপন তৈরি ও পরিচালনা করুন।"
+      },
+      "announcements": {
+        "title": "ঘোষণা",
+        "description": "শপের জন্য লক্ষ্যভিত্তিক ঘোষণা প্রকাশ করুন।"
+      },
+      "content": {
+        "title": "ওয়েবসাইট কনটেন্ট",
+        "description": "FAQ ও টেস্টিমোনিয়াল পরিচালনা করুন।"
+      },
+      "settings": {
+        "title": "প্ল্যাটফর্ম সেটিংস",
+        "description": "নিবন্ধন, বিলিং, AI, ইন্টিগ্রেশন ও নিরাপত্তা সেটিংস।"
+      },
+      "auditLogs": {
+        "title": "অডিট লগ",
+        "description": "প্ল্যাটফর্মে কে কী পরিবর্তন করেছেন তা পর্যালোচনা করুন।"
+      },
+      "system": {
+        "title": "সিস্টেম",
+        "description": "ওয়েবহুক, ব্যাকগ্রাউন্ড জব ও স্বাস্থ্য পরীক্ষা করুন।"
+      },
+      "usage": {
+        "title": "ব্যবহার ও AI খরচ",
+        "description": "শপভিত্তিক ব্যবহার এবং AI খরচ পর্যবেক্ষণ করুন।"
+      },
+      "shopAudit": {
+        "title": "শপ অডিট লগ",
+        "description": "এই শপে হওয়া পরিবর্তনের ইতিহাস।"
+      }
+    },
+    "common": {
+      "yes": "হ্যাঁ",
+      "no": "না",
+      "on": "চালু",
+      "off": "বন্ধ",
+      "enabled": "সক্রিয়",
+      "disabled": "নিষ্ক্রিয়",
+      "active": "সক্রিয়",
+      "inactive": "নিষ্ক্রিয়",
+      "public": "সর্বসাধারণের জন্য",
+      "hidden": "লুকানো"
+    },
+    "actions": {
+      "open": "খুলুন",
+      "view": "দেখুন",
+      "edit": "সম্পাদনা",
+      "editPlan": "প্ল্যান সম্পাদনা",
+      "createPlan": "প্ল্যান তৈরি",
+      "createCoupon": "কুপন তৈরি",
+      "createAnnouncement": "ঘোষণা তৈরি",
+      "createContent": "কনটেন্ট যোগ",
+      "save": "সংরক্ষণ",
+      "saveGroup": "গ্রুপ সংরক্ষণ",
+      "saving": "সংরক্ষণ হচ্ছে...",
+      "confirm": "নিশ্চিত করুন",
+      "cancel": "বাতিল",
+      "close": "বন্ধ",
+      "refresh": "রিফ্রেশ",
+      "export": "CSV ডাউনলোড",
+      "backToShops": "শপে ফিরুন",
+      "backToOrders": "অর্ডারে ফিরুন",
+      "backToPlans": "প্ল্যানে ফিরুন",
+      "block": "ব্লক",
+      "unblock": "আনব্লক",
+      "suspend": "স্থগিত করুন",
+      "reactivate": "পুনরায় চালু করুন",
+      "impersonate": "শুধু দেখার জন্য প্রবেশ",
+      "extend": "মেয়াদ বাড়ান",
+      "addOverride": "ওভাররাইড যোগ করুন",
+      "remove": "সরান",
+      "delete": "মুছুন",
+      "deleteShop": "শপ মুছুন",
+      "approve": "অনুমোদন",
+      "reject": "প্রত্যাখ্যান",
+      "recheck": "আবার যাচাই",
+      "markRefunded": "রিফান্ড চিহ্নিত করুন",
+      "archive": "আর্কাইভ",
+      "enable": "চালু করুন",
+      "disable": "বন্ধ করুন",
+      "unlock": "আনলক",
+      "revokeSessions": "সব সেশন বাতিল",
+      "replay": "আবার চালান",
+      "retryFailed": "ব্যর্থ জব আবার চালান",
+      "diff": "পরিবর্তন দেখুন",
+      "previous": "আগের",
+      "next": "পরের"
+    },
+    "messages": {
+      "saved": "পরিবর্তন সংরক্ষিত হয়েছে।",
+      "blocked": "ব্যবহারকারী ব্লক করা হয়েছে।",
+      "unblocked": "ব্যবহারকারী আনব্লক করা হয়েছে।",
+      "approved": "পেমেন্ট অনুমোদিত হয়েছে।",
+      "deleted": "মুছে ফেলা হয়েছে।",
+      "actionFailed": "কাজটি সম্পন্ন হয়নি। আবার চেষ্টা করুন।",
+      "slugMismatch": "নিশ্চিত করতে শপের সঠিক স্লাগ লিখুন।"
+    },
+    "confirmations": {
+      "planAffects": "এই পরিবর্তনটি {count}টি সাবস্ক্রাইবার শপে এখনই প্রযোজ্য হবে। চালিয়ে যাবেন?",
+      "dangerousSettings": "আপনি {count}টি সংবেদনশীল সেটিংস পরিবর্তন করছেন। চালিয়ে যাবেন?",
+      "paymentRecheck": "পেমেন্ট গেটওয়েতে এখনই যাচাই করবেন?",
+      "markRefunded": "রিফান্ড সম্পন্ন হয়েছে নিশ্চিত করে চিহ্নিত করবেন?",
+      "deleteCoupon": "এই কুপনটি মুছবেন?",
+      "deleteAnnouncement": "এই ঘোষণাটি মুছবেন?",
+      "deleteContent": "এই কনটেন্ট মুছবেন?",
+      "unlockUser": "এই অ্যাকাউন্ট আনলক করবেন?",
+      "revokeSessions": "ব্যবহারকারীর সব সেশন বাতিল করবেন?",
+      "retryJobs": "এই কিউর ব্যর্থ জবগুলো আবার চালাবেন?",
+      "replayWebhook": "এই ওয়েবহুক আবার কিউতে পাঠাবেন?",
+      "archivePlan": "এই প্ল্যান আর্কাইভ করবেন?"
+    },
+    "dialogs": {
+      "confirmAction": "এই কাজটি নিশ্চিত করুন",
+      "user": {
+        "block": "ব্যবহারকারী ব্লক করুন",
+        "unblock": "ব্যবহারকারী আনব্লক করুন",
+        "reset2fa": "2FA রিসেট করুন"
+      },
+      "payment": {
+        "approve": "পেমেন্ট অনুমোদন করুন",
+        "reject": "পেমেন্ট প্রত্যাখ্যান করুন",
+        "refund": "রিফান্ড চিহ্নিত করুন"
+      },
+      "shop": {
+        "status": "শপের অবস্থা পরিবর্তন",
+        "impersonate": "শুধু দেখার জন্য প্রবেশ",
+        "extend": "সাবস্ক্রিপশন বাড়ান",
+        "delete": "শপ মুছুন",
+        "override": "ফিচার ওভাররাইড"
+      },
+      "plan": { "create": "প্ল্যান তৈরি", "edit": "প্ল্যান সম্পাদনা" },
+      "coupon": { "create": "কুপন তৈরি", "edit": "কুপন সম্পাদনা" },
+      "announcement": { "create": "ঘোষণা তৈরি", "edit": "ঘোষণা সম্পাদনা" },
+      "content": { "create": "কনটেন্ট যোগ", "edit": "কনটেন্ট সম্পাদনা" }
+    },
+    "fields": {
+      "reason": "কারণ",
+      "note": "নোট",
+      "suspendOwnedShops": "মালিকানাধীন শপও স্থগিত করুন",
+      "reactivateOwnedShops": "মালিকানাধীন শপও পুনরায় চালু করুন",
+      "status": "অবস্থা",
+      "days": "দিন",
+      "confirmSlug": "নিশ্চিত করতে শপের স্লাগ লিখুন",
+      "featureKey": "ফিচার কী",
+      "enabledOverride": "ফিচার চালু",
+      "limit": "সীমা",
+      "unlimited": "সীমাহীন",
+      "expiresAt": "মেয়াদ শেষ",
+      "planKey": "প্ল্যান কী",
+      "nameEn": "নাম (ইংরেজি)",
+      "nameBn": "নাম (বাংলা)",
+      "monthlyPriceTaka": "মাসিক মূল্য (টাকা)",
+      "yearlyPriceTaka": "বার্ষিক মূল্য (টাকা)",
+      "trialDays": "ট্রায়ালের দিন",
+      "publicPlan": "সর্বসাধারণের জন্য দেখান",
+      "defaultPlan": "ডিফল্ট প্ল্যান",
+      "archived": "আর্কাইভ করা",
+      "code": "কুপন কোড",
+      "couponType": "কুপনের ধরন",
+      "value": "মূল্য",
+      "maxRedemptions": "সর্বোচ্চ ব্যবহার",
+      "validFrom": "শুরুর তারিখ",
+      "validUntil": "শেষ তারিখ",
+      "planKeys": "প্ল্যান কী (কমা দিয়ে আলাদা)",
+      "billingCycles": "বিলিং চক্র (কমা দিয়ে আলাদা)",
+      "active": "সক্রিয়",
+      "titleEn": "শিরোনাম (ইংরেজি)",
+      "titleBn": "শিরোনাম (বাংলা)",
+      "bodyEn": "বিবরণ (ইংরেজি)",
+      "bodyBn": "বিবরণ (বাংলা)",
+      "variant": "ধরন",
+      "audience": "দর্শক",
+      "shopId": "শপ আইডি",
+      "linkUrl": "লিংক URL",
+      "startsAt": "শুরুর সময়",
+      "endsAt": "শেষ সময়",
+      "dismissible": "বন্ধ করা যাবে",
+      "contentType": "কনটেন্টের ধরন",
+      "authorName": "লেখকের নাম",
+      "authorRole": "লেখকের পরিচয়",
+      "avatarUrl": "ছবির URL",
+      "rating": "রেটিং",
+      "sortOrder": "ক্রম",
+      "from": "শুরু",
+      "to": "শেষ",
+      "period": "সময়কাল"
+    },
+    "columns": {
+      "shop": "শপ",
+      "owner": "মালিক",
+      "plan": "প্ল্যান",
+      "ordersThisMonth": "এই মাসের অর্ডার",
+      "created": "তৈরি",
+      "user": "ব্যবহারকারী",
+      "phone": "ফোন",
+      "status": "অবস্থা",
+      "role": "ভূমিকা",
+      "security": "নিরাপত্তা",
+      "account": "অ্যাকাউন্ট",
+      "path": "পেজ",
+      "views": "ভিউ",
+      "referrer": "রেফারার",
+      "ip": "IP ঠিকানা",
+      "visits": "ভিজিট",
+      "uniquePaths": "ভিন্ন পেজ",
+      "device": "ডিভাইস",
+      "lastSeen": "শেষ দেখা",
+      "actor": "কর্মকারী",
+      "action": "কাজ",
+      "entity": "বিষয়",
+      "shopId": "শপ আইডি",
+      "amount": "পরিমাণ",
+      "method": "পদ্ধতি",
+      "transaction": "লেনদেন",
+      "invoice": "ইনভয়েস",
+      "customer": "কাস্টমার",
+      "order": "অর্ডার",
+      "cod": "COD",
+      "total": "মোট",
+      "address": "ঠিকানা",
+      "district": "জেলা",
+      "source": "উৎস",
+      "channel": "চ্যানেল",
+      "subscription": "সাবস্ক্রিপশন",
+      "periodEnd": "মেয়াদ শেষ",
+      "shops": "শপ",
+      "feature": "ফিচার",
+      "type": "ধরন",
+      "resetPeriod": "রিসেট সময়",
+      "group": "গ্রুপ",
+      "globalSwitch": "গ্লোবাল সুইচ",
+      "active": "সক্রিয়",
+      "name": "নাম",
+      "category": "বিভাগ",
+      "product": "প্রোডাক্ট",
+      "quantity": "পরিমাণ",
+      "discount": "ছাড়",
+      "code": "কোড",
+      "redemptions": "ব্যবহার",
+      "validity": "কার্যকারিতা",
+      "title": "শিরোনাম",
+      "variant": "ধরন",
+      "author": "লেখক",
+      "body": "বিবরণ",
+      "facebook": "Facebook",
+      "website": "ওয়েবসাইট",
+      "attempts": "চেষ্টা",
+      "error": "ত্রুটি",
+      "event": "ইভেন্ট",
+      "received": "পেয়েছে",
+      "queue": "কিউ",
+      "created": "তৈরি",
+      "completed": "সম্পন্ন",
+      "failed": "ব্যর্থ",
+      "retry": "পুনরায় চেষ্টা",
+      "usage": "ব্যবহার",
+      "period": "সময়কাল",
+      "runs": "রান",
+      "tokens": "টোকেন",
+      "costUsd": "খরচ (USD)",
+      "blocked": "ব্লক",
+      "changes": "পরিবর্তন",
+      "country": "দেশ",
+      "lockedUntil": "লক থাকবে {date} পর্যন্ত",
+      "sortOrder": "সাজানোর ক্রম"
+    },
+    "overview": {
+      "adminAccess": "সুরক্ষিত অ্যাডমিন প্রবেশ",
+      "totalShops": "মোট শপ",
+      "shopBreakdown": "সক্রিয় {active} · স্থগিত {suspended}",
+      "users": "ব্যবহারকারী",
+      "new7Days": "গত 7 দিনে নতুন {count}",
+      "mrr": "মাসিক পুনরাবৃত্ত রাজস্ব",
+      "thisMonthRevenue": "এই মাসে {amount}",
+      "ordersToday": "আজকের অর্ডার",
+      "visitorsToday": "আজকের ভিজিটর {count}",
+      "signups": "নতুন নিবন্ধন",
+      "last30Days": "গত 30 দিন",
+      "systemStatus": "সিস্টেমের অবস্থা",
+      "failedWebhooks": "ব্যর্থ ওয়েবহুক (24 ঘণ্টা)",
+      "failedJobs": "ব্যর্থ জব (24 ঘণ্টা)",
+      "launchMode": "ফ্রি লঞ্চ মোড",
+      "maintenance": "মেইনটেন্যান্স মোড",
+      "appVersion": "অ্যাপ সংস্করণ",
+      "integrations": "ইন্টিগ্রেশন সংযোগ",
+      "planDistribution": "প্ল্যান অনুযায়ী শপ",
+      "activity": "কার্যক্রম",
+      "ordersThisMonth": "এই মাসের অর্ডার",
+      "deliveredThisMonth": "এই মাসে ডেলিভারি",
+      "gmvThisMonth": "এই মাসের মোট বিক্রি",
+      "aiCost": "এই মাসের AI খরচ",
+      "pendingPayments": "পর্যালোচনাধীন পেমেন্ট",
+      "needsRefund": "রিফান্ড প্রয়োজন"
+    },
+    "planGrid": {
+      "title": "প্ল্যান ফিচার গ্রিড",
+      "affects": "এখনই {count}টি সাবস্ক্রাইবার শপে প্রযোজ্য",
+      "overviewHint": "সব প্ল্যানে প্রতিটি ফিচারের সীমা ও অবস্থা তুলনা করুন।",
+      "unlimited": "সীমাহীন",
+      "enabled": "চালু",
+      "disabled": "বন্ধ",
+      "inPlan": "প্ল্যানে অন্তর্ভুক্ত",
+      "limitFor": "{feature}-এর সীমা"
+    },
+    "plans": {
+      "subscribers": "{count} জন সাবস্ক্রাইবার",
+      "default": "ডিফল্ট",
+      "launch": "লঞ্চ প্ল্যান",
+      "archived": "আর্কাইভ করা",
+      "visibility": "দৃশ্যমানতা"
+    },
+    "features": {
+      "title": "প্ল্যাটফর্ম ফিচার",
+      "unused": "কোডে ব্যবহৃত নয়"
+    },
+    "shopStats": {
+      "products": "পণ্য",
+      "customers": "গ্রাহক",
+      "orders": "অর্ডার",
+      "conversations": "কথোপকথন"
+    },
+    "shopDetail": {
+      "overrides": "ফিচার ওভাররাইড",
+      "overrideHint": "প্রতিটি ওভাররাইডের জন্য কারণ দিন।",
+      "members": "সদস্য",
+      "channels": "সংযুক্ত চ্যানেল"
+    },
+    "settings": {
+      "secretNotice": "শুধু কনফিগার করা আছে কি না দেখানো হয়; কোনো গোপন মান দেখানো হয় না।"
+    },
+    "visitors": {
+      "range": "তারিখের পরিসর",
+      "days": { "1": "আজ", "7": "গত 7 দিন", "30": "গত 30 দিন" },
+      "pageViews": "পেজ ভিউ",
+      "uniqueVisitors": "ভিন্ন ভিজিটর",
+      "uniqueIps": "ভিন্ন IP",
+      "signups": "নিবন্ধন",
+      "trend": "দৈনিক ট্রাফিক",
+      "topPages": "জনপ্রিয় পেজ",
+      "referrers": "রেফারার",
+      "ipList": "IP অনুযায়ী ভিজিট",
+      "recent": "সাম্প্রতিক ভিজিট",
+      "campaigns": "ক্যাম্পেইন",
+      "campaign": "ক্যাম্পেইন",
+      "devices": "ডিভাইস",
+      "countries": "দেশ"
+    },
+    "orderDetail": { "items": "অর্ডার আইটেম", "timeline": "অর্ডার টাইমলাইন" },
+    "tabs": {
+      "pending": "পর্যালোচনাধীন",
+      "refunds": "রিফান্ড প্রয়োজন",
+      "all": "সব পেমেন্ট",
+      "invoices": "ইনভয়েস",
+      "FAQ": "FAQ",
+      "TESTIMONIAL": "টেস্টিমোনিয়াল",
+      "webhooks": "ওয়েবহুক",
+      "jobs": "জব কিউ",
+      "health": "স্বাস্থ্য",
+      "usage": "ব্যবহার",
+      "ai": "AI খরচ",
+      "analytics": "অ্যানালিটিক্স",
+      "billing": "বিলিং",
+      "integrations": "ইন্টিগ্রেশন",
+      "landing": "ল্যান্ডিং পেজ",
+      "platform": "প্ল্যাটফর্ম",
+      "security": "নিরাপত্তা",
+      "sms": "SMS"
+    },
+    "roles": {
+      "USER": "ব্যবহারকারী",
+      "SUPPORT": "সাপোর্ট",
+      "SUPER_ADMIN": "সুপার অ্যাডমিন",
+      "OWNER": "মালিক",
+      "MANAGER": "ম্যানেজার",
+      "AGENT": "এজেন্ট",
+      "FULFILMENT": "ফুলফিলমেন্ট",
+      "ACCOUNTANT": "হিসাবরক্ষক",
+      "VIEWER": "দর্শক"
+    },
+    "status": {
+      "ACTIVE": "সক্রিয়",
+      "SUSPENDED": "স্থগিত",
+      "TRIALING": "ট্রায়াল",
+      "PAST_DUE": "বকেয়া",
+      "CANCELLED": "বাতিল",
+      "EXPIRED": "মেয়াদ শেষ",
+      "PENDING_VERIFICATION": "যাচাই বাকি",
+      "INITIATED": "শুরু হয়েছে",
+      "PAID": "পরিশোধিত",
+      "FAILED": "ব্যর্থ",
+      "REJECTED": "প্রত্যাখ্যাত",
+      "PROCESSED": "প্রক্রিয়াকৃত",
+      "IGNORED": "উপেক্ষিত",
+      "PENDING": "অপেক্ষমাণ",
+      "DRAFT": "খসড়া",
+      "CONFIRMED": "নিশ্চিত",
+      "SHIPPED": "পাঠানো হয়েছে",
+      "DELIVERED": "ডেলিভারি হয়েছে",
+      "RETURNED": "ফেরত",
+      "CLOSED": "বন্ধ"
+    },
+    "couponTypes": { "PERCENT": "শতকরা ছাড়", "FIXED": "নির্দিষ্ট ছাড়" },
+    "variants": { "INFO": "তথ্য", "WARNING": "সতর্কতা", "SUCCESS": "সফলতা" },
+    "audiences": {
+      "ALL": "সব শপ",
+      "PLAN": "নির্দিষ্ট প্ল্যান",
+      "SHOP": "নির্দিষ্ট শপ"
+    },
+    "contentTypes": { "FAQ": "FAQ", "TESTIMONIAL": "টেস্টিমোনিয়াল" },
+    "search": {
+      "shops": "শপ, মালিক বা ইমেইল খুঁজুন",
+      "users": "নাম, ইমেইল বা ফোন খুঁজুন",
+      "orders": "অর্ডার নম্বর বা ফোন খুঁজুন",
+      "audit": "অ্যাকশন দিয়ে অডিট লগ খুঁজুন",
+      "auditLogs": "অডিট লগ খুঁজুন"
+    },
+    "empty": {
+      "noAnnouncements": "কোনো ঘোষণা পাওয়া যায়নি।",
+      "noContent": "কোনো কনটেন্ট পাওয়া যায়নি।",
+      "noCoupons": "কোনো কুপন পাওয়া যায়নি।",
+      "noFeatures": "কোনো ফিচার পাওয়া যায়নি।",
+      "noItems": "কোনো আইটেম পাওয়া যায়নি।",
+      "noMembers": "কোনো সদস্য পাওয়া যায়নি।",
+      "noChannels": "কোনো সংযুক্ত চ্যানেল নেই।",
+      "noOrders": "কোনো অর্ডার পাওয়া যায়নি।",
+      "noPayments": "কোনো পেমেন্ট পাওয়া যায়নি।",
+      "noShops": "কোনো শপ পাওয়া যায়নি।",
+      "noUsers": "কোনো ব্যবহারকারী পাওয়া যায়নি।",
+      "noOverrides": "এই শপে কোনো ওভাররাইড নেই।",
+      "noVisits": "এই সময়ে কোনো ভিজিট পাওয়া যায়নি।",
+      "noAuditLogs": "কোনো অডিট লগ পাওয়া যায়নি।",
+      "noUsage": "এই ফিল্টারে ব্যবহার পাওয়া যায়নি।"
+    },
+    "pagination": {
+      "total": "মোট {count}টি",
+      "previous": "আগের",
+      "page": "পৃষ্ঠা {page}",
+      "next": "পরের"
+    },
+    "system": {
+      "webhooks": "ওয়েবহুক",
+      "jobs": "জব কিউ",
+      "healthPath": "স্বাস্থ্য পরীক্ষা"
+    },
+    "billing": { "month": "মাস", "year": "বছর" }
   }
 }
