@@ -26,7 +26,7 @@ export default async function DataDeletionPage({
         {params.code ? (
           <div className="mt-5 rounded-lg bg-muted p-4 text-sm">
             {status
-              ? `${t("deletion.status")}: ${status.status}`
+              ? `${t("deletion.status")}: ${t(status.status === "COMPLETED" ? "deletion.completed" : "deletion.received")}`
               : t("deletion.statusUnavailable")}
           </div>
         ) : null}

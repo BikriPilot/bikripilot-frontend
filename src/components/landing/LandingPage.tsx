@@ -20,6 +20,8 @@ import { publicServerApi } from "@/lib/api/public.api";
 import type { SiteContent } from "@/types/content";
 import type { PublicPlan } from "@/types/plan";
 import { formatMoney } from "@/lib/money";
+import { PricingComparison } from "./PricingComparison";
+import { DemoVideo } from "./DemoVideo";
 
 const localized = (locale: string, bn: string | null, en: string | null) =>
   locale === "bn" ? bn || en || "" : en || bn || "";
@@ -81,14 +83,7 @@ export async function LandingPage() {
                 <ArrowRight className="size-4" />
               </Link>
               {config?.heroVideoUrl ? (
-                <a
-                  href={config.heroVideoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-12 items-center rounded-lg border bg-card px-5 font-semibold"
-                >
-                  {t("watchDemo")}
-                </a>
+                <DemoVideo url={config.heroVideoUrl} label={t("watchDemo")} />
               ) : null}
             </div>
             <p className="mt-5 text-sm text-muted-foreground">
@@ -424,56 +419,7 @@ function PricingSection({
             {t("launchPricing")}
           </div>
         ) : null}
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`rounded-2xl border bg-card p-6 ${plan.isHighlighted ? "border-primary ring-2 ring-primary/15" : ""}`}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="text-xl font-semibold">
-                  {localized(locale, plan.nameBn, plan.nameEn)}
-                </h3>
-                {plan.isHighlighted ? (
-                  <span className="rounded-full bg-primary-soft px-2 py-1 text-xs font-semibold text-primary">
-                    {t("popular")}
-                  </span>
-                ) : null}
-              </div>
-              <p className="mt-2 min-h-12 text-sm text-muted-foreground">
-                {localized(locale, plan.descriptionBn, plan.descriptionEn)}
-              </p>
-              <p className="mt-6 text-3xl font-semibold">
-                {formatMoney(plan.priceMonthlyPaisa)}
-                <span className="text-sm font-normal text-muted-foreground">
-                  {t("perMonth")}
-                </span>
-              </p>
-              <Link
-                href="/register"
-                className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-              >
-                {t("startFree")}
-              </Link>
-              <ul className="mt-6 space-y-3 text-sm">
-                {plan.features
-                  .filter((feature) => feature.enabled)
-                  .slice(0, 5)
-                  .map((feature) => (
-                    <li key={feature.key} className="flex gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-success" />
-                      {localized(locale, feature.nameBn, feature.nameEn)}
-                      {feature.unlimited
-                        ? ` - ${t("unlimited")}`
-                        : feature.limit !== null
-                          ? ` - ${feature.limit}`
-                          : ""}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <PricingComparison plans={plans} compact />
       </div>
     </section>
   );

@@ -3,20 +3,20 @@ import { Hind_Siliguri, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { runtimeConfig } from "@/config/runtime";
-import { ImpersonationBanner } from "@/components/admin/ImpersonationBanner";
 import { VisitTracker } from "@/components/layout/VisitTracker";
 import { Providers } from "./providers";
 import "./globals.css";
 
 const hindSiliguri = Hind_Siliguri({
   variable: "--font-hind-siliguri",
-  subsets: ["bengali", "latin"],
+  subsets: ["bengali"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
 });
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  preload: false,
   display: "swap",
 });
 
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   icons: {
-    icon: "/images/bikrio.png",
-    apple: "/images/bikrio.png",
+    icon: "/images/favicon.png",
+    apple: "/images/apple-icon.png",
   },
 };
 
@@ -50,7 +50,6 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <VisitTracker />
-            <ImpersonationBanner />
             {children}
           </Providers>
         </NextIntlClientProvider>

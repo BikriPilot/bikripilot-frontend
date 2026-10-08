@@ -3,11 +3,11 @@ import type { SiteContent, SiteContentType } from "@/types/content";
 import type { PublicPlan } from "@/types/plan";
 import type { PublicConfig } from "@/types/publicConfig";
 
-async function publicFetch<T>(path: string): Promise<T | null> {
+async function publicFetch<T>(path: string, live = false): Promise<T | null> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1"}${path}`,
-      { next: { revalidate: 300 } },
+      live ? { cache: "no-store" } : { next: { revalidate: 300 } },
     );
     if (!response.ok) return null;
     const body = (await response.json()) as { data: T };
@@ -25,11 +25,10 @@ export const publicServerApi = {
     (await publicFetch<SiteContent[]>(`/public/content?type=${type}`)) ?? [],
   getDataDeletionStatus: (code: string) =>
     publicFetch<{
-      code: string;
-      status: string;
+      status: "RECEIVED" | "COMPLETED";
       createdAt: string;
       completedAt: string | null;
-    }>(`/public/data-deletion/${encodeURIComponent(code)}`),
+    }>(`/public/data-deletion/${encodeURIComponent(code)}`, true),
 };
 
 export const publicApi = {
@@ -47,8 +46,7 @@ export const publicApi = {
     (
       await api.get<{
         data: {
-          code: string;
-          status: string;
+          status: "RECEIVED" | "COMPLETED";
           createdAt: string;
           completedAt: string | null;
         };
