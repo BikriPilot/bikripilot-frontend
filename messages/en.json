@@ -692,6 +692,18 @@
     "settingsAudit": "Audit log"
   },
   "orders": {
+    "statusLabel": "Status",
+    "review": {
+      "title": "AI Orders",
+      "description": "Review chat orders and verify customer payments before confirmation.",
+      "empty": "No chat orders awaiting review.",
+      "conversation": "Open conversation",
+      "call": "Call verify",
+      "called": "Call verified",
+      "undoCall": "Clear call verification",
+      "callHint": "Mark after you call the customer and verify the order.",
+      "callError": "Call verification could not be saved."
+    },
     "form": {
       "unitPrice": "Unit price (taka)",
       "confirmBulk": "Apply this status to the selected orders? Each order will be checked separately.",
@@ -821,6 +833,7 @@
     "total": "Total"
   },
   "step8": {
+    "aiOrders": "AI Orders",
     "loginTitle": "Welcome back",
     "loginDescription": "Sign in to keep your selling moving.",
     "registerTitle": "Create your Bikrio account",

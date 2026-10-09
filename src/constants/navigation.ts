@@ -71,6 +71,13 @@ export const NAV_SECTIONS: NavSection[] = [
     mobile: "bottom",
     subNav: [
       {
+        key: "aiOrders",
+        href: "/dashboard/ai-orders",
+        labelKey: "aiOrders",
+        permission: "order.read",
+        exact: true,
+      },
+      {
         key: "orders",
         href: "/dashboard/orders",
         labelKey: "orders",

@@ -29,6 +29,8 @@ import { RiskBadge } from "@/components/risk/RiskBadge";
 import { RiskCheckDialog } from "@/components/risk/RiskCheckDialog";
 import { formatMoney } from "@/lib/money";
 import { OrderForm } from "./OrderForm";
+import { CallVerificationButton } from "./CallVerificationButton";
+import { MessageSquare } from "lucide-react";
 import { useOrder, useOrderMutations } from "@/hooks/queries/useOrders";
 import {
   useCancelShipment,
@@ -179,6 +181,17 @@ export function OrderDetail({ orderId }: { orderId: string }) {
           <h1 className="text-2xl font-semibold">{order.orderNumber}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
+          {order.conversationId && can("inbox.read") && (
+            <Link
+              href={`/dashboard/inbox/${order.conversationId}`}
+              title={t("review.conversation")}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3"
+            >
+              <MessageSquare size={16} />
+              {t("review.conversation")}
+            </Link>
+          )}
+          <CallVerificationButton order={order} />
           {can("order.write") &&
             ["DRAFT", "PENDING", "CONFIRMED", "PACKED"].includes(
               order.status,

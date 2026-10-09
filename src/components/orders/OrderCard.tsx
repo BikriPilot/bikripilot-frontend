@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { PackageCheck, Truck } from 'lucide-react';
-import { ShipmentStatusBadge } from '@/components/couriers/ShipmentStatusBadge';
-import { RiskBadge } from '@/components/risk/RiskBadge';
-import { formatMoney } from '@/lib/money';
-import type { OrderListItemDTO } from '@/types/order';
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { PackageCheck, Truck } from "lucide-react";
+import { ShipmentStatusBadge } from "@/components/couriers/ShipmentStatusBadge";
+import { RiskBadge } from "@/components/risk/RiskBadge";
+import { formatMoney } from "@/lib/money";
+import type { OrderListItemDTO } from "@/types/order";
+import { CallVerificationButton } from "./CallVerificationButton";
 
 interface OrderCardProps {
   item: OrderListItemDTO;
@@ -21,15 +22,15 @@ export function OrderCard({
   onToggleSelect,
   onBookCourier,
 }: OrderCardProps) {
-  const t = useTranslations('orders');
-  const tShip = useTranslations('shipments');
+  const t = useTranslations("orders");
+  const tShip = useTranslations("shipments");
   const canBook =
-    !item.shipment && (item.status === 'CONFIRMED' || item.status === 'PACKED');
+    !item.shipment && (item.status === "CONFIRMED" || item.status === "PACKED");
 
   return (
     <div
       className={`rounded-xl border bg-card p-4 transition-colors ${
-        selected ? 'border-primary bg-primary/5' : ''
+        selected ? "border-primary bg-primary/5" : ""
       }`}
     >
       <div className="flex items-center justify-between">
@@ -83,10 +84,13 @@ export function OrderCard({
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border bg-card py-1.5 text-xs font-semibold text-primary hover:bg-primary/5"
           >
             <PackageCheck size={14} />
-            {tShip('bookCourier')}
+            {tShip("bookCourier")}
           </button>
         </div>
       )}
+      <div className="mt-3">
+        <CallVerificationButton order={item} />
+      </div>
     </div>
   );
 }

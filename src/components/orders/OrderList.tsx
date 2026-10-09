@@ -17,9 +17,12 @@ import { BulkBookDialog } from "@/components/couriers/BulkBookDialog";
 import { useOrders } from "@/hooks/queries/useOrders";
 import { OrderCard } from "./OrderCard";
 import { OrderTable } from "./OrderTable";
+import { OrderDetail } from "./OrderDetail";
 import type { OrderListItemDTO } from "@/types/order";
 
-export function OrderList() {
+export function OrderList({
+  reviewQueue = false,
+}: { reviewQueue?: boolean } = {}) {
   const t = useTranslations("orders");
   const tShip = useTranslations("shipments");
   const router = useRouter();
@@ -33,6 +36,7 @@ export function OrderList() {
     order: "desc",
     status: searchParams.get("status") || undefined,
     search: searchParams.get("search") || undefined,
+    queue: reviewQueue ? "ai_review" : "orders",
   };
   const query = useOrders(filters);
   const setFilter = (key: string, value: string) => {
@@ -41,11 +45,14 @@ export function OrderList() {
     else params.delete(key);
     if (key !== "page") params.delete("page");
     setSelectedOrderIds([]);
-    router.replace(`/dashboard/orders?${params.toString()}`);
+    router.replace(
+      `${reviewQueue ? "/dashboard/ai-orders" : "/dashboard/orders"}?${params.toString()}`,
+    );
   };
   const items = query.data?.data ?? [];
 
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
+  const [expandedOrderIds, setExpandedOrderIds] = useState<string[]>([]);
   const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkErrors, setBulkErrors] = useState<
@@ -90,10 +97,10 @@ export function OrderList() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={t("title")}
-        description={t("description")}
+        title={reviewQueue ? t("review.title") : t("title")}
+        description={reviewQueue ? t("review.description") : t("description")}
         action={
-          can("order.write") ? (
+          !reviewQueue && can("order.write") ? (
             <Link
               href="/dashboard/orders/new"
               className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
@@ -125,7 +132,9 @@ export function OrderList() {
             onChange={(event) => setFilter("status", event.target.value)}
           >
             <option value="">{t("form.all")}</option>
-            {ORDER_STATUSES.map((status) => (
+            {ORDER_STATUSES.filter(
+              (status) => !reviewQueue || ["DRAFT", "PENDING"].includes(status),
+            ).map((status) => (
               <option key={status} value={status}>
                 {t(`status.${status}`)}
               </option>
@@ -150,7 +159,8 @@ export function OrderList() {
       </div>
 
       {/* Floating Bulk Action Bar */}
-      {(can("shipment.write") || can("order.status")) &&
+      {!reviewQueue &&
+        (can("shipment.write") || can("order.status")) &&
         selectedOrderIds.length > 0 && (
           <div className="sticky top-4 z-30 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/20 bg-card p-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -250,16 +260,53 @@ export function OrderList() {
         <ErrorState onRetry={() => void query.refetch()} />
       ) : items.length === 0 ? (
         <EmptyState
-          title={t("empty")}
+          title={reviewQueue ? t("review.empty") : t("empty")}
           action={
-            <Link
-              href="/dashboard/orders/new"
-              className="inline-flex min-h-11 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
-            >
-              {t("newOrder")}
-            </Link>
+            !reviewQueue && can("order.write") ? (
+              <Link
+                href="/dashboard/orders/new"
+                className="inline-flex min-h-11 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
+              >
+                {t("newOrder")}
+              </Link>
+            ) : undefined
           }
         />
+      ) : reviewQueue ? (
+        <div className="space-y-4">
+          {items.map((item) => (
+            <details
+              key={item.id}
+              className="rounded-lg border bg-card p-4"
+              onToggle={(event) => {
+                const open = event.currentTarget.open;
+                setExpandedOrderIds((current) =>
+                  open
+                    ? [...new Set([...current, item.id])]
+                    : current.filter((id) => id !== item.id),
+                );
+              }}
+            >
+              <summary className="min-h-11 cursor-pointer">
+                <span className="font-semibold">{item.orderNumber}</span>
+                <span className="ml-3">
+                  {item.customerName || t("customer")}
+                </span>
+                <span className="ml-3 text-sm text-muted-foreground">
+                  {item.customerPhone}
+                </span>
+                <span className="ml-3 text-sm">
+                  {t(`status.${item.status}`)}
+                </span>
+              </summary>
+              <div className="mt-4 border-t pt-4">
+                {expandedOrderIds.includes(item.id) && (
+                  <OrderDetail orderId={item.id} />
+                )}
+              </div>
+            </details>
+          ))}
+        </div>
       ) : (
         <>
           <div className="grid gap-3 md:hidden">

@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { PackageCheck, Truck } from 'lucide-react';
-import { ShipmentStatusBadge } from '@/components/couriers/ShipmentStatusBadge';
-import { RiskBadge } from '@/components/risk/RiskBadge';
-import { formatMoney } from '@/lib/money';
-import { formatDate } from '@/lib/date';
-import type { OrderListItemDTO } from '@/types/order';
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { PackageCheck, Truck } from "lucide-react";
+import { ShipmentStatusBadge } from "@/components/couriers/ShipmentStatusBadge";
+import { RiskBadge } from "@/components/risk/RiskBadge";
+import { formatMoney } from "@/lib/money";
+import { formatDate } from "@/lib/date";
+import type { OrderListItemDTO } from "@/types/order";
+import { CallVerificationButton } from "./CallVerificationButton";
 
 interface OrderTableProps {
   items: OrderListItemDTO[];
@@ -24,8 +25,8 @@ export function OrderTable({
   onSelectAll,
   onBookCourier,
 }: OrderTableProps) {
-  const t = useTranslations('orders');
-  const tShip = useTranslations('shipments');
+  const t = useTranslations("orders");
+  const tShip = useTranslations("shipments");
   const allSelected = items.length > 0 && selectedIds.length === items.length;
 
   return (
@@ -44,13 +45,15 @@ export function OrderTable({
                 />
               </th>
             )}
-            <th className="px-4 py-3 font-semibold">{t('number')}</th>
-            <th className="px-4 py-3 font-semibold">{t('customer')}</th>
-            <th className="px-4 py-3 font-semibold">{t('total')}</th>
-            <th className="px-4 py-3 font-semibold">{t('statusLabel')}</th>
-            <th className="px-4 py-3 font-semibold">{tShip('courier')}</th>
-            <th className="px-4 py-3 font-semibold">{t('date')}</th>
-            <th className="px-4 py-3 text-right font-semibold">{tShip('actions')}</th>
+            <th className="px-4 py-3 font-semibold">{t("number")}</th>
+            <th className="px-4 py-3 font-semibold">{t("customer")}</th>
+            <th className="px-4 py-3 font-semibold">{t("total")}</th>
+            <th className="px-4 py-3 font-semibold">{t("statusLabel")}</th>
+            <th className="px-4 py-3 font-semibold">{tShip("courier")}</th>
+            <th className="px-4 py-3 font-semibold">{t("date")}</th>
+            <th className="px-4 py-3 text-right font-semibold">
+              {tShip("actions")}
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y">
@@ -58,13 +61,13 @@ export function OrderTable({
             const isSelected = selectedIds.includes(item.id);
             const canBook =
               !item.shipment &&
-              (item.status === 'CONFIRMED' || item.status === 'PACKED');
+              (item.status === "CONFIRMED" || item.status === "PACKED");
 
             return (
               <tr
                 key={item.id}
                 className={`transition-colors hover:bg-muted/20 ${
-                  isSelected ? 'bg-primary/5' : ''
+                  isSelected ? "bg-primary/5" : ""
                 }`}
               >
                 {onToggleSelect && (
@@ -122,6 +125,7 @@ export function OrderTable({
                   {formatDate(item.createdAt)}
                 </td>
                 <td className="px-4 py-3 text-right">
+                  <CallVerificationButton order={item} />
                   {canBook && onBookCourier && (
                     <button
                       type="button"
@@ -129,7 +133,7 @@ export function OrderTable({
                       className="inline-flex items-center gap-1 rounded-lg border bg-card px-2.5 py-1 text-xs font-semibold text-primary hover:bg-primary/5"
                     >
                       <PackageCheck size={13} />
-                      {tShip('bookCourier')}
+                      {tShip("bookCourier")}
                     </button>
                   )}
                 </td>

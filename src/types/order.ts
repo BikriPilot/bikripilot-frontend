@@ -45,6 +45,7 @@ export interface OrderListItemDTO {
   totalPaisa: number;
   codAmountPaisa: number;
   paymentStatus: PaymentStatus;
+  callVerifiedAt?: string | null;
   itemCount: number;
   firstItemName: string | null;
   readinessScore: number;

@@ -4,6 +4,12 @@ import type { PageMeta } from "@/types/product";
 const path = (shopId: string, suffix = "") =>
   `/shops/${shopId}/orders${suffix}`;
 export const ordersApi = {
+  callVerification: (shopId: string, id: string, verified: boolean) =>
+    api
+      .post<{ data: OrderDTO }>(path(shopId, `/${id}/call-verification`), {
+        verified,
+      })
+      .then((response) => response.data.data),
   bulkStatus: (shopId: string, orderIds: string[], toStatus: string) =>
     api
       .post<{
