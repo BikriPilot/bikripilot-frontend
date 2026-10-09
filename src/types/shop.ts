@@ -36,6 +36,8 @@ export interface ShopSettingsDTO {
   invoiceNote: string | null;
   tagadaTemplate: string | null;
   publicTrackingEnabled: boolean;
+  advanceMode: "NONE" | "DELIVERY_CHARGE" | "PARTIAL";
+  partialAdvancePaisa: number;
 }
 export type OnboardingStepKey =
   | "business_info"

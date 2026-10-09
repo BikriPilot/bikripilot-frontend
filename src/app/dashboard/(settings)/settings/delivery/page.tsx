@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { PAYMENT_METHODS } from "@/constants/enums";
 export default function DeliverySettingsPage() {
   const t = useTranslations("step8");
+  const advanceText = useTranslations("orders.advance");
   const enumText = useTranslations("enums.PaymentMethod");
   const { shopId, can } = useCurrentShop();
   const query = useQuery({
@@ -30,6 +31,8 @@ export default function DeliverySettingsPage() {
       | "lowStockThreshold"
       | "invoiceNote"
       | "publicTrackingEnabled"
+      | "advanceMode"
+      | "partialAdvancePaisa"
     >
   > & {
     freeDeliveryMinPaisa?: string;
@@ -56,6 +59,12 @@ export default function DeliverySettingsPage() {
     setBusy(true);
     try {
       const body = {
+        ...(form.advanceMode !== undefined
+          ? { advanceMode: form.advanceMode }
+          : {}),
+        ...(form.partialAdvancePaisa !== undefined
+          ? { partialAdvancePaisa: form.partialAdvancePaisa }
+          : {}),
         deliveryChargeInsideDhakaPaisa: Math.round(
           Number(taka("deliveryChargeInsideDhakaPaisa")) * 100,
         ),
@@ -126,6 +135,45 @@ export default function DeliverySettingsPage() {
             })
           }
         />
+        <label className="grid gap-2 text-sm">
+          {advanceText("policy")}
+          <select
+            className="min-h-11 rounded-lg border bg-background px-3 text-base"
+            value={form.advanceMode ?? settings.advanceMode ?? "NONE"}
+            onChange={(event) =>
+              setForm({
+                ...form,
+                advanceMode: event.target
+                  .value as ShopSettingsDTO["advanceMode"],
+              })
+            }
+          >
+            <option value="NONE">{advanceText("none")}</option>
+            <option value="DELIVERY_CHARGE">{advanceText("delivery")}</option>
+            <option value="PARTIAL">{advanceText("partial")}</option>
+          </select>
+        </label>
+        {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" && (
+          <Field
+            label={advanceText("partialAmount")}
+            type="number"
+            min="0.01"
+            step="0.01"
+            required
+            value={
+              (form.partialAdvancePaisa ?? settings.partialAdvancePaisa ?? 0) /
+              100
+            }
+            onChange={(event) =>
+              setForm({
+                ...form,
+                partialAdvancePaisa: Math.round(
+                  Number(event.target.value) * 100,
+                ),
+              })
+            }
+          />
+        )}
         <Field
           label={t("subDhaka")}
           inputMode="decimal"

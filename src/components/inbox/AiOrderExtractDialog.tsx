@@ -36,7 +36,9 @@ export function AiOrderExtractDialog({
   const inboxMutations = useInboxMutations(conversationId);
   const orderMutations = useOrderMutations();
 
-  const [extraction, setExtraction] = useState<AiOrderExtractionDTO | null>(null);
+  const [extraction, setExtraction] = useState<AiOrderExtractionDTO | null>(
+    null,
+  );
   const [isExtracting, setIsExtracting] = useState(false);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
@@ -89,6 +91,8 @@ export function AiOrderExtractDialog({
           unitPricePaisa: item.unitPricePaisa,
         })),
         note: extraction.note || undefined,
+        paymentTransactionId: extraction.paymentTransactionId ?? null,
+        paymentSenderPhone: extraction.paymentSenderPhone ?? null,
         aiRunId: extraction.aiRunId,
         aiExtractedFields: extraction.extractedFields,
       });
@@ -216,20 +220,26 @@ export function AiOrderExtractDialog({
                 </h4>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                   <div>
-                    <span className="text-muted-foreground block">{t("name")}:</span>
+                    <span className="text-muted-foreground block">
+                      {t("name")}:
+                    </span>
                     <span className="font-medium text-foreground">
                       {extraction.customerName || "-"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">{t("phone")}:</span>
+                    <span className="text-muted-foreground block">
+                      {t("phone")}:
+                    </span>
                     <span className="font-medium font-mono text-foreground">
                       {extraction.phone || "-"}
                     </span>
                   </div>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">{t("address")}:</span>
+                  <span className="text-muted-foreground block text-[11px]">
+                    {t("address")}:
+                  </span>
                   <span className="font-medium text-foreground text-[11px]">
                     {extraction.address || "-"}
                   </span>
@@ -237,13 +247,17 @@ export function AiOrderExtractDialog({
                 {(extraction.district || extraction.deliveryZone) && (
                   <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t">
                     <div>
-                      <span className="text-muted-foreground block">{t("district")}:</span>
+                      <span className="text-muted-foreground block">
+                        {t("district")}:
+                      </span>
                       <span className="font-medium text-foreground">
                         {extraction.district || "-"}
                       </span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground block">{t("deliveryZone")}:</span>
+                      <span className="text-muted-foreground block">
+                        {t("deliveryZone")}:
+                      </span>
                       <span className="font-medium text-foreground">
                         {extraction.deliveryZone || "-"}
                       </span>
@@ -256,7 +270,9 @@ export function AiOrderExtractDialog({
               <div className="rounded-xl border bg-background p-3.5 space-y-2.5">
                 <h4 className="font-semibold text-foreground flex items-center gap-1.5">
                   <ShoppingBag size={14} className="text-primary" />
-                  <span>{t("extractedItems")} ({extraction.items.length})</span>
+                  <span>
+                    {t("extractedItems")} ({extraction.items.length})
+                  </span>
                 </h4>
                 {extraction.items.length === 0 ? (
                   <p className="text-muted-foreground text-[11px] italic">
@@ -270,7 +286,9 @@ export function AiOrderExtractDialog({
                         className="flex items-center justify-between rounded-lg bg-muted/40 p-2 text-[11px]"
                       >
                         <div>
-                          <p className="font-medium text-foreground">{item.productName}</p>
+                          <p className="font-medium text-foreground">
+                            {item.productName}
+                          </p>
                           {item.variantName && (
                             <p className="text-muted-foreground text-[10px]">
                               {item.variantName}
@@ -282,7 +300,8 @@ export function AiOrderExtractDialog({
                             {formatMoney(item.unitPricePaisa * item.quantity)}
                           </p>
                           <p className="text-muted-foreground text-[10px]">
-                            Qty: {item.quantity} × {formatMoney(item.unitPricePaisa)}
+                            Qty: {item.quantity} ×{" "}
+                            {formatMoney(item.unitPricePaisa)}
                           </p>
                         </div>
                       </div>
@@ -330,7 +349,9 @@ export function AiOrderExtractDialog({
             <button
               type="button"
               onClick={handleCreateOrder}
-              disabled={isCreatingOrder || isExtracting || extraction.items.length === 0}
+              disabled={
+                isCreatingOrder || isExtracting || extraction.items.length === 0
+              }
               className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 font-medium text-xs text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs disabled:opacity-50"
             >
               {isCreatingOrder ? (

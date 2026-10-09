@@ -8,6 +8,12 @@ import type {
 import type { PageMeta } from "@/types/product";
 const path = (shopId: string, suffix = "") => `/shops/${shopId}${suffix}`;
 export const customersApi = {
+  lookup: (shopId: string, phone: string) =>
+    api
+      .get<{ data: CustomerDTO | null }>(path(shopId, "/customers/lookup"), {
+        params: { phone },
+      })
+      .then((response) => response.data.data),
   list: (
     shopId: string,
     params: Record<string, string | number | boolean | undefined>,

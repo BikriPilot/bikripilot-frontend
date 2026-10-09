@@ -7,7 +7,7 @@ import type {
   AI_TONES,
   DELIVERY_ZONES,
   KNOWLEDGE_TYPES,
-} from '@/constants/enums';
+} from "@/constants/enums";
 
 export type AiReplyMode = (typeof AI_REPLY_MODES)[number];
 export type AiTone = (typeof AI_TONES)[number];
@@ -51,12 +51,12 @@ export interface UpdateAiSettingsInput {
 }
 
 export type AiReadinessItemKey =
-  | 'channel_connected'
-  | 'business_info'
-  | 'products_with_price'
-  | 'delivery_charges'
-  | 'policy'
-  | 'faq';
+  | "channel_connected"
+  | "business_info"
+  | "products_with_price"
+  | "delivery_charges"
+  | "policy"
+  | "faq";
 
 export interface AiReadinessDTO {
   ready: boolean;
@@ -121,6 +121,8 @@ export interface OrderMissingField {
 }
 
 export interface AiOrderExtractionDTO {
+  paymentTransactionId?: string | null;
+  paymentSenderPhone?: string | null;
   aiRunId: string;
   confidence: number;
   customerName: string | null;
@@ -156,5 +158,5 @@ export interface AiUsageDTO {
 
 export interface PlaygroundInput {
   message: string;
-  history?: { role: 'customer' | 'shop'; text: string }[];
+  history?: { role: "customer" | "shop"; text: string }[];
 }
