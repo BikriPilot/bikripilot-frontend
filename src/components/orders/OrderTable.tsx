@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { PackageCheck, Truck } from "lucide-react";
+import { ArrowRight, Truck } from "lucide-react";
 import { ShipmentStatusBadge } from "@/components/couriers/ShipmentStatusBadge";
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { formatMoney } from "@/lib/money";
@@ -23,14 +23,13 @@ export function OrderTable({
   selectedIds = [],
   onToggleSelect,
   onSelectAll,
-  onBookCourier,
 }: OrderTableProps) {
   const t = useTranslations("orders");
   const tShip = useTranslations("shipments");
   const allSelected = items.length > 0 && selectedIds.length === items.length;
 
   return (
-    <div className="overflow-x-auto rounded-2xl border bg-card">
+    <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="w-full min-w-[850px] text-left text-sm">
         <thead className="border-b bg-muted/50 text-xs text-muted-foreground">
           <tr>
@@ -47,6 +46,7 @@ export function OrderTable({
             )}
             <th className="px-4 py-3 font-semibold">{t("number")}</th>
             <th className="px-4 py-3 font-semibold">{t("customer")}</th>
+            <th className="px-4 py-3 font-semibold">{t("items")}</th>
             <th className="px-4 py-3 font-semibold">{t("total")}</th>
             <th className="px-4 py-3 font-semibold">{t("statusLabel")}</th>
             <th className="px-4 py-3 font-semibold">{tShip("courier")}</th>
@@ -59,9 +59,6 @@ export function OrderTable({
         <tbody className="divide-y">
           {items.map((item) => {
             const isSelected = selectedIds.includes(item.id);
-            const canBook =
-              !item.shipment &&
-              (item.status === "CONFIRMED" || item.status === "PACKED");
 
             return (
               <tr
@@ -100,8 +97,17 @@ export function OrderTable({
                     {item.customerPhone}
                   </div>
                 </td>
+                <td className="max-w-48 px-4 py-3">
+                  <p className="break-words">{item.firstItemName || "-"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.itemCount} {t("items")}
+                  </p>
+                </td>
                 <td className="px-4 py-3 font-medium">
                   {formatMoney(item.totalPaisa)}
+                  <p className="mt-1 whitespace-nowrap text-xs text-muted-foreground">
+                    {t("advance.remaining")}: {formatMoney(item.codAmountPaisa)}
+                  </p>
                 </td>
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
@@ -126,16 +132,13 @@ export function OrderTable({
                 </td>
                 <td className="px-4 py-3 text-right">
                   <CallVerificationButton order={item} />
-                  {canBook && onBookCourier && (
-                    <button
-                      type="button"
-                      onClick={() => onBookCourier(item)}
-                      className="inline-flex items-center gap-1 rounded-lg border bg-card px-2.5 py-1 text-xs font-semibold text-primary hover:bg-primary/5"
-                    >
-                      <PackageCheck size={13} />
-                      {tShip("bookCourier")}
-                    </button>
-                  )}
+                  <Link
+                    href={`/dashboard/orders/${item.id}`}
+                    className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-lg border px-3"
+                  >
+                    {t("workflow.update")}
+                    <ArrowRight size={14} />
+                  </Link>
                 </td>
               </tr>
             );

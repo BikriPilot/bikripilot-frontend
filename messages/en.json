@@ -692,6 +692,9 @@
     "settingsAudit": "Audit log"
   },
   "orders": {
+    "manualFallback": "Update manually when no courier shipment is linked",
+    "manageShipment": "Manage delivery in Shipments",
+    "workflow": { "description": "Confirmed orders first. Verify by phone, pack, then book Steadfast. Use the status filter for other orders.", "back": "Back to orders", "update": "Update", "actions": { "CONFIRMED": "Confirm order", "PACKED": "Mark packed", "SHIPPED": "Mark shipped manually", "DELIVERED": "Mark delivered manually", "PARTIALLY_DELIVERED": "Record partial delivery", "RETURNED": "Record return", "CANCELLED": "Cancel order" } },
     "statusLabel": "Status",
     "review": {
       "title": "AI Orders",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { hisabApi } from "@/lib/api/hisab.api";
@@ -18,6 +19,7 @@ import {
   Truck,
   XCircle,
   ShieldCheck,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ErrorState } from "@/components/common/PageStates";
@@ -29,6 +31,7 @@ import { RiskBadge } from "@/components/risk/RiskBadge";
 import { RiskCheckDialog } from "@/components/risk/RiskCheckDialog";
 import { formatMoney } from "@/lib/money";
 import { OrderForm } from "./OrderForm";
+import { getOrderActions } from "./order.workflow";
 import { CallVerificationButton } from "./CallVerificationButton";
 import { MessageSquare } from "lucide-react";
 import { useOrder, useOrderMutations } from "@/hooks/queries/useOrders";
@@ -39,6 +42,7 @@ import {
 
 export function OrderDetail({ orderId }: { orderId: string }) {
   const t = useTranslations("orders");
+  const router = useRouter();
   const paymentText = useTranslations("orders.advance");
   const methodText = useTranslations("enums.PaymentMethod");
   const { shopId, can } = useCurrentShop();
@@ -82,6 +86,11 @@ export function OrderDetail({ orderId }: { orderId: string }) {
   const statusEvents = order.statusEvents ?? [];
   const allowedTransitions = order.allowedTransitions ?? [];
   const activeShipment = order.activeShipment;
+  const visibleTransitions = getOrderActions(
+    order.status,
+    allowedTransitions,
+    Boolean(activeShipment),
+  );
   if (editing)
     return (
       <div className="space-y-4">
@@ -136,6 +145,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
         },
       });
       toast.success(t("updated"));
+      if (toStatus === "CONFIRMED") router.push("/dashboard/orders");
     } catch {
       toast.error(t("saveError"));
     }
@@ -176,9 +186,32 @@ export function OrderDetail({ orderId }: { orderId: string }) {
   return (
     <div className="space-y-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-muted-foreground">{t("order")}</p>
-          <h1 className="text-2xl font-semibold">{order.orderNumber}</h1>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            aria-label={t("workflow.back")}
+            title={t("workflow.back")}
+            className="grid size-11 place-items-center rounded-lg border"
+            onClick={() =>
+              router.push(
+                order.confirmedAt ||
+                  (!order.aiExtracted &&
+                    !order.conversationId &&
+                    !["MESSENGER", "COMMENT"].includes(order.source))
+                  ? "/dashboard/orders"
+                  : "/dashboard/ai-orders",
+              )
+            }
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <p className="text-sm text-muted-foreground">{t("order")}</p>
+            <h1 className="text-2xl font-semibold">{order.orderNumber}</h1>
+            <p className="text-sm text-muted-foreground">
+              {t(`status.${order.status}`)}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {order.conversationId && can("inbox.read") && (
@@ -210,24 +243,77 @@ export function OrderDetail({ orderId }: { orderId: string }) {
           >
             {t("print")}
           </Link>
-          {allowedTransitions.map((next) => (
-            <button
-              key={next}
-              type="button"
-              onClick={() => void changeStatus(next)}
-              disabled={
-                statusMutation.isPending ||
-                (next === "CONFIRMED" &&
-                  order.advanceRequired &&
-                  order.advancePaidPaisa < order.requiredAdvancePaisa)
-              }
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-            >
-              {t(`status.${next}`)}
-            </button>
-          ))}
+          {visibleTransitions
+            .filter(
+              (next) =>
+                ![
+                  "SHIPPED",
+                  "DELIVERED",
+                  "PARTIALLY_DELIVERED",
+                  "RETURNED",
+                ].includes(next),
+            )
+            .map((next) => (
+              <button
+                key={next}
+                type="button"
+                onClick={() => void changeStatus(next)}
+                disabled={
+                  statusMutation.isPending ||
+                  (next === "CONFIRMED" &&
+                    order.advanceRequired &&
+                    order.advancePaidPaisa < order.requiredAdvancePaisa)
+                }
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                {t(`workflow.actions.${next}`)}
+              </button>
+            ))}
         </div>
       </header>
+      {!activeShipment &&
+        visibleTransitions.some((next) =>
+          ["SHIPPED", "DELIVERED", "PARTIALLY_DELIVERED", "RETURNED"].includes(
+            next,
+          ),
+        ) && (
+          <details className="border-y py-3">
+            <summary className="min-h-11 cursor-pointer text-sm font-medium">
+              {t("manualFallback")}
+            </summary>
+            <div className="flex flex-wrap gap-2 py-3">
+              {visibleTransitions
+                .filter((next) =>
+                  [
+                    "SHIPPED",
+                    "DELIVERED",
+                    "PARTIALLY_DELIVERED",
+                    "RETURNED",
+                  ].includes(next),
+                )
+                .map((next) => (
+                  <button
+                    key={next}
+                    type="button"
+                    disabled={statusMutation.isPending}
+                    onClick={() => void changeStatus(next)}
+                    className="min-h-11 rounded-lg border px-4 text-sm"
+                  >
+                    {t(`workflow.actions.${next}`)}
+                  </button>
+                ))}
+            </div>
+          </details>
+        )}
+      {activeShipment && (
+        <Link
+          href="/dashboard/shipments"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary"
+        >
+          <Truck size={16} />
+          {t("manageShipment")}
+        </Link>
+      )}
 
       <section className="border-y bg-card px-4 py-5 sm:px-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -668,6 +754,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
       <BookShipmentDialog
         order={order}
         open={bookDialogOpen}
+        onBooked={() => router.push("/dashboard/shipments")}
         onClose={() => {
           setBookDialogOpen(false);
           void query.refetch();
@@ -677,6 +764,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
       <ManualShipmentDialog
         order={order}
         open={manualDialogOpen}
+        onBooked={() => router.push("/dashboard/shipments")}
         onClose={() => {
           setManualDialogOpen(false);
           void query.refetch();

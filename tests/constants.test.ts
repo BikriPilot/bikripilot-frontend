@@ -2,12 +2,18 @@ import { describe, expect, it } from "vitest";
 import { FEATURE_LIST } from "@/constants/features";
 import { PERMISSIONS, ROLE_PERMISSIONS } from "@/constants/permissions";
 import { canTransition } from "@/constants/orderStatus";
-import { NAV_SECTIONS } from "@/constants/navigation";
+import { NAV_SECTIONS, getActiveSection } from "@/constants/navigation";
 import en from "../messages/en.json";
 import bn from "../messages/bn.json";
 import { PAYMENT_METHODS } from "@/constants/enums";
 
 describe("shared business registries", () => {
+  it("selects the most specific sidebar section", () => {
+    expect(getActiveSection("/dashboard/ai/settings")?.key).toBe("ai");
+    expect(getActiveSection("/dashboard/settings/hisab")?.key).toBe("settings");
+    expect(getActiveSection("/dashboard/orders/order-id")?.key).toBe("orders");
+    expect(getActiveSection("/dashboard/ai-orders")?.key).toBe("orders");
+  });
   it("has bilingual payment method labels", () => {
     for (const method of PAYMENT_METHODS) {
       expect(en.enums.PaymentMethod[method]).toBeTruthy();

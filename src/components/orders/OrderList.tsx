@@ -6,6 +6,7 @@ import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { ordersApi } from "@/lib/api/orders.api";
 import { ORDER_STATUSES } from "@/constants/enums";
 import { toast } from "sonner";
+import { formatMoney } from '@/lib/money';
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Layers, X } from "lucide-react";
@@ -18,6 +19,7 @@ import { useOrders } from "@/hooks/queries/useOrders";
 import { OrderCard } from "./OrderCard";
 import { OrderTable } from "./OrderTable";
 import { OrderDetail } from "./OrderDetail";
+import { getOrderListStatus } from './order.workflow';
 import type { OrderListItemDTO } from "@/types/order";
 
 export function OrderList({
@@ -34,7 +36,7 @@ export function OrderList({
     limit: 20,
     sort: "createdAt",
     order: "desc",
-    status: searchParams.get("status") || undefined,
+    status: getOrderListStatus(searchParams.get('status'), reviewQueue),
     search: searchParams.get("search") || undefined,
     queue: reviewQueue ? "ai_review" : "orders",
   };
@@ -98,7 +100,7 @@ export function OrderList({
     <div className="space-y-6">
       <PageHeader
         title={reviewQueue ? t("review.title") : t("title")}
-        description={reviewQueue ? t("review.description") : t("description")}
+        description={reviewQueue ? t("review.description") : t("workflow.description")}
         action={
           !reviewQueue && can("order.write") ? (
             <Link
@@ -128,12 +130,12 @@ export function OrderList({
           {t("form.filterStatus")}
           <select
             className="min-h-11 rounded-lg border bg-card px-3 text-base"
-            value={filters.status || ""}
+            value={filters.status || 'ALL'}
             onChange={(event) => setFilter("status", event.target.value)}
           >
-            <option value="">{t("form.all")}</option>
+            <option value="ALL">{t("form.all")}</option>
             {ORDER_STATUSES.filter(
-              (status) => !reviewQueue || ["DRAFT", "PENDING"].includes(status),
+              (status) => !reviewQueue || ["DRAFT", "PENDING", "CANCELLED"].includes(status),
             ).map((status) => (
               <option key={status} value={status}>
                 {t(`status.${status}`)}
@@ -287,17 +289,14 @@ export function OrderList({
                 );
               }}
             >
-              <summary className="min-h-11 cursor-pointer">
-                <span className="font-semibold">{item.orderNumber}</span>
-                <span className="ml-3">
-                  {item.customerName || t("customer")}
-                </span>
-                <span className="ml-3 text-sm text-muted-foreground">
-                  {item.customerPhone}
-                </span>
-                <span className="ml-3 text-sm">
-                  {t(`status.${item.status}`)}
-                </span>
+              <summary className="min-h-11 cursor-pointer list-none">
+                <div className="grid items-center gap-3 md:grid-cols-[100px_1fr_1fr_130px_100px]">
+                  <span className="font-semibold text-primary">{item.orderNumber}</span>
+                  <div className="min-w-0"><p className="break-words font-medium">{item.customerName || t('customer')}</p><p className="text-sm text-muted-foreground">{item.customerPhone}</p></div>
+                  <div className="min-w-0 text-sm"><p className="break-words">{item.firstItemName || '-'}</p><p className="text-muted-foreground">{item.itemCount} {t('items')}</p></div>
+                  <div className="text-sm tabular-nums"><p className="font-semibold">{formatMoney(item.totalPaisa)}</p><p className="text-muted-foreground">{t('advance.remaining')}: {formatMoney(item.codAmountPaisa)}</p></div>
+                  <span className="text-sm">{t(`status.${item.status}`)}</span>
+                </div>
               </summary>
               <div className="mt-4 border-t pt-4">
                 {expandedOrderIds.includes(item.id) && (

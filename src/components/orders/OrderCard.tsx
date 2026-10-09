@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { PackageCheck, Truck } from "lucide-react";
+import { ArrowRight, Truck } from "lucide-react";
 import { ShipmentStatusBadge } from "@/components/couriers/ShipmentStatusBadge";
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { formatMoney } from "@/lib/money";
@@ -20,12 +20,8 @@ export function OrderCard({
   item,
   selected = false,
   onToggleSelect,
-  onBookCourier,
 }: OrderCardProps) {
   const t = useTranslations("orders");
-  const tShip = useTranslations("shipments");
-  const canBook =
-    !item.shipment && (item.status === "CONFIRMED" || item.status === "PACKED");
 
   return (
     <div
@@ -76,20 +72,19 @@ export function OrderCard({
         </div>
       )}
 
-      {canBook && onBookCourier && (
-        <div className="mt-3 border-t pt-2.5">
-          <button
-            type="button"
-            onClick={() => onBookCourier(item)}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border bg-card py-1.5 text-xs font-semibold text-primary hover:bg-primary/5"
-          >
-            <PackageCheck size={14} />
-            {tShip("bookCourier")}
-          </button>
-        </div>
-      )}
-      <div className="mt-3">
+      <p className="mt-3 break-words text-sm">{item.firstItemName || "-"}</p>
+      <p className="text-sm text-muted-foreground">
+        {t("advance.remaining")}: {formatMoney(item.codAmountPaisa)}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
         <CallVerificationButton order={item} />
+        <Link
+          href={`/dashboard/orders/${item.id}`}
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3"
+        >
+          {t("workflow.update")}
+          <ArrowRight size={14} />
+        </Link>
       </div>
     </div>
   );

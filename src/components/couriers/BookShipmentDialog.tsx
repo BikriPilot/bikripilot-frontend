@@ -1,38 +1,49 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { AlertTriangle, PackageCheck } from 'lucide-react';
-import { toast } from 'sonner';
-import { Field } from '@/components/common/Field';
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { AlertTriangle, PackageCheck } from "lucide-react";
+import { toast } from "sonner";
+import { Field } from "@/components/common/Field";
 import {
   useBookShipment,
   useCourierLocations,
   useCouriers,
-} from '@/hooks/queries/useCouriers';
-import type { OrderDTO, OrderListItemDTO } from '@/types/order';
+} from "@/hooks/queries/useCouriers";
+import type { OrderDTO, OrderListItemDTO } from "@/types/order";
 
 interface BookShipmentDialogProps {
   order: OrderDTO | OrderListItemDTO;
   open: boolean;
   onClose: () => void;
+  onBooked?: () => void;
 }
 
-export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogProps) {
-  const t = useTranslations('shipments.book');
+export function BookShipmentDialog({
+  order,
+  open,
+  onClose,
+  onBooked,
+}: BookShipmentDialogProps) {
+  const t = useTranslations("shipments.book");
   const { data: couriers, isPending: couriersLoading } = useCouriers();
   const bookMutation = useBookShipment();
 
   const activeCouriers = couriers?.filter((c) => c.isActive) || [];
-  const defaultCourier = activeCouriers.find((c) => c.isDefault) || activeCouriers[0];
+  const defaultCourier =
+    activeCouriers.find((c) => c.isDefault) ||
+    activeCouriers.find((c) => c.provider === "STEADFAST") ||
+    activeCouriers[0];
 
-  const [selectedCourierId, setSelectedCourierId] = useState<string>('');
+  const [selectedCourierId, setSelectedCourierId] = useState<string>("");
   const [codAmountTaka, setCodAmountTaka] = useState<string>(
     String(Math.round(order.codAmountPaisa / 100)),
   );
-  const [weightKg, setWeightKg] = useState<string>('0.5');
-  const [note, setNote] = useState<string>('');
-  const [itemDescription, setItemDescription] = useState<string>('Clothing / Fashion Items');
+  const [weightKg, setWeightKg] = useState<string>("0.5");
+  const [note, setNote] = useState<string>("");
+  const [itemDescription, setItemDescription] = useState<string>(
+    "Clothing / Fashion Items",
+  );
 
   // Pathao location states
   const [pathaoCityId, setPathaoCityId] = useState<number | null>(null);
@@ -41,35 +52,37 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
 
   // RedX location states
   const [redxAreaId, setRedxAreaId] = useState<number | null>(null);
-  const [redxAreaName, setRedxAreaName] = useState<string>('');
+  const [redxAreaName, setRedxAreaName] = useState<string>("");
 
-  const effectiveCourierId = selectedCourierId || defaultCourier?.id || '';
-  const currentCourier = activeCouriers.find((c) => c.id === effectiveCourierId);
+  const effectiveCourierId = selectedCourierId || defaultCourier?.id || "";
+  const currentCourier = activeCouriers.find(
+    (c) => c.id === effectiveCourierId,
+  );
 
   // Location queries
-  const isPathao = currentCourier?.provider === 'PATHAO';
-  const isRedx = currentCourier?.provider === 'REDX';
+  const isPathao = currentCourier?.provider === "PATHAO";
+  const isRedx = currentCourier?.provider === "REDX";
 
   const { data: pathaoCities } = useCourierLocations(
     isPathao ? effectiveCourierId : null,
-    'city',
+    "city",
   );
 
   const { data: pathaoZones } = useCourierLocations(
     isPathao && pathaoCityId ? effectiveCourierId : null,
-    'zone',
+    "zone",
     pathaoCityId || undefined,
   );
 
   const { data: pathaoAreas } = useCourierLocations(
     isPathao && pathaoZoneId ? effectiveCourierId : null,
-    'area',
+    "area",
     pathaoZoneId || undefined,
   );
 
   const { data: redxAreas } = useCourierLocations(
     isRedx ? effectiveCourierId : null,
-    'area',
+    "area",
     undefined,
     order.district || undefined,
   );
@@ -79,17 +92,17 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!effectiveCourierId) {
-      toast.error(t('selectCourierError'));
+      toast.error(t("selectCourierError"));
       return;
     }
 
     if (isPathao && (!pathaoCityId || !pathaoZoneId)) {
-      toast.error(t('pathaoLocationRequired'));
+      toast.error(t("pathaoLocationRequired"));
       return;
     }
 
     if (isRedx && (!redxAreaId || !redxAreaName)) {
-      toast.error(t('redxAreaRequired'));
+      toast.error(t("redxAreaRequired"));
       return;
     }
 
@@ -122,13 +135,14 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
       });
 
       toast.success(
-        t('bookedSuccess', {
-          tracking: result.trackingCode || result.consignmentId || '',
+        t("bookedSuccess", {
+          tracking: result.trackingCode || result.consignmentId || "",
         }),
       );
       onClose();
+      onBooked?.();
     } catch {
-      toast.error(t('bookingFailed'));
+      toast.error(t("bookingFailed"));
     }
   };
 
@@ -138,7 +152,7 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <PackageCheck className="text-primary" size={22} />
-            <h2 className="text-xl font-semibold">{t('title')}</h2>
+            <h2 className="text-xl font-semibold">{t("title")}</h2>
           </div>
           <button
             type="button"
@@ -155,39 +169,52 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
             <span>{order.orderNumber}</span>
             <span>{order.customerName}</span>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">{order.customerPhone}</p>
-          {'address' in order && order.address ? (
-            <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{order.address}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {order.customerPhone}
+          </p>
+          {"address" in order && order.address ? (
+            <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
+              {order.address}
+            </p>
           ) : null}
           {order.district && (
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {t('district')}: {order.district}
+              {t("district")}: {order.district}
             </p>
           )}
         </div>
 
         {/* Risk Warning if Medium or High */}
-        {order.riskLevel && (order.riskLevel === 'HIGH' || order.riskLevel === 'MEDIUM') && (
-          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning-soft p-3 text-xs text-warning">
-            <AlertTriangle size={16} className="shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold">{t('riskAlertTitle', { level: order.riskLevel })}</p>
-              <p className="mt-0.5">{t('riskAlertDescription')}</p>
+        {order.riskLevel &&
+          (order.riskLevel === "HIGH" || order.riskLevel === "MEDIUM") && (
+            <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning-soft p-3 text-xs text-warning">
+              <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">
+                  {t("riskAlertTitle", { level: order.riskLevel })}
+                </p>
+                <p className="mt-0.5">{t("riskAlertDescription")}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {couriersLoading ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">{t('loadingCouriers')}</p>
+          <p className="py-6 text-center text-sm text-muted-foreground">
+            {t("loadingCouriers")}
+          </p>
         ) : activeCouriers.length === 0 ? (
           <div className="rounded-xl border border-dashed p-6 text-center">
-            <p className="font-medium text-sm">{t('noCouriersConnected')}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{t('connectCourierFirst')}</p>
+            <p className="font-medium text-sm">{t("noCouriersConnected")}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t("connectCourierFirst")}
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium">{t('selectCourier')}</label>
+              <label className="mb-1.5 block text-sm font-medium">
+                {t("selectCourier")}
+              </label>
               <select
                 value={effectiveCourierId}
                 onChange={(e) => {
@@ -196,14 +223,15 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                   setPathaoZoneId(null);
                   setPathaoAreaId(null);
                   setRedxAreaId(null);
-                  setRedxAreaName('');
+                  setRedxAreaName("");
                 }}
                 className="h-11 w-full rounded-lg border bg-card px-3 text-sm focus:border-primary outline-none"
                 required
               >
                 {activeCouriers.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name} ({c.provider}) {c.isDefault ? `[${t('default')}]` : ''}
+                    {c.name} ({c.provider}){" "}
+                    {c.isDefault ? `[${t("default")}]` : ""}
                   </option>
                 ))}
               </select>
@@ -211,7 +239,7 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
 
             <div className="grid gap-3 sm:grid-cols-2">
               <Field
-                label={t('codAmountTaka')}
+                label={t("codAmountTaka")}
                 type="number"
                 value={codAmountTaka}
                 onChange={(e) => setCodAmountTaka(e.target.value)}
@@ -219,7 +247,7 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                 required
               />
               <Field
-                label={t('weightKg')}
+                label={t("weightKg")}
                 type="number"
                 step="0.1"
                 value={weightKg}
@@ -232,20 +260,26 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
             {/* Pathao cascaded dropdowns */}
             {isPathao && (
               <div className="space-y-3 rounded-xl border bg-muted/20 p-3.5">
-                <p className="font-semibold text-xs text-primary">{t('pathaoLocationTitle')}</p>
+                <p className="font-semibold text-xs text-primary">
+                  {t("pathaoLocationTitle")}
+                </p>
                 <div>
-                  <label className="mb-1 block text-xs font-medium">{t('city')}</label>
+                  <label className="mb-1 block text-xs font-medium">
+                    {t("city")}
+                  </label>
                   <select
-                    value={pathaoCityId || ''}
+                    value={pathaoCityId || ""}
                     onChange={(e) => {
-                      setPathaoCityId(e.target.value ? Number(e.target.value) : null);
+                      setPathaoCityId(
+                        e.target.value ? Number(e.target.value) : null,
+                      );
                       setPathaoZoneId(null);
                       setPathaoAreaId(null);
                     }}
                     className="h-10 w-full rounded-lg border bg-card px-3 text-sm focus:border-primary outline-none"
                     required
                   >
-                    <option value="">{t('selectCity')}</option>
+                    <option value="">{t("selectCity")}</option>
                     {pathaoCities?.map((city) => (
                       <option key={city.id} value={city.id}>
                         {city.name}
@@ -255,18 +289,22 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium">{t('zone')}</label>
+                  <label className="mb-1 block text-xs font-medium">
+                    {t("zone")}
+                  </label>
                   <select
-                    value={pathaoZoneId || ''}
+                    value={pathaoZoneId || ""}
                     disabled={!pathaoCityId}
                     onChange={(e) => {
-                      setPathaoZoneId(e.target.value ? Number(e.target.value) : null);
+                      setPathaoZoneId(
+                        e.target.value ? Number(e.target.value) : null,
+                      );
                       setPathaoAreaId(null);
                     }}
                     className="h-10 w-full rounded-lg border bg-card px-3 text-sm focus:border-primary outline-none disabled:opacity-50"
                     required
                   >
-                    <option value="">{t('selectZone')}</option>
+                    <option value="">{t("selectZone")}</option>
                     {pathaoZones?.map((zone) => (
                       <option key={zone.id} value={zone.id}>
                         {zone.name}
@@ -276,16 +314,20 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium">{t('area')} ({t('optional')})</label>
+                  <label className="mb-1 block text-xs font-medium">
+                    {t("area")} ({t("optional")})
+                  </label>
                   <select
-                    value={pathaoAreaId || ''}
+                    value={pathaoAreaId || ""}
                     disabled={!pathaoZoneId}
                     onChange={(e) => {
-                      setPathaoAreaId(e.target.value ? Number(e.target.value) : null);
+                      setPathaoAreaId(
+                        e.target.value ? Number(e.target.value) : null,
+                      );
                     }}
                     className="h-10 w-full rounded-lg border bg-card px-3 text-sm focus:border-primary outline-none disabled:opacity-50"
                   >
-                    <option value="">{t('selectArea')}</option>
+                    <option value="">{t("selectArea")}</option>
                     {pathaoAreas?.map((area) => (
                       <option key={area.id} value={area.id}>
                         {area.name}
@@ -299,21 +341,27 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
             {/* RedX Area select */}
             {isRedx && (
               <div className="space-y-3 rounded-xl border bg-muted/20 p-3.5">
-                <p className="font-semibold text-xs text-primary">{t('redxLocationTitle')}</p>
+                <p className="font-semibold text-xs text-primary">
+                  {t("redxLocationTitle")}
+                </p>
                 <div>
-                  <label className="mb-1 block text-xs font-medium">{t('redxArea')}</label>
+                  <label className="mb-1 block text-xs font-medium">
+                    {t("redxArea")}
+                  </label>
                   <select
-                    value={redxAreaId || ''}
+                    value={redxAreaId || ""}
                     onChange={(e) => {
-                      const areaId = e.target.value ? Number(e.target.value) : null;
+                      const areaId = e.target.value
+                        ? Number(e.target.value)
+                        : null;
                       setRedxAreaId(areaId);
                       const areaObj = redxAreas?.find((a) => a.id === areaId);
-                      setRedxAreaName(areaObj?.name || '');
+                      setRedxAreaName(areaObj?.name || "");
                     }}
                     className="h-10 w-full rounded-lg border bg-card px-3 text-sm focus:border-primary outline-none"
                     required
                   >
-                    <option value="">{t('selectRedxArea')}</option>
+                    <option value="">{t("selectRedxArea")}</option>
                     {redxAreas?.map((area) => (
                       <option key={area.id} value={area.id}>
                         {area.name}
@@ -325,17 +373,17 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
             )}
 
             <Field
-              label={t('itemDescription')}
+              label={t("itemDescription")}
               value={itemDescription}
               onChange={(e) => setItemDescription(e.target.value)}
               placeholder="e.g. Cotton Dress"
             />
 
             <Field
-              label={t('noteToCourier')}
+              label={t("noteToCourier")}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder={t('notePlaceholder')}
+              placeholder={t("notePlaceholder")}
             />
 
             <div className="flex justify-end gap-3 pt-3">
@@ -345,7 +393,7 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                 disabled={bookMutation.isPending}
                 className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
               >
-                {t('cancel')}
+                {t("cancel")}
               </button>
               <button
                 type="submit"
@@ -353,7 +401,7 @@ export function BookShipmentDialog({ order, open, onClose }: BookShipmentDialogP
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 <PackageCheck size={16} />
-                {bookMutation.isPending ? t('booking') : t('confirmBooking')}
+                {bookMutation.isPending ? t("booking") : t("confirmBooking")}
               </button>
             </div>
           </form>

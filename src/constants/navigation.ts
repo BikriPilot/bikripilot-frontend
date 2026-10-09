@@ -288,3 +288,24 @@ export const NAV_SECTIONS: NavSection[] = [
 export const NAV_FOOTER_ITEMS = [
   { key: "help", href: "/dashboard/help", icon: LifeBuoy, labelKey: "help" },
 ] as const;
+
+export const getActiveSection = (
+  pathname: string,
+  sections: NavSection[] = NAV_SECTIONS,
+) =>
+  sections
+    .map((section) => ({
+      section,
+      length: Math.max(
+        0,
+        ...[section.href, ...section.subNav.map((item) => item.href)]
+          .filter(
+            (href) =>
+              pathname === href ||
+              (href !== "/dashboard" && pathname.startsWith(`${href}/`)),
+          )
+          .map((href) => href.length),
+      ),
+    }))
+    .filter((item) => item.length > 0)
+    .sort((first, second) => second.length - first.length)[0]?.section;

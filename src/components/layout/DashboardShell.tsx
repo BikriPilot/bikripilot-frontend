@@ -1,4 +1,5 @@
 "use client";
+import { getActiveSection } from "@/constants/navigation";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Menu, Store, UserCircle, X } from "lucide-react";
@@ -44,18 +45,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const isPrint =
     pathname.includes("/print") ||
     pathname.startsWith("/dashboard/hisab/statement/");
-  const isActive = (href: string) =>
-    href === "/dashboard"
-      ? pathname === href
-      : pathname.startsWith(href) ||
-        Boolean(
-          sections
-            .find((section) => section.href === href)
-            ?.subNav.some(
-              (item) =>
-                pathname === item.href || pathname.startsWith(`${item.href}/`),
-            ),
-        );
+  const activeSection = getActiveSection(pathname, sections);
+  const isActive = (href: string) => activeSection?.href === href;
   if (isPrint)
     return <div className="min-h-screen bg-background">{children}</div>;
   return (
