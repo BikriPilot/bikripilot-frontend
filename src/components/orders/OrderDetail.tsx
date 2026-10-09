@@ -31,6 +31,7 @@ import { RiskBadge } from "@/components/risk/RiskBadge";
 import { RiskCheckDialog } from "@/components/risk/RiskCheckDialog";
 import { formatMoney } from "@/lib/money";
 import { OrderForm } from "./OrderForm";
+import { CancelOrderDialog } from "./CancelOrderDialog";
 import { getOrderActions } from "./order.workflow";
 import { CallVerificationButton } from "./CallVerificationButton";
 import { MessageSquare } from "lucide-react";
@@ -40,7 +41,13 @@ import {
   useSyncShipment,
 } from "@/hooks/queries/useCouriers";
 
-export function OrderDetail({ orderId }: { orderId: string }) {
+export function OrderDetail({
+  orderId,
+  onBack,
+}: {
+  orderId: string;
+  onBack?: () => void;
+}) {
   const t = useTranslations("orders");
   const router = useRouter();
   const paymentText = useTranslations("orders.advance");
@@ -65,6 +72,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
   });
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [cancellationOpen, setCancellationOpen] = useState(false);
   const tShip = useTranslations("shipments");
   const query = useOrder(orderId);
   const statusMutation = useOrderMutations().status;
@@ -112,12 +120,10 @@ export function OrderDetail({ orderId }: { orderId: string }) {
     );
 
   const changeStatus = async (toStatus: string) => {
-    let cancelReason: string | undefined;
     let restock: boolean | undefined;
     if (toStatus === "CANCELLED") {
-      const reason = window.prompt(t("form.cancelReason"));
-      if (!reason?.trim()) return;
-      cancelReason = reason.trim();
+      setCancellationOpen(true);
+      return;
     }
     if (toStatus === "RETURNED") {
       if (!window.confirm(t("form.confirmReturn"))) return;
@@ -140,7 +146,6 @@ export function OrderDetail({ orderId }: { orderId: string }) {
         id: order.id,
         body: {
           toStatus,
-          ...(cancelReason ? { cancelReason } : {}),
           ...(restock !== undefined ? { restock } : {}),
         },
       });
@@ -182,6 +187,10 @@ export function OrderDetail({ orderId }: { orderId: string }) {
   const canBookCourier =
     !activeShipment &&
     (order.status === "CONFIRMED" || order.status === "PACKED");
+  const dispatchBlocked = !order.callVerifiedAt || order.status !== "PACKED";
+  const dispatchHint = !order.callVerifiedAt
+    ? t("dispatch.callFirst")
+    : t("dispatch.packFirst");
 
   return (
     <div className="space-y-5">
@@ -193,14 +202,16 @@ export function OrderDetail({ orderId }: { orderId: string }) {
             title={t("workflow.back")}
             className="grid size-11 place-items-center rounded-lg border"
             onClick={() =>
-              router.push(
-                order.confirmedAt ||
-                  (!order.aiExtracted &&
-                    !order.conversationId &&
-                    !["MESSENGER", "COMMENT"].includes(order.source))
-                  ? "/dashboard/orders"
-                  : "/dashboard/ai-orders",
-              )
+              onBack
+                ? onBack()
+                : router.push(
+                    order.confirmedAt ||
+                      (!order.aiExtracted &&
+                        !order.conversationId &&
+                        !["MESSENGER", "COMMENT"].includes(order.source))
+                      ? "/dashboard/orders"
+                      : "/dashboard/ai-orders",
+                  )
             }
           >
             <ArrowLeft size={18} />
@@ -211,6 +222,11 @@ export function OrderDetail({ orderId }: { orderId: string }) {
             <p className="text-sm text-muted-foreground">
               {t(`status.${order.status}`)}
             </p>
+            {order.status === "CANCELLED" && order.cancelReason && (
+              <p className="mt-1 break-words text-sm text-danger">
+                {t("dispatch.cancelReason")}: {order.cancelReason}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -260,6 +276,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                 onClick={() => void changeStatus(next)}
                 disabled={
                   statusMutation.isPending ||
+                  (next === "PACKED" && !order.callVerifiedAt) ||
                   (next === "CONFIRMED" &&
                     order.advanceRequired &&
                     order.advancePaidPaisa < order.requiredAdvancePaisa)
@@ -271,6 +288,17 @@ export function OrderDetail({ orderId }: { orderId: string }) {
             ))}
         </div>
       </header>
+      <CancelOrderDialog
+        open={cancellationOpen}
+        onClose={() => setCancellationOpen(false)}
+        onConfirm={async (cancelReason) => {
+          await statusMutation.mutateAsync({
+            id: order.id,
+            body: { toStatus: "CANCELLED", cancelReason },
+          });
+          toast.success(t("updated"));
+        }}
+      />
       {!activeShipment &&
         visibleTransitions.some((next) =>
           ["SHIPPED", "DELIVERED", "PARTIALLY_DELIVERED", "RETURNED"].includes(
@@ -295,7 +323,15 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                   <button
                     key={next}
                     type="button"
-                    disabled={statusMutation.isPending}
+                    disabled={
+                      statusMutation.isPending ||
+                      (next === "SHIPPED" && dispatchBlocked)
+                    }
+                    title={
+                      next === "SHIPPED" && dispatchBlocked
+                        ? dispatchHint
+                        : undefined
+                    }
                     onClick={() => void changeStatus(next)}
                     className="min-h-11 rounded-lg border px-4 text-sm"
                   >
@@ -491,6 +527,14 @@ export function OrderDetail({ orderId }: { orderId: string }) {
       </section>
 
       {/* Shipment Card (Plan 14 §8.3, §8.10) */}
+      {canBookCourier && dispatchBlocked && (
+        <p
+          role="status"
+          className="rounded-lg bg-warning-soft p-3 text-sm text-foreground"
+        >
+          {dispatchHint}
+        </p>
+      )}
       <section className="rounded-2xl border bg-card p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -605,6 +649,8 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                 <button
                   type="button"
                   onClick={() => setBookDialogOpen(true)}
+                  disabled={dispatchBlocked || !can("shipment.write")}
+                  title={dispatchBlocked ? dispatchHint : undefined}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   <PackageCheck size={16} />
@@ -613,6 +659,8 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                 <button
                   type="button"
                   onClick={() => setManualDialogOpen(true)}
+                  disabled={dispatchBlocked || !can("shipment.write")}
+                  title={dispatchBlocked ? dispatchHint : undefined}
                   className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted"
                 >
                   <Truck size={15} />

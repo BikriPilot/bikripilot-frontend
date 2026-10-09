@@ -80,7 +80,7 @@ export function OrderCard({
         <CallVerificationButton order={item} />
         <Link
           href={`/dashboard/orders/${item.id}`}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3"
+          className="inline-flex min-h-11 w-36 justify-center items-center gap-2 rounded-lg bg-primary px-3 text-primary-foreground"
         >
           {t("workflow.update")}
           <ArrowRight size={14} />

@@ -10,14 +10,23 @@ export const ordersApi = {
         verified,
       })
       .then((response) => response.data.data),
-  bulkStatus: (shopId: string, orderIds: string[], toStatus: string) =>
+  bulkStatus: (
+    shopId: string,
+    orderIds: string[],
+    toStatus: string,
+    cancelReason?: string,
+  ) =>
     api
       .post<{
         data: {
           succeeded: string[];
           failed: { id: string; code: string; message: string }[];
         };
-      }>(path(shopId, "/bulk-status"), { orderIds, toStatus })
+      }>(path(shopId, "/bulk-status"), {
+        orderIds,
+        toStatus,
+        ...(cancelReason ? { cancelReason } : {}),
+      })
       .then((response) => response.data.data),
   update: (shopId: string, id: string, body: Record<string, unknown>) =>
     api

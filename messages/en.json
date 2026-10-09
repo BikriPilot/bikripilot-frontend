@@ -692,9 +692,37 @@
     "settingsAudit": "Audit log"
   },
   "orders": {
+    "dispatch": {
+      "cancelReason": "Cancellation reason",
+      "callFirst": "Verify the order by phone first",
+      "packFirst": "Mark the order packed first",
+      "ready": "Ready for dispatch"
+    },
+    "cancellation": {
+      "title": "Cancel order",
+      "reason": "Cancellation reason",
+      "close": "Close",
+      "keep": "Keep order",
+      "submit": "Cancel order",
+      "saving": "Cancelling...",
+      "error": "Cancellation failed. Your reason is kept; try again."
+    },
     "manualFallback": "Update manually when no courier shipment is linked",
     "manageShipment": "Manage delivery in Shipments",
-    "workflow": { "description": "Confirmed orders first. Verify by phone, pack, then book Steadfast. Use the status filter for other orders.", "back": "Back to orders", "update": "Update", "actions": { "CONFIRMED": "Confirm order", "PACKED": "Mark packed", "SHIPPED": "Mark shipped manually", "DELIVERED": "Mark delivered manually", "PARTIALLY_DELIVERED": "Record partial delivery", "RETURNED": "Record return", "CANCELLED": "Cancel order" } },
+    "workflow": {
+      "description": "Confirmed orders first. Verify by phone, pack, then book Steadfast. Use the status filter for other orders.",
+      "back": "Back to orders",
+      "update": "Update",
+      "actions": {
+        "CONFIRMED": "Confirm order",
+        "PACKED": "Mark packed",
+        "SHIPPED": "Mark shipped manually",
+        "DELIVERED": "Mark delivered manually",
+        "PARTIALLY_DELIVERED": "Record partial delivery",
+        "RETURNED": "Record return",
+        "CANCELLED": "Cancel order"
+      }
+    },
     "statusLabel": "Status",
     "review": {
       "title": "AI Orders",
@@ -1953,6 +1981,9 @@
     }
   },
   "shipments": {
+    "collectedAmount": "Amount collected (taka)",
+    "collectedAmountError": "Enter the collected amount between zero and the parcel COD amount.",
+    "manualProvider": "Manual courier",
     "title": "Shipments",
     "description": "Track all parcels across Steadfast, Pathao, RedX, and manual couriers.",
     "shipmentCardTitle": "Courier & Delivery",

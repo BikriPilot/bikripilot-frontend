@@ -33,7 +33,7 @@ export function CallVerificationButton({
       aria-pressed={Boolean(order.callVerifiedAt)}
       title={order.callVerifiedAt ? t("undoCall") : t("callHint")}
       disabled={mutation.isPending}
-      className={`inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm ${order.callVerifiedAt ? "border-success text-success" : ""}`}
+      className={`inline-flex min-h-11 w-36 justify-center items-center gap-2 rounded-lg border px-3 text-sm ${order.callVerifiedAt ? "border-success bg-success-soft text-success" : ""}`}
       onClick={async () => {
         try {
           await mutation.mutateAsync();
