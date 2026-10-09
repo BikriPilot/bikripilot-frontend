@@ -1,19 +1,19 @@
-export type CourierProvider = 'STEADFAST' | 'PATHAO' | 'REDX' | 'MANUAL';
+export type CourierProvider = "STEADFAST" | "PATHAO" | "REDX" | "MANUAL";
 
 export type ShipmentStatus =
-  | 'CREATED'
-  | 'PICKUP_PENDING'
-  | 'IN_TRANSIT'
-  | 'OUT_FOR_DELIVERY'
-  | 'DELIVERED'
-  | 'PARTIAL_DELIVERED'
-  | 'ON_HOLD'
-  | 'RETURNING'
-  | 'RETURNED'
-  | 'CANCELLED'
-  | 'UNKNOWN';
+  | "CREATED"
+  | "PICKUP_PENDING"
+  | "IN_TRANSIT"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED"
+  | "PARTIAL_DELIVERED"
+  | "ON_HOLD"
+  | "RETURNING"
+  | "RETURNED"
+  | "CANCELLED"
+  | "UNKNOWN";
 
-export type ShipmentEventSource = 'WEBHOOK' | 'SYNC' | 'MANUAL' | 'SYSTEM';
+export type ShipmentEventSource = "WEBHOOK" | "SYNC" | "MANUAL" | "SYSTEM";
 
 export interface CourierConnectionDTO {
   id: string;
@@ -127,7 +127,8 @@ export interface ManualShipmentInput {
 }
 
 export interface UpdateManualStatusInput {
-  status: 'DELIVERED' | 'PARTIAL_DELIVERED' | 'RETURNED' | 'IN_TRANSIT' | 'ON_HOLD';
+  status:
+    "DELIVERED" | "PARTIAL_DELIVERED" | "RETURNED" | "IN_TRANSIT" | "ON_HOLD";
   collectedAmountPaisa?: number;
   note?: string;
 }
@@ -139,7 +140,7 @@ export interface CancelShipmentInput {
 export interface ShipmentListQuery {
   page?: number;
   limit?: number;
-  status?: ShipmentStatus;
+  status?: string;
   provider?: CourierProvider;
   courierId?: string;
   active?: boolean;

@@ -82,7 +82,7 @@ export function ShipmentTable() {
   const [cancelReason, setCancelReason] = useState("");
 
   const currentTabObj = STATUS_TABS.find((t) => t.key === activeTab);
-  const statusParam = currentTabObj?.statuses?.[0]; // backend accepts single status or filter
+  const statusParam = currentTabObj?.statuses?.join(",");
 
   const { data, isPending, isError, refetch } = useShipments({
     page,
