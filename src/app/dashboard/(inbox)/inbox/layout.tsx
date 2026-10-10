@@ -13,7 +13,8 @@ export default function InboxLayout({
   const pathname = usePathname();
   const router = useRouter();
 
-  const conversationId = typeof params?.conversationId === "string" ? params.conversationId : null;
+  const conversationId =
+    typeof params?.conversationId === "string" ? params.conversationId : null;
   const isMobileListOnly = pathname === "/dashboard/inbox";
 
   // Activate realtime socket listener for new messages & updates
@@ -24,10 +25,12 @@ export default function InboxLayout({
   };
 
   return (
-    <div className="flex h-[calc(100dvh-56px)] md:h-[calc(100dvh-136px)] w-full overflow-hidden rounded-none md:rounded-2xl md:border bg-card shadow-xs">
+    <div
+      className={`flex w-full min-h-0 overflow-hidden bg-card md:rounded-lg md:border md:h-[calc(100dvh-192px)] ${isMobileListOnly ? "h-[calc(100dvh-240px)] min-h-80" : "fixed inset-0 z-40 h-dvh md:static"}`}
+    >
       {/* Left Pane: Conversation List */}
       <div
-        className={`w-full md:w-[340px] xl:w-[360px] shrink-0 h-full ${
+        className={`w-full md:w-[300px] xl:w-[340px] shrink-0 h-full min-h-0 ${
           isMobileListOnly ? "flex" : "hidden md:flex"
         }`}
       >

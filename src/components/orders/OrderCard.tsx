@@ -8,6 +8,7 @@ import { RiskBadge } from "@/components/risk/RiskBadge";
 import { formatMoney } from "@/lib/money";
 import type { OrderListItemDTO } from "@/types/order";
 import { CallVerificationButton } from "./CallVerificationButton";
+import { OrderConversationLink } from "./OrderConversationLink";
 
 interface OrderCardProps {
   item: OrderListItemDTO;
@@ -77,6 +78,7 @@ export function OrderCard({
         {t("advance.remaining")}: {formatMoney(item.codAmountPaisa)}
       </p>
       <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
+        <OrderConversationLink conversationId={item.conversationId} />
         <CallVerificationButton order={item} />
         <Link
           href={`/dashboard/orders/${item.id}`}

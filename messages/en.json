@@ -1,4 +1,10 @@
 {
+  "credentialSecurity": {
+    "title": "Credential protection",
+    "meta": "Authorize through Facebook. Bikrio does not ask for your Facebook password. Page access tokens are encrypted with AES-256-GCM on our server and are not returned to the seller interface. You can revoke access in Facebook's Business Integrations settings.",
+    "courier": "Saved API keys and secrets are encrypted with AES-256-GCM on our server. After saving, the seller interface receives masked key details, not your full credentials. Change or revoke keys through your courier provider when needed.",
+    "serverAccess": "Our server decrypts credentials when calling the provider; this is not zero-knowledge storage. Protect your account with two-factor authentication and never share keys in chat."
+  },
   "common": {
     "brand": "Bikrio",
     "languageNameBn": "বাংলা",
@@ -955,6 +961,8 @@
       "remove_branding": "Remove branding"
     },
     "openMenu": "Open menu",
+    "hideSidebar": "Hide sidebar",
+    "showSidebar": "Show sidebar",
     "more": "More",
     "close": "Close",
     "logout": "Log out",

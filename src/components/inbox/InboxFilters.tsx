@@ -41,6 +41,7 @@ export function InboxFilters({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t("searchPlaceholder")}
+          aria-label={t("searchPlaceholder")}
           className="h-9 w-full rounded-lg border bg-background pl-9 pr-3 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
@@ -54,6 +55,7 @@ export function InboxFilters({
               key={f}
               type="button"
               onClick={() => onSelectFilter(f)}
+              aria-pressed={isActive}
               className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-2xs"

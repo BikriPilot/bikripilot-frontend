@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  ImagePlus,
-  Send,
-  X,
-  Loader2,
-  FileText,
-  Sparkles,
-} from "lucide-react";
+import { ImagePlus, Send, X, Loader2, FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
@@ -126,7 +119,9 @@ export function Composer({
     const currentText = text.trim();
     const currentAttachment = attachedImage;
 
-    const isEdited = activeAiRunId ? currentText !== originalDraftText : undefined;
+    const isEdited = activeAiRunId
+      ? currentText !== originalDraftText
+      : undefined;
     const runIdToSend = activeAiRunId || undefined;
 
     setText("");
@@ -154,7 +149,8 @@ export function Composer({
   };
 
   const handleGenerateAiDraft = async () => {
-    if (disabled || isGeneratingDraft || mutations.generateAiDraft.isPending) return;
+    if (disabled || isGeneratingDraft || mutations.generateAiDraft.isPending)
+      return;
     setIsGeneratingDraft(true);
     try {
       const draft = await mutations.generateAiDraft.mutateAsync(undefined);
@@ -189,11 +185,12 @@ export function Composer({
     }
   };
 
-  const disabled = isWindowClosed || mutations.sendMessage.isPending || isUploading;
+  const disabled =
+    isWindowClosed || mutations.sendMessage.isPending || isUploading;
   const hasAiDraft = Boolean(localDraftData || conversation?.aiDraftText);
 
   return (
-    <div className="relative border-t bg-card p-3">
+    <div className="relative shrink-0 border-t bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:p-3">
       {hasAiDraft && (
         <AiDraftBar
           conversationId={conversationId}
@@ -243,8 +240,8 @@ export function Composer({
         </div>
       )}
 
-      <div className="flex items-end gap-2 rounded-xl border bg-background p-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
-        <div className="flex items-center gap-1 self-end pb-1 text-muted-foreground">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-2 rounded-lg border bg-background p-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+        <div className="col-start-1 row-start-2 flex items-center gap-1 text-muted-foreground">
           <input
             ref={fileInputRef}
             type="file"
@@ -258,6 +255,7 @@ export function Composer({
             onClick={() => fileInputRef.current?.click()}
             className="grid size-8 place-items-center rounded-lg hover:bg-muted hover:text-foreground disabled:opacity-50"
             title={t("attachImage")}
+            aria-label={t("attachImage")}
           >
             {isUploading ? (
               <Loader2 size={16} className="animate-spin text-primary" />
@@ -271,15 +269,21 @@ export function Composer({
             onClick={() => setPickerOpen((prev) => !prev)}
             className="grid size-8 place-items-center rounded-lg hover:bg-muted hover:text-foreground disabled:opacity-50"
             title={t("savedReplies")}
+            aria-label={t("savedReplies")}
           >
             <FileText size={18} />
           </button>
           <button
             type="button"
-            disabled={disabled || isGeneratingDraft || mutations.generateAiDraft.isPending}
+            disabled={
+              disabled ||
+              isGeneratingDraft ||
+              mutations.generateAiDraft.isPending
+            }
             onClick={handleGenerateAiDraft}
             className="grid size-8 place-items-center rounded-lg hover:bg-muted hover:text-foreground text-primary disabled:opacity-50 transition-colors"
             title={t("generateAiDraft")}
+            aria-label={t("generateAiDraft")}
           >
             {isGeneratingDraft || mutations.generateAiDraft.isPending ? (
               <Loader2 size={16} className="animate-spin text-primary" />
@@ -296,11 +300,14 @@ export function Composer({
           value={text}
           onChange={handleTextChange}
           onKeyDown={handleKeyDown}
-          placeholder={isWindowClosed ? t("windowClosedNotice") : t("typeMessage")}
-          className="max-h-36 flex-1 resize-none bg-transparent py-1.5 text-sm focus:outline-none disabled:opacity-50"
+          placeholder={
+            isWindowClosed ? t("windowClosedNotice") : t("typeMessage")
+          }
+          aria-label={t("typeMessage")}
+          className="col-span-2 col-start-1 row-start-1 min-h-9 w-full min-w-0 max-h-36 resize-none overflow-y-auto bg-transparent px-1 py-1.5 text-sm leading-6 [overflow-wrap:anywhere] focus:outline-none disabled:opacity-50"
         />
 
-        <div className="flex items-center gap-2 self-end pb-1">
+        <div className="col-start-2 row-start-2 flex shrink-0 items-center gap-2">
           <span className="text-[11px] font-mono text-muted-foreground">
             {text.length}/2000
           </span>

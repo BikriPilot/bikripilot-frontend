@@ -12,7 +12,7 @@ export function NotificationBell() {
   const t = useTranslations("step8");
   const { shopId } = useCurrentShop();
   const query = useQuery({
-    queryKey: queryKeys.notifications,
+    queryKey: [...queryKeys.notifications, shopId, "unread-count"],
     queryFn: () => notificationsApi.unreadCount(shopId!),
     enabled: Boolean(shopId),
   });

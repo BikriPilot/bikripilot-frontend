@@ -35,7 +35,9 @@ export function useConversations(query?: ConversationListQuery) {
       inboxApi.listConversations(shopId!, { ...query, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) =>
-      lastPage.meta?.hasMore ? (lastPage.meta.nextCursor ?? undefined) : undefined,
+      lastPage.meta?.hasMore
+        ? (lastPage.meta.nextCursor ?? undefined)
+        : undefined,
     enabled: Boolean(shopId),
     placeholderData: (prev) => prev,
   });
@@ -63,7 +65,9 @@ export function useMessages(conversationId: string | null | undefined) {
       }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) =>
-      lastPage.meta?.hasMore ? (lastPage.meta.nextCursor ?? undefined) : undefined,
+      lastPage.meta?.hasMore
+        ? (lastPage.meta.nextCursor ?? undefined)
+        : undefined,
     enabled: Boolean(shopId && conversationId),
   });
 }
@@ -166,6 +170,11 @@ export function useInboxRealtime(activeConversationId?: string | null) {
             ...page,
             data: page.data.map((conv) => {
               if (conv.id !== conversationId) return conv;
+              if (
+                new Date(message.sentAt).getTime() <
+                new Date(conv.lastMessageAt).getTime()
+              )
+                return conv;
               return {
                 ...conv,
                 lastMessageAt: message.sentAt,
@@ -227,6 +236,9 @@ export function useInboxRealtime(activeConversationId?: string | null) {
   const handleConversationUpdated = useCallback(
     ({ conversation }: { conversation: ConversationListItemDTO }) => {
       if (!shopId) return;
+      void queryClient.invalidateQueries({
+        queryKey: ["conversations", shopId],
+      });
 
       queryClient.setQueriesData<
         InfiniteData<{ data: ConversationListItemDTO[]; meta?: CursorMeta }>
@@ -297,7 +309,12 @@ export function useInboxMutations(conversationId?: string | null) {
       >(queryKeys.messages(shopId, conversationId), (old) => {
         if (!old) {
           return {
-            pages: [{ data: [optimisticMsg], meta: { hasMore: false, nextCursor: null } }],
+            pages: [
+              {
+                data: [optimisticMsg],
+                meta: { hasMore: false, nextCursor: null },
+              },
+            ],
             pageParams: [undefined],
           };
         }
@@ -379,7 +396,8 @@ export function useInboxMutations(conversationId?: string | null) {
   });
 
   const retryMessageMutation = useMutation({
-    mutationFn: (messageId: string) => inboxApi.retryMessage(shopId!, messageId),
+    mutationFn: (messageId: string) =>
+      inboxApi.retryMessage(shopId!, messageId),
     onSuccess: (retriedMsg) => {
       if (!shopId || !conversationId) return;
 
@@ -512,7 +530,11 @@ export function useInboxMutations(conversationId?: string | null) {
 
   const extractOrderWithAiMutation = useMutation({
     mutationFn: (autoCreateDraftOrder?: boolean) =>
-      inboxApi.extractOrderWithAi(shopId!, conversationId!, autoCreateDraftOrder),
+      inboxApi.extractOrderWithAi(
+        shopId!,
+        conversationId!,
+        autoCreateDraftOrder,
+      ),
     onSuccess: () => {
       if (!shopId || !conversationId) return;
       void queryClient.invalidateQueries({
@@ -522,8 +544,7 @@ export function useInboxMutations(conversationId?: string | null) {
   });
 
   const summarizeConversationMutation = useMutation({
-    mutationFn: () =>
-      inboxApi.summarizeConversation(shopId!, conversationId!),
+    mutationFn: () => inboxApi.summarizeConversation(shopId!, conversationId!),
     onSuccess: () => {
       if (!shopId || !conversationId) return;
       void queryClient.invalidateQueries({
@@ -533,8 +554,7 @@ export function useInboxMutations(conversationId?: string | null) {
   });
 
   const discardAiDraftMutation = useMutation({
-    mutationFn: () =>
-      inboxApi.discardAiDraft(shopId!, conversationId!),
+    mutationFn: () => inboxApi.discardAiDraft(shopId!, conversationId!),
     onSuccess: () => {
       if (!shopId || !conversationId) return;
       void queryClient.invalidateQueries({

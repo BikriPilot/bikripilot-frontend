@@ -9,6 +9,7 @@ import { formatMoney } from "@/lib/money";
 import { formatDate } from "@/lib/date";
 import type { OrderListItemDTO } from "@/types/order";
 import { CallVerificationButton } from "./CallVerificationButton";
+import { OrderConversationLink } from "./OrderConversationLink";
 
 interface OrderTableProps {
   items: OrderListItemDTO[];
@@ -131,6 +132,7 @@ export function OrderTable({
                   {formatDate(item.createdAt)}
                 </td>
                 <td className="px-4 py-3 text-right">
+                  <OrderConversationLink conversationId={item.conversationId} />
                   <CallVerificationButton order={item} />
                   <Link
                     href={`/dashboard/orders/${item.id}`}

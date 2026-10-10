@@ -11,7 +11,7 @@ function renderWithIntl(ui: React.ReactElement) {
   return render(
     <NextIntlClientProvider locale="en" messages={enMessages}>
       {ui}
-    </NextIntlClientProvider>
+    </NextIntlClientProvider>,
   );
 }
 
@@ -29,10 +29,12 @@ describe("WindowNotice", () => {
         window={windowState}
         useHumanAgentTag={false}
         onToggleHumanAgentTag={vi.fn()}
-      />
+      />,
     );
 
-    expect(screen.getByText(/24-hour messaging window is active/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/24-hour messaging window is active/i),
+    ).toBeInTheDocument();
   });
 
   it("renders closed notice and human agent tag checkbox when standard window is expired", () => {
@@ -49,10 +51,12 @@ describe("WindowNotice", () => {
         window={windowState}
         useHumanAgentTag={false}
         onToggleHumanAgentTag={onToggle}
-      />
+      />,
     );
 
-    expect(screen.getByText(/24-hour standard messaging window has closed/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/24-hour standard messaging window has closed/i),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Send using Human Agent Tag/i)).toBeInTheDocument();
 
     const checkbox = screen.getByRole("checkbox");
@@ -83,12 +87,25 @@ describe("MessageBubble", () => {
     };
 
     renderWithIntl(
-      <MessageBubble message={message} onRetry={vi.fn()} onOpenImage={vi.fn()} />
+      <MessageBubble
+        message={message}
+        onRetry={vi.fn()}
+        onOpenImage={vi.fn()}
+      />,
     );
 
     expect(
-      screen.getByText("Hello, I want to order a bag <script>alert(1)</script>")
+      screen.getByText(
+        "Hello, I want to order a bag <script>alert(1)</script>",
+      ),
     ).toBeInTheDocument();
+    const text = screen.getByText(
+      "Hello, I want to order a bag <script>alert(1)</script>",
+    );
+    expect(text.closest(".whitespace-pre-wrap")).toHaveClass(
+      "[overflow-wrap:anywhere]",
+    );
+    expect(text.closest(".w-fit")).toHaveClass("max-w-[min(80%,28rem)]");
   });
 
   it("renders outbound message with HUMAN AGENT tag badge", () => {
@@ -116,7 +133,11 @@ describe("MessageBubble", () => {
     };
 
     renderWithIntl(
-      <MessageBubble message={message} onRetry={vi.fn()} onOpenImage={vi.fn()} />
+      <MessageBubble
+        message={message}
+        onRetry={vi.fn()}
+        onOpenImage={vi.fn()}
+      />,
     );
 
     expect(screen.getByText("Your order is confirmed!")).toBeInTheDocument();
@@ -135,7 +156,7 @@ describe("InboxFilters", () => {
         onSelectFilter={onSelectFilter}
         search=""
         onSearchChange={onSearchChange}
-      />
+      />,
     );
 
     expect(screen.getByText("All")).toBeInTheDocument();

@@ -27,6 +27,15 @@ export function SocketProvider() {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.orders(currentShopId),
       });
+      void queryClient.invalidateQueries({
+        queryKey: ["conversations", currentShopId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["conversation", currentShopId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["messages", currentShopId],
+      });
     }
   }, [currentShopId, queryClient]);
 
@@ -50,8 +59,11 @@ export function SocketProvider() {
     if (!shopId || !token) return;
     const socket = connectSocket(token);
     if (!socket) return;
-    socket.emit("shop:join", { shopId });
+    const joinShop = () => socket.emit("shop:join", { shopId });
+    socket.on("connect", joinShop);
+    if (socket.connected) joinShop();
     return () => {
+      socket.off("connect", joinShop);
       socket.emit("shop:leave", { shopId });
     };
   }, [shopId, token]);

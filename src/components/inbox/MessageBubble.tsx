@@ -23,6 +23,7 @@ export function MessageBubble({
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
+    timeZone: "Asia/Dhaka",
   });
 
   return (
@@ -63,7 +64,7 @@ export function MessageBubble({
       </div>
 
       <div
-        className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm sm:max-w-[70%] ${
+        className={`w-fit min-w-0 max-w-[min(80%,28rem)] rounded-2xl px-3 py-2 text-sm ${
           isOutbound
             ? "rounded-tr-sm bg-primary text-primary-foreground shadow-sm"
             : "rounded-tl-sm border bg-card text-foreground shadow-sm"
@@ -89,7 +90,7 @@ export function MessageBubble({
         )}
 
         {message.text && (
-          <div className="break-words leading-relaxed whitespace-pre-wrap">
+          <div className="min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere] leading-6">
             <SafeText text={message.text} />
           </div>
         )}

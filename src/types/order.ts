@@ -35,6 +35,7 @@ export interface OrderItemDTO {
   image: string | null;
 }
 export interface OrderListItemDTO {
+  conversationId?: string | null;
   id: string;
   orderNumber: string;
   status: OrderStatus;

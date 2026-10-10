@@ -7,7 +7,10 @@ import { useConversations } from "@/hooks/queries/useInbox";
 import { CardListSkeleton } from "@/components/common/skeletons";
 import { InboxFilters } from "./InboxFilters";
 import { ConversationItem } from "./ConversationItem";
-import type { ConversationFilter, ConversationListItemDTO } from "@/types/inbox";
+import type {
+  ConversationFilter,
+  ConversationListItemDTO,
+} from "@/types/inbox";
 
 interface ConversationListProps {
   activeId?: string | null;
@@ -38,7 +41,7 @@ export function ConversationList({
     data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
-    <div className="flex h-full flex-col bg-card border-r">
+    <div className="flex h-full min-h-0 w-full flex-col bg-card border-r">
       {/* Header and Filters */}
       <InboxFilters
         activeFilter={filter}
@@ -48,7 +51,7 @@ export function ConversationList({
       />
 
       {/* List Container */}
-      <div className="flex-1 overflow-y-auto divide-y">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain divide-y">
         {isLoading ? (
           <div className="p-4">
             <CardListSkeleton rows={6} />

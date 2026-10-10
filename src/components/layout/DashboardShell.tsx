@@ -2,7 +2,15 @@
 import { getActiveSection } from "@/constants/navigation";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Menu, Store, UserCircle, X } from "lucide-react";
+import {
+  LogOut,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Store,
+  UserCircle,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -26,6 +34,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
   const clear = useAuthStore((state) => state.clear);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const logout = async () => {
     try {
       await authApi.logout();
@@ -51,9 +60,23 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     return <div className="min-h-screen bg-background">{children}</div>;
   return (
     <div className="min-h-screen bg-background">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 border-r bg-card md:block xl:w-60">
-        <div className="flex h-14 items-center border-b px-5">
+      <aside
+        id="seller-sidebar"
+        className={`fixed inset-y-0 left-0 z-30 hidden w-60 border-r bg-card ${sidebarVisible ? "md:block" : ""}`}
+      >
+        <div className="flex h-14 items-center justify-between gap-2 border-b px-4">
           <Logo />
+          <button
+            type="button"
+            onClick={() => setSidebarVisible(false)}
+            aria-label={t("hideSidebar")}
+            title={t("hideSidebar")}
+            aria-controls="seller-sidebar"
+            aria-expanded={sidebarVisible}
+            className="grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
+          >
+            <PanelLeftClose size={18} />
+          </button>
         </div>
         <nav className="space-y-1 p-3 md:xl:p-3">
           {sections.map(({ href, icon: Icon, key, labelKey }) => (
@@ -89,11 +112,24 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <header
-        className={`sticky top-0 z-30 h-14 items-center justify-between border-b bg-card/95 px-4 backdrop-blur md:ml-60 ${
+        className={`sticky top-0 z-30 h-14 items-center justify-between border-b bg-card/95 px-4 backdrop-blur ${sidebarVisible ? "md:ml-60" : ""} ${
           isChatThreadMobile ? "hidden md:flex" : "flex"
         }`}
       >
         <div className="flex min-w-0 items-center gap-1 md:gap-3">
+          {!sidebarVisible && (
+            <button
+              type="button"
+              onClick={() => setSidebarVisible(true)}
+              aria-label={t("showSidebar")}
+              title={t("showSidebar")}
+              aria-controls="seller-sidebar"
+              aria-expanded={sidebarVisible}
+              className="hidden size-10 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-muted md:grid"
+            >
+              <PanelLeftOpen size={19} />
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setMoreOpen(true)}
@@ -143,7 +179,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </button>
         </div>
       </header>
-      <div className="md:ml-60">
+      <div className={sidebarVisible ? "md:ml-60" : ""}>
         {!isChatThreadMobile && <SectionSubNav />}
         <main
           className={`mx-auto max-w-[1440px] ${

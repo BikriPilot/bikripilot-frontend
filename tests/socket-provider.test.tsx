@@ -34,6 +34,28 @@ describe("realtime benefit propagation", () => {
     cleanup();
     vi.clearAllMocks();
   });
+  it("rejoins the shop and refreshes missed inbox data after every reconnect", () => {
+    const view = render(<SocketProvider />);
+    const handlers = mocks.on.mock.calls
+      .filter(([event]) => event === "connect")
+      .map(([, handler]) => handler);
+    expect(handlers).toHaveLength(2);
+    for (let connection = 0; connection < 2; connection += 1) {
+      handlers.forEach((handler) => handler());
+    }
+    expect(mocks.emit).toHaveBeenCalledTimes(2);
+    expect(mocks.emit).toHaveBeenCalledWith("shop:join", { shopId: "shop" });
+    for (const key of ["conversations", "conversation", "messages"]) {
+      expect(mocks.invalidate).toHaveBeenCalledWith({
+        queryKey: [key, "shop"],
+      });
+    }
+    view.unmount();
+    expect(mocks.off).toHaveBeenCalledWith("connect", handlers[1]);
+    expect(mocks.emit).toHaveBeenLastCalledWith("shop:leave", {
+      shopId: "shop",
+    });
+  });
   it("refreshes benefit and billing caches on entitlement changes", () => {
     const view = render(<SocketProvider />);
     const handler = mocks.on.mock.calls.find(
