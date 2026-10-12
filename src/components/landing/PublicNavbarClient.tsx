@@ -239,7 +239,7 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
               href="/register"
               className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-primary px-4.5 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
             >
-              <span>{t.startTotallyFree || t.startFree}</span>
+              <span>{t.startFree}</span>
               <ArrowRight className="size-3.5" />
             </Link>
           </div>
@@ -272,7 +272,7 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
                 href="/register"
                 className="rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground shadow-xs"
               >
-                {t.startTotallyFree || t.startFree}
+                {t.startFree}
               </Link>
             </div>
 
