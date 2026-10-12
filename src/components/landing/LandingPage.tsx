@@ -16,6 +16,7 @@ import {
   UsersRound,
   Workflow,
   Zap,
+  Headset,
 } from "lucide-react";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -218,10 +219,17 @@ export async function LandingPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/register"
-                className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-primary px-5 font-semibold text-primary-foreground shadow-sm"
+                className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-primary px-5 font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5"
               >
-                {t("startFree")}
+                {t("startTotallyFree")}
                 <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex min-h-12 items-center gap-2 rounded-lg border bg-card px-5 font-semibold text-foreground shadow-xs transition-colors hover:bg-muted"
+              >
+                <Headset className="size-4 text-primary" />
+                {t("supportBtn")}
               </Link>
               {config?.heroVideoUrl ? (
                 <DemoVideo url={config.heroVideoUrl} label={t("watchDemo")} />

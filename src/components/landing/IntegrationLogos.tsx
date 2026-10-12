@@ -34,6 +34,18 @@ export function FacebookLogo({ className = "size-5" }: { className?: string }) {
   );
 }
 
+export function LinkedInLogo({ className = "size-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="4" fill="#0A66C2" />
+      <path
+        d="M7.4 9H4.6v9h2.8V9zm-1.4-4.2c-.9 0-1.6.7-1.6 1.6s.7 1.6 1.6 1.6 1.6-.7 1.6-1.6c0-.9-.7-1.6-1.6-1.6zm13.4 7.4c0-2.8-1.5-4.1-3.5-4.1-1.6 0-2.3.9-2.7 1.5V9h-2.8c.04.8 0 9 0 9h2.8v-5c0-.3 0-.5.1-.7.2-.6.7-1.2 1.6-1.2 1.1 0 1.6.9 1.6 2.1V18h2.8l.1-5.8z"
+        fill="#ffffff"
+      />
+    </svg>
+  );
+}
+
 export function WhatsAppLogo({ className = "size-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
