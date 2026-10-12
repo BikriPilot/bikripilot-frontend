@@ -22,11 +22,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(runtimeConfig.siteUrl),
-  title: "Bikrio — Facebook selling made easy",
-  description: "Turn Facebook messages into delivered orders with Bikrio.",
+  title: "BikriPilot — Facebook selling made easy",
+  description: "Turn Facebook messages into delivered orders with BikriPilot.",
   openGraph: {
-    title: "Bikrio — Facebook selling made easy",
-    description: "Turn Facebook messages into delivered orders with Bikrio.",
+    title: "BikriPilot — Facebook selling made easy",
+    description: "Turn Facebook messages into delivered orders with BikriPilot.",
     images: ["/og-image.png"],
   },
   icons: {

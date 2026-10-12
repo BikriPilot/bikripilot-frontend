@@ -33,7 +33,7 @@ export default async function HelpPage() {
         )}
       </div>
       <Link
-        href="/#faq"
+        href="/faq"
         className="inline-flex min-h-11 items-center font-semibold text-primary"
       >
         {t("faqLink")}

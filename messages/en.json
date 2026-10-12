@@ -1,12 +1,12 @@
 {
   "credentialSecurity": {
     "title": "Credential protection",
-    "meta": "Authorize through Facebook. Bikrio does not ask for your Facebook password. Page access tokens are encrypted with AES-256-GCM on our server and are not returned to the seller interface. You can revoke access in Facebook's Business Integrations settings.",
+    "meta": "Authorize through Facebook. BikriPilot does not ask for your Facebook password. Page access tokens are encrypted with AES-256-GCM on our server and are not returned to the seller interface. You can revoke access in Facebook's Business Integrations settings.",
     "courier": "Saved API keys and secrets are encrypted with AES-256-GCM on our server. After saving, the seller interface receives masked key details, not your full credentials. Change or revoke keys through your courier provider when needed.",
     "serverAccess": "Our server decrypts credentials when calling the provider; this is not zero-knowledge storage. Protect your account with two-factor authentication and never share keys in chat."
   },
   "common": {
-    "brand": "Bikrio",
+    "brand": "BikriPilot",
     "languageNameBn": "বাংলা",
     "languageNameEn": "English",
     "comingSoon": "Coming soon",
@@ -857,7 +857,7 @@
     "confirmHighRiskWarning": "This customer has a High Risk score due to previous returns or cancellations. Are you sure you want to confirm this order?"
   },
   "tracking": {
-    "poweredBy": "Powered by Bikrio",
+    "poweredBy": "Powered by BikriPilot",
     "title": "Track your order",
     "description": "Enter the shop details, order number, and the last 4 digits of the phone number.",
     "shopSlug": "Shop address name",
@@ -873,7 +873,7 @@
     "aiOrders": "AI Orders",
     "loginTitle": "Welcome back",
     "loginDescription": "Sign in to keep your selling moving.",
-    "registerTitle": "Create your Bikrio account",
+    "registerTitle": "Create your BikriPilot account",
     "registerDescription": "Start with the essentials. You can finish setup later.",
     "email": "Email",
     "password": "Password",
@@ -1033,7 +1033,7 @@
     "logoutAll": "Log out of all devices",
     "currentSession": "Current session",
     "notificationsTitle": "Notifications",
-    "notificationsDescription": "Updates from your shop and Bikrio.",
+    "notificationsDescription": "Updates from your shop and BikriPilot.",
     "markAllRead": "Mark all as read",
     "noNotifications": "You are all caught up.",
     "save": "Save",
@@ -1110,10 +1110,23 @@
     "footerContact": "Contact",
     "footerDeletion": "Data deletion",
     "footerTrack": "Track order",
-    "copyright": "© {year} Bikrio. All rights reserved.",
+    "copyright": "© {year} BikriPilot. All rights reserved.",
     "footerPrivacy": "Privacy",
     "footerTerms": "Terms",
     "footerFacebook": "Facebook page",
+    "footerAddressLabel": "Headquarters",
+    "footerAddress": "Islampur, Shahporan, Sylhet, Bangladesh",
+    "footerProduct": "Product",
+    "footerSolutions": "Solutions",
+    "footerSupport": "Support",
+    "footerLegal": "Legal",
+    "footerMetaPartner": "Official Meta Tech Provider",
+    "footerStatus": "All systems operational",
+    "featuresHeroDesc": "An integrated operating system designed for modern social commerce sellers and growing retail brands.",
+    "howHeroDesc": "Connect your channels, automate conversations, book couriers, and manage your ledger without manual data entry.",
+    "faqHeroDesc": "Everything you need to know about setting up BikriPilot, integrations, billing, and security.",
+    "haveQuestions": "Have questions?",
+    "talkToSupport": "Talk to support",
     "launchBadge": "Launch offer: free while we launch",
     "heroTitle": "Turn Facebook messages into delivered orders.",
     "heroDescription": "Reply with AI, create orders from chat, book a courier in one tap, and keep your ledger up to date.",
@@ -1177,7 +1190,7 @@
         "body": "See past outcomes before deciding how to ship."
       },
       "ledger": {
-        "title": "A living ledger",
+        "title": "Hisab Khata",
         "body": "Orders and courier payouts keep your records current."
       },
       "team": {
@@ -1238,7 +1251,7 @@
     },
     "comparison": {
       "without": {
-        "title": "Without Bikrio",
+        "title": "Without BikriPilot",
         "item1": "Messages and orders in separate notebooks",
         "item2": "Courier payments matched by hand",
         "item3": "Teammate work is hard to follow",
@@ -1246,7 +1259,7 @@
         "item5": "Reports take a full evening"
       },
       "with": {
-        "title": "With Bikrio",
+        "title": "With BikriPilot",
         "item1": "A ready order from the conversation",
         "item2": "Parcels and money in one place",
         "item3": "Clear access for every teammate",
@@ -1261,13 +1274,13 @@
     "popular": "Popular",
     "perMonth": "/month",
     "unlimited": "Unlimited",
-    "testimonialsTitle": "From sellers using Bikrio",
+    "testimonialsTitle": "From sellers using BikriPilot",
     "faqEyebrow": "Common questions",
     "faqTitle": "What sellers ask before starting.",
     "faqItems": {
       "1": {
         "question": "Is my Facebook Page safe?",
-        "answer": "Bikrio uses the official Meta API and never asks for your Page password."
+        "answer": "BikriPilot uses the official Meta API and never asks for your Page password."
       },
       "2": {
         "question": "Does AI understand Banglish?",
@@ -1295,7 +1308,7 @@
       },
       "8": {
         "question": "Do I need a computer?",
-        "answer": "No. Bikrio works on phones, tablets, and computers."
+        "answer": "No. BikriPilot works on phones, tablets, and computers."
       }
     },
     "finalTitle": "Sell with more clarity from today.",
@@ -1375,7 +1388,7 @@
       },
       "analytics": {
         "title": "Visitor analytics",
-        "body": "Bikrio may use visitor analytics with masked IPs to improve the site."
+        "body": "BikriPilot may use visitor analytics with masked IPs to improve the site."
       },
       "ai": {
         "title": "AI use",
@@ -1392,7 +1405,7 @@
     },
     "deletion": {
       "title": "Data deletion",
-      "intro": "You can request deletion of data held by Bikrio through Meta or directly.",
+      "intro": "You can request deletion of data held by BikriPilot through Meta or directly.",
       "howTitle": "How to request deletion",
       "howBody": "Send support your account email, shop name, and the data you want deleted. If Meta gave you a confirmation code, add ?code= to this page URL.",
       "status": "Status",
@@ -2257,7 +2270,7 @@
       "successRate": "Success rate"
     },
     "pageTitle": "Customer Risk Check",
-    "pageDescription": "Check delivery success rate and return history across the Bikrio network",
+    "pageDescription": "Check delivery success rate and return history across the BikriPilot network",
     "checkPhoneTitle": "Check a phone number",
     "searchPlaceholder": "Enter phone number (e.g. 01712345678)",
     "checkButton": "Check risk",
@@ -2269,7 +2282,7 @@
     "cachedNotice": "Checked from 24h cache",
     "assessmentFactors": "Assessment factors",
     "overallPerformance": "Overall delivery performance",
-    "networkTitle": "Bikrio Network",
+    "networkTitle": "BikriPilot Network",
     "networkShopsCount": "Across {count} independent shops",
     "externalTitle": "Courier Partner Data",
     "noExternalCourier": "No external data",
@@ -2279,7 +2292,7 @@
     "cancelled": "Cancelled",
     "blockedInYourShop": "Blocked in your shop",
     "privacyGuaranteed": "Privacy Guaranteed",
-    "privacyDescription": "Data is aggregated across the Bikrio network. To protect buyer and seller privacy, specific customer names, addresses, and shop names are never shared.",
+    "privacyDescription": "Data is aggregated across the BikriPilot network. To protect buyer and seller privacy, specific customer names, addresses, and shop names are never shared.",
     "recentChecksTitle": "Recent checks",
     "recentChecksCount": "{count} checks",
     "noRecentChecks": "No checks yet",
@@ -2341,7 +2354,7 @@
     "pages": {
       "overview": {
         "title": "Overview",
-        "description": "Bikrio platform activity, revenue, and system health."
+        "description": "BikriPilot platform activity, revenue, and system health."
       },
       "shops": {
         "title": "Shops",

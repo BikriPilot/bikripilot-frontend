@@ -9,13 +9,13 @@ export function Logo({ compact = false }: { compact?: boolean }) {
     >
       <Image
         src="/images/bikrio.png"
-        alt="Bikrio"
+        alt="BikriPilot"
         width={36}
         height={36}
         priority
         className="size-9 rounded-lg object-cover"
       />
-      {!compact ? <span>Bikrio</span> : null}
+      {!compact ? <span>BikriPilot</span> : null}
     </Link>
   );
 }

@@ -10,16 +10,16 @@ export async function PublicNavbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Logo />
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground lg:flex">
-          <Link href="/#features" className="hover:text-foreground">
+          <Link href="/features" className="hover:text-foreground">
             {t("navFeatures")}
           </Link>
-          <Link href="/#how-it-works" className="hover:text-foreground">
+          <Link href="/how-it-works" className="hover:text-foreground">
             {t("navHow")}
           </Link>
           <Link href="/pricing" className="hover:text-foreground">
             {t("navPricing")}
           </Link>
-          <Link href="/#faq" className="hover:text-foreground">
+          <Link href="/faq" className="hover:text-foreground">
             {t("navFaq")}
           </Link>
         </nav>
@@ -50,13 +50,13 @@ export async function PublicNavbar() {
             <div className="absolute right-0 top-14 w-64 rounded-xl border bg-card p-3 shadow-lg">
               <nav className="grid gap-1 text-sm">
                 <Link
-                  href="/#features"
+                  href="/features"
                   className="rounded-lg px-3 py-3 hover:bg-muted"
                 >
                   {t("navFeatures")}
                 </Link>
                 <Link
-                  href="/#how-it-works"
+                  href="/how-it-works"
                   className="rounded-lg px-3 py-3 hover:bg-muted"
                 >
                   {t("navHow")}
@@ -68,7 +68,7 @@ export async function PublicNavbar() {
                   {t("navPricing")}
                 </Link>
                 <Link
-                  href="/#faq"
+                  href="/faq"
                   className="rounded-lg px-3 py-3 hover:bg-muted"
                 >
                   {t("navFaq")}

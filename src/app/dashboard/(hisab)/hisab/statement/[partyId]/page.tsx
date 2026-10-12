@@ -90,7 +90,7 @@ export default function StatementPage() {
       </p>
       {data.showBranding && (
         <footer className="border-t pt-4 text-center text-sm">
-          Powered by Bikrio
+          Powered by BikriPilot
         </footer>
       )}
     </main>

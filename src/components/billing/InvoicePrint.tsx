@@ -41,7 +41,7 @@ export function InvoicePrint({ invoice }: { invoice: InvoiceDTO }) {
           `}</style>
           <article className="billing-print-area hidden text-sm leading-6">
             <header className="border-b pb-5">
-              <p className="text-xs uppercase">Bikrio</p>
+              <p className="text-xs uppercase">BikriPilot</p>
               <h1 className="mt-2 text-2xl font-semibold">Invoice</h1>
               <p>{invoice.number}</p>
             </header>
@@ -85,7 +85,7 @@ export function InvoicePrint({ invoice }: { invoice: InvoiceDTO }) {
               </div>
             </dl>
             <p className="mt-8 border-t pt-3 text-xs">
-              Bikrio subscription invoice
+              BikriPilot subscription invoice
             </p>
           </article>
         </>

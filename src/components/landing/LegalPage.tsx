@@ -14,7 +14,7 @@ export async function LegalPage({ kind }: { kind: "privacy" | "terms" }) {
   return (
     <main className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
       <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-        Bikrio
+        BikriPilot
       </p>
       <h1 className="mt-3 text-4xl font-semibold">{t(`${kind}.title`)}</h1>
       <p className="mt-4 text-sm text-muted-foreground">{t("reviewNote")}</p>
