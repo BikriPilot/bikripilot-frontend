@@ -99,7 +99,7 @@ export function InteractiveShowcase() {
   useEffect(() => {
     if (isPaused) return;
 
-    setProgress(0);
+    const rafId = requestAnimationFrame(() => setProgress(0));
     const startTime = Date.now();
     const duration = 5000; // 5.0 seconds per tab
 
@@ -116,6 +116,7 @@ export function InteractiveShowcase() {
     }, 40);
 
     return () => {
+      cancelAnimationFrame(rafId);
       clearInterval(timer);
     };
   }, [activeTab, isPaused]);

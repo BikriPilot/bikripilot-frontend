@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Paperclip,
   RotateCcw,
 } from "lucide-react";
 

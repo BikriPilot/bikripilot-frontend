@@ -44,8 +44,11 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
 
   // Close menus when route changes
   useEffect(() => {
-    setResourcesOpen(false);
-    setMobileMenuOpen(false);
+    const timer = setTimeout(() => {
+      setResourcesOpen(false);
+      setMobileMenuOpen(false);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   // Handle mouse hover with delay to avoid accidental close
