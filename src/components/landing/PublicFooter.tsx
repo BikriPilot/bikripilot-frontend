@@ -1,11 +1,11 @@
 import {
+  BadgeCheck,
   ExternalLink,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -94,7 +94,7 @@ export async function PublicFooter({
             {/* Trust Badges */}
             <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px] font-medium text-muted-foreground">
               <span className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 px-2 py-1">
-                <Sparkles className="size-3 text-primary" />
+                <BadgeCheck className="size-3 text-primary" />
                 <span>{t("footerMetaPartner")}</span>
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 px-2 py-1">

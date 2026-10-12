@@ -12,6 +12,10 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("common");
   const setLocale = (nextLocale: "bn" | "en") => {
     document.cookie = `bk_locale=${nextLocale}; Max-Age=31536000; Path=/; SameSite=Lax`;
+    const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+    if (typeof document !== "undefined" && !document.cookie.includes("bk_theme=")) {
+      document.cookie = `bk_theme=${isDark ? "dark" : "light"}; Max-Age=31536000; Path=/; SameSite=Lax`;
+    }
     const auth = useAuthStore.getState();
     if (auth.accessToken && auth.user && !auth.user.impersonation) {
       void authApi

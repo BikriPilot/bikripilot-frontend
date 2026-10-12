@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Hind_Siliguri, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -40,10 +41,14 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("bk_theme")?.value || "dark";
+
   return (
     <html
       lang={locale}
-      className={`${hindSiliguri.variable} ${inter.variable} ${locale === "bn" ? "font-bangla" : "font-english"}`}
+      className={`${theme === "dark" ? "dark" : ""} ${hindSiliguri.variable} ${inter.variable} ${locale === "bn" ? "font-bangla" : "font-english"}`}
+      style={{ colorScheme: theme }}
       suppressHydrationWarning
     >
       <body className="min-h-screen antialiased">

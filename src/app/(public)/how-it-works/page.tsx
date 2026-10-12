@@ -1,8 +1,9 @@
 import {
   ArrowRight,
+  Bot,
   Check,
   CheckCircle2,
-  Sparkles,
+  Layers,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -65,7 +66,7 @@ export default async function HowItWorksPage() {
       {/* Header */}
       <div className="mx-auto max-w-3xl text-center">
         <div className="inline-flex items-center gap-2 rounded-full border bg-primary-soft px-3.5 py-1 text-sm font-semibold text-primary">
-          <Sparkles className="size-4" />
+          <Layers className="size-4" />
           <span>{t("howEyebrow")}</span>
         </div>
         <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
@@ -153,7 +154,7 @@ export default async function HowItWorksPage() {
                 <span className="text-xs font-bold text-primary">
                   AI Assistant Draft
                 </span>
-                <Sparkles className="size-3.5 text-primary" />
+                <Bot className="size-3.5 text-primary" />
               </div>
               <p className="mt-1 font-medium">{t("workflowReply")}</p>
             </div>

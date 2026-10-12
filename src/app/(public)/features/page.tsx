@@ -8,7 +8,6 @@ import {
   MessageSquareText,
   PackageCheck,
   ShieldCheck,
-  Sparkles,
   UsersRound,
   WalletCards,
   Zap,
@@ -132,7 +131,7 @@ export default async function FeaturesPage() {
       {/* Header */}
       <div className="mx-auto max-w-3xl text-center">
         <div className="inline-flex items-center gap-2 rounded-full border bg-primary-soft px-3.5 py-1 text-sm font-semibold text-primary">
-          <Sparkles className="size-4" />
+          <Layers className="size-4" />
           <span>{t("featureEyebrow")}</span>
         </div>
         <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">

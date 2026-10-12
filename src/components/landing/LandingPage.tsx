@@ -11,10 +11,10 @@ import {
   MessageSquareText,
   PackageCheck,
   ShieldCheck,
-  Sparkles,
   ExternalLink,
   WalletCards,
   UsersRound,
+  Workflow,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -25,7 +25,8 @@ import type { PublicPlan } from "@/types/plan";
 import { formatMoney } from "@/lib/money";
 import { PricingComparison } from "./PricingComparison";
 import { DemoVideo } from "./DemoVideo";
-import { PARTNERS } from "./IntegrationLogos";
+import { PARTNERS, MessengerLogo, WhatsAppLogo } from "./IntegrationLogos";
+import { InteractiveShowcase } from "./InteractiveShowcase";
 
 const localized = (locale: string, bn: string | null, en: string | null) =>
   locale === "bn" ? bn || en || "" : en || bn || "";
@@ -48,8 +49,6 @@ export async function LandingPage() {
       points: [
         "Replies to every customer message 24/7 — no human needs to stay online",
         "AI takes orders automatically from conversations, zero manual entry",
-        "Instant draft suggestions in Bangla, English & Banglish",
-        "Unified inbox for Facebook Messenger & comments",
       ],
     },
     {
@@ -60,7 +59,6 @@ export async function LandingPage() {
       points: [
         "Extract customer name, phone, address and item directly from chat",
         "Auto-generate complete order drafts in seconds",
-        "Prevents order loss and saves hours of manual data entry",
       ],
     },
     {
@@ -71,7 +69,6 @@ export async function LandingPage() {
       points: [
         "Native integrations with Steadfast, Pathao, and RedX",
         "Book parcels with a single tap without opening courier panels",
-        "Automated consignment tracking and status sync",
       ],
     },
     {
@@ -82,7 +79,6 @@ export async function LandingPage() {
       points: [
         "Network-wide delivery success score for customer phone numbers",
         "Instant warnings on chronic order cancelers & fake orders",
-        "Significantly lowers returned shipment (RTO) costs",
       ],
     },
     {
@@ -93,7 +89,6 @@ export async function LandingPage() {
       points: [
         "Automated cash-flow records tied to orders and courier payouts",
         "Real-time tracking of 'You Will Get' and 'You Will Give' dues",
-        "One-click customer due reminders via SMS",
       ],
     },
     {
@@ -104,7 +99,6 @@ export async function LandingPage() {
       points: [
         "Automatically reply to product inquiries on Facebook posts",
         "Auto-route public comments directly to private Messenger inbox",
-        "Boost customer engagement and sales conversions",
       ],
     },
     {
@@ -115,7 +109,6 @@ export async function LandingPage() {
       points: [
         "Preset quick replies and FAQ automated responses",
         "Keyword-based triggers for pricing, sizes, and stock availability",
-        "Zero setup complexity, active 24/7",
       ],
     },
     {
@@ -125,7 +118,6 @@ export async function LandingPage() {
       badge: "Collaboration",
       points: [
         "Role-based access controls for Owners, Managers, and Agents",
-        "Keep sensitive business metrics and credentials protected",
         "Track individual teammate performance and response times",
       ],
     },
@@ -137,18 +129,83 @@ export async function LandingPage() {
       points: [
         "Real-time dashboards for daily revenue, sales volume, and COD payouts",
         "Courier delivery success rates and return analytics",
-        "Export clean CSV reports anytime for accounting",
       ],
     },
   ] as const;
+
+  const withoutBikriPilot = [
+    localized(
+      locale,
+      "কাউকে ২৪/৭ অনলাইনে থেকে ম্যানুয়ালি মেসেজ ও অর্ডার নিতে হয়",
+      "Must keep someone online 24/7 to manually reply & take orders"
+    ),
+    localized(
+      locale,
+      "রাতে মেসেজ জমে থাকে ও কাস্টমারের গুরুত্বপূর্ণ অর্ডার মিস হয়",
+      "Messages pile up at night, important customer orders get missed"
+    ),
+    localized(
+      locale,
+      "একই প্রশ্ন বারবার আসে, প্রতিবার ম্যানুয়ালি রিপ্লাই দিতে হয়",
+      "The same questions repeat, manually replying every time"
+    ),
+    localized(
+      locale,
+      "ফেক অর্ডার ও রিটার্নের কারণে কুরিয়ার চার্জের আর্থিক ক্ষতি",
+      "Fake orders and returns, zero pre-dispatch verification"
+    ),
+    localized(
+      locale,
+      "চ্যাট থেকে কাস্টমারের ঠিকানা কুরিয়ার প্যানেলে কপি-পেস্ট করতে হয়",
+      "Customer details copied from chat into courier panels"
+    ),
+    localized(
+      locale,
+      "টিম মেম্বারদের কাজ, রেসপন্স টাইম ও পারফরম্যান্স ট্র্যাকিং কঠিন",
+      "Teammate work and response times are hard to follow"
+    ),
+  ];
+
+  const withBikriPilot = [
+    localized(
+      locale,
+      "AI উত্তর ও অর্ডার নেয় ২৪/৭ — কাউকে জেগে অনলাইনে থাকতে হয় না",
+      "AI replies & takes orders 24/7 automatically — zero human fatigue"
+    ),
+    localized(
+      locale,
+      "রাতে কোনো মেসেজ মিস হয় না — সাথে সাথে স্বয়ংক্রিয় রিপ্লাই হয়ে যায়",
+      "Zero missed night messages — instant replies keep buyers engaged"
+    ),
+    localized(
+      locale,
+      "স্মার্ট FAQ ও অটো-রিপ্লাই — বারবার টাইপ না করে এক সেকেন্ডেই উত্তর",
+      "Instant automated replies for price, size & product inquiries"
+    ),
+    localized(
+      locale,
+      "শিপ করার আগেই ফ্রড প্রতিরোধ — ডেলিভারি রেট দেখে রিটার্ন কমান",
+      "Pre-dispatch Fraud Shield alerts on chronic cancelers before shipping"
+    ),
+    localized(
+      locale,
+      "এক ট্যাপে কুরিয়ার বুকিং — চ্যাট থেকেই এক ক্লিকে পার্সেল এন্ট্রি",
+      "One-tap direct courier dispatch to Steadfast, Pathao & RedX"
+    ),
+    localized(
+      locale,
+      "স্বচ্ছ রোল-বেসড টিম কন্ট্রোল ও প্রতিটি মেম্বারের রেসপন্স ট্র্যাকিং",
+      "Transparent team collaboration with role-based permissions"
+    ),
+  ];
+
   return (
     <main className="overflow-hidden">
       <section className="relative border-b bg-[radial-gradient(circle_at_75%_20%,var(--primary-soft),transparent_38%),linear-gradient(135deg,var(--background),var(--muted))]">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
           <div className="relative z-10">
             {config?.freeLaunchMode ? (
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card/80 px-3 py-1.5 text-sm font-semibold text-primary">
-                <Sparkles className="size-4" />
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card/80 px-3.5 py-1.5 text-sm font-semibold text-primary shadow-2xs">
                 {t("launchBadge")}
               </div>
             ) : null}
@@ -178,23 +235,37 @@ export async function LandingPage() {
             <div className="absolute -inset-8 -z-10 rounded-full bg-primary/10 blur-3xl" />
             <div className="rounded-[2rem] border bg-card p-4 shadow-xl sm:p-6">
               <div className="flex items-center justify-between border-b pb-4">
-                <div>
-                  <p className="font-semibold">{t("mockInbox")}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("mockCustomer")}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-1">
+                    <MessengerLogo className="size-6 rounded-full border border-background shadow-xs" />
+                    <WhatsAppLogo className="size-6 rounded-full border border-background shadow-xs" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <p className="font-bold text-sm text-foreground">FB Page &amp; WhatsApp Inbox</p>
+                      <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[9px] font-bold text-blue-600">Meta API</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Connected to your Facebook Page 24/7
+                    </p>
+                  </div>
                 </div>
-                <div className="grid size-10 place-items-center rounded-full bg-primary-soft text-primary">
-                  <MessageCircle className="size-5" />
+                <div className="grid size-9 place-items-center rounded-full bg-emerald-500/10 text-emerald-600">
+                  <Bot className="size-4.5" />
                 </div>
               </div>
               <div className="space-y-3 py-5 text-sm">
-                <div className="ml-auto max-w-[82%] rounded-2xl rounded-br-sm bg-muted p-3">
+                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-muted p-3">
+                  <div className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold text-blue-600">
+                    <MessengerLogo className="size-3" />
+                    <span>Customer on FB Page</span>
+                  </div>
                   {t("mockQuestion")}
                 </div>
                 <div className="max-w-[88%] rounded-2xl rounded-bl-sm bg-primary-soft p-3 text-foreground">
-                  <span className="mb-1 block text-xs font-semibold text-primary">
-                    AI
+                  <span className="mb-1 flex items-center gap-1.5 text-xs font-bold text-primary">
+                    <Bot className="size-3.5" />
+                    BikriPilot AI (Page Auto-Reply)
                   </span>
                   {t("mockReply")}
                 </div>
@@ -224,7 +295,7 @@ export async function LandingPage() {
       <section className="border-y bg-card/60 backdrop-blur-xs">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-2 px-4 py-3 text-xs sm:px-8">
           <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            <Sparkles className="size-3 text-primary" />
+            <Layers className="size-3.5 text-primary" />
             <span>{t("worksWith")}</span>
           </div>
           <div className="hidden h-3.5 w-px bg-border sm:block" />
@@ -248,69 +319,63 @@ export async function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-            {t("problemEyebrow")}
-          </p>
-          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-            {t("problemTitle")}
-          </h2>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(
-            ["night", "price", "copy", "returns", "money", "notebook"] as const
-          ).map((key) => (
-            <div key={key} className="rounded-xl border bg-card p-5">
-              <h3 className="font-semibold">{t(`problems.${key}.title`)}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {t(`problems.${key}.body`)}
+
+      {/* Interactive Platform Cockpit Showcase */}
+      <InteractiveShowcase />
+
+      <section id="features" className="border-t">
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:py-20 sm:px-8">
+          {/* Section Header: Left Square Badge & Right Title/Description */}
+          <div className="flex flex-col sm:flex-row sm:items-stretch gap-4 sm:gap-6">
+            {/* Left Square Card - Full height matching right content */}
+            <div className="shrink-0 flex sm:flex-col items-center justify-center gap-3 sm:gap-2.5 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/15 via-violet-500/10 to-primary/5 px-4 py-3 sm:p-4 sm:w-28 shadow-xs">
+              <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white shadow-md shadow-indigo-500/25">
+                <Workflow className="size-5" />
+              </div>
+              <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 text-center">
+                {t("featureEyebrow")}
+              </span>
+            </div>
+
+            {/* Right: Title and Description */}
+            <div className="flex flex-col justify-center max-w-3xl">
+              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl text-foreground">
+                Keep the path from chat to cash clear.
+              </h2>
+              <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
+                An integrated operating system designed for modern social commerce sellers and growing retail brands.
               </p>
             </div>
-          ))}
-        </div>
-      </section>
-      <section id="features" className="border-t">
-        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border bg-primary-soft px-3.5 py-1 text-sm font-semibold text-primary">
-              <Sparkles className="size-4" />
-              <span>{t("featureEyebrow")}</span>
-            </div>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              {t("featureTitle")}
-            </h2>
-            <p className="mt-4 text-base leading-7 text-muted-foreground">
-              {t("featuresHeroDesc")}
-            </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+          {/* Compact 9 Feature Cards Grid */}
+          <div className="mt-8 sm:mt-12 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
             {featureCards.map((item) => {
               const Icon = item.icon;
               return (
                 <article
                   key={item.key}
                   id={item.key}
-                  className="group relative flex flex-col justify-between rounded-2xl border bg-card p-6 shadow-sm transition-all hover:border-primary/50 hover:shadow-md"
+                  className="group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
                 >
                   <div>
-                    <div className="flex items-center justify-between">
-                      <div
-                        className={`grid size-12 place-items-center rounded-xl border ${item.color}`}
-                      >
-                        <Icon className="size-6" />
+                    <div className="flex items-center justify-between gap-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`grid size-9 shrink-0 place-items-center rounded-lg border ${item.color}`}
+                        >
+                          <Icon className="size-4.5" />
+                        </div>
+                        <h3 className="text-sm font-bold text-foreground">
+                          {t(`features.${item.key}.title`)}
+                        </h3>
                       </div>
-                      <span className="rounded-full border bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+                      <span className="shrink-0 rounded-md border border-border/70 bg-muted/50 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
                         {item.badge}
                       </span>
                     </div>
-                    <h3 className="mt-5 text-lg font-bold">
-                      {t(`features.${item.key}.title`)}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      {t(`features.${item.key}.body`)}
-                    </p>
-                    <ul className="mt-5 space-y-2.5 border-t pt-5 text-xs leading-5 text-muted-foreground">
+
+                    <ul className="mt-3.5 space-y-1.5 border-t border-border/50 pt-3 text-xs leading-relaxed text-muted-foreground">
                       {item.points.map((point) => (
                         <li key={point} className="flex items-start gap-2">
                           <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
@@ -474,24 +539,31 @@ export async function LandingPage() {
               {/* Inbox header */}
               <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="grid size-7 place-items-center rounded-full bg-primary/10 text-primary">
-                    <MessageCircle className="size-4" />
+                  <div className="flex -space-x-1">
+                    <MessengerLogo className="size-6 rounded-full border border-background shadow-xs" />
+                    <WhatsAppLogo className="size-6 rounded-full border border-background shadow-xs" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-foreground">BikriPilot Inbox</p>
-                    <p className="text-[10px] text-muted-foreground">Messenger · Facebook Page</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-foreground">FB Page &amp; WhatsApp Live Inbox</p>
+                      <span className="rounded-full bg-blue-500/10 px-1.5 py-0.2 text-[9px] font-bold text-blue-600">Meta Webhook</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Automated customer replies for your Page</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="size-2 rounded-full bg-success animate-pulse" />
-                  <span className="text-[10px] font-semibold text-success">Online</span>
+                  <span className="text-[10px] font-semibold text-success">24/7 Online</span>
                 </div>
               </div>
               {/* Messages area */}
               <div className="flex flex-col gap-3 p-4 text-sm">
                 {/* Customer message — right aligned */}
                 <div className="flex flex-col items-end">
-                  <span className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Customer</span>
+                  <span className="mb-1 flex items-center gap-1 text-[10px] font-semibold text-blue-600">
+                    <MessengerLogo className="size-3" />
+                    <span>Customer on Facebook Page</span>
+                  </span>
                   <div className="max-w-[82%] rounded-2xl rounded-tr-sm bg-muted px-4 py-2.5 text-foreground shadow-xs">
                     <p className="font-medium leading-relaxed">{t("workflowMessage")}</p>
                   </div>
@@ -499,8 +571,8 @@ export async function LandingPage() {
                 {/* AI reply — left aligned */}
                 <div className="flex flex-col items-start">
                   <div className="mb-1 flex items-center gap-1.5">
-                    <Sparkles className="size-3 text-primary" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">AI Assistant</span>
+                    <Bot className="size-3.5 text-primary" />
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">BikriPilot AI (Page Auto-Reply)</span>
                   </div>
                   <div className="max-w-[82%] rounded-2xl rounded-tl-sm border border-primary/25 bg-primary-soft px-4 py-2.5 text-foreground shadow-xs">
                     <p className="font-medium leading-relaxed">{t("workflowReply")}</p>
@@ -576,36 +648,34 @@ export async function LandingPage() {
             </ul>
           </div>
           <div className="grid content-center gap-4">
-            <div className="rounded-2xl border border-danger/30 bg-card p-6 shadow-xs">
+            <div className="rounded-2xl border border-danger/30 bg-card p-5 sm:p-6 shadow-xs">
               <div className="inline-flex rounded-full bg-danger-soft px-3 py-1 text-xs font-semibold text-danger">
                 {t("comparison.without.title")}
               </div>
-              <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-start gap-3">
-                  <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-danger/10 text-xs font-bold text-danger">✕</span>
-                  <span className="font-medium text-foreground/80">Must keep someone online 24/7 to manually reply messages &amp; take orders</span>
-                </li>
-                {[1, 2, 3, 4, 5].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-danger/10 text-xs font-bold text-danger">✕</span>
-                    <span>{t(`comparison.without.item${item}`)}</span>
+              <ul className="mt-5 space-y-3 text-xs sm:text-sm text-muted-foreground">
+                {withoutBikriPilot.map((text, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-danger/10 text-[11px] font-bold text-danger">
+                      ✕
+                    </span>
+                    <span className="font-medium text-foreground/85 leading-snug">
+                      {text}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-primary/40 bg-card p-6 shadow-sm">
+            <div className="rounded-2xl border border-primary/40 bg-card p-5 sm:p-6 shadow-sm">
               <div className="inline-flex rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
                 {t("comparison.with.title")}
               </div>
-              <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-start gap-3">
-                  <Check className="mt-0.5 size-5 shrink-0 rounded-full bg-primary/10 p-1 text-primary" />
-                  <span className="font-medium text-foreground">AI replies &amp; takes orders 24/7 automatically — no one needs to be online</span>
-                </li>
-                {[1, 2, 3, 4, 5].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
+              <ul className="mt-5 space-y-3 text-xs sm:text-sm text-muted-foreground">
+                {withBikriPilot.map((text, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
                     <Check className="mt-0.5 size-5 shrink-0 rounded-full bg-primary/10 p-1 text-primary" />
-                    <span className="font-medium text-foreground">{t(`comparison.with.item${item}`)}</span>
+                    <span className="font-medium text-foreground leading-snug">
+                      {text}
+                    </span>
                   </li>
                 ))}
               </ul>
