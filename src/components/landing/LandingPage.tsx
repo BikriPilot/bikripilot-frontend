@@ -323,105 +323,6 @@ export async function LandingPage() {
       {/* Interactive Platform Cockpit Showcase */}
       <InteractiveShowcase />
 
-      <section id="features" className="border-t">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:py-20 sm:px-8">
-          {/* Section Header: Left Square Badge & Right Title/Description */}
-          <div className="flex flex-col sm:flex-row sm:items-stretch gap-4 sm:gap-6">
-            {/* Left Square Card - Full height matching right content */}
-            <div className="shrink-0 flex sm:flex-col items-center justify-center gap-3 sm:gap-2.5 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/15 via-violet-500/10 to-primary/5 px-4 py-3 sm:p-4 sm:w-28 shadow-xs">
-              <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white shadow-md shadow-indigo-500/25">
-                <Workflow className="size-5" />
-              </div>
-              <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 text-center">
-                {t("featureEyebrow")}
-              </span>
-            </div>
-
-            {/* Right: Title and Description */}
-            <div className="flex flex-col justify-center max-w-3xl">
-              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl text-foreground">
-                Keep the path from chat to cash clear.
-              </h2>
-              <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
-                An integrated operating system designed for modern social commerce sellers and growing retail brands.
-              </p>
-            </div>
-          </div>
-
-          {/* Compact 9 Feature Cards Grid */}
-          <div className="mt-8 sm:mt-12 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {featureCards.map((item) => {
-              const Icon = item.icon;
-              return (
-                <article
-                  key={item.key}
-                  id={item.key}
-                  className="group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2.5">
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={`grid size-9 shrink-0 place-items-center rounded-lg border ${item.color}`}
-                        >
-                          <Icon className="size-4.5" />
-                        </div>
-                        <h3 className="text-sm font-bold text-foreground">
-                          {t(`features.${item.key}.title`)}
-                        </h3>
-                      </div>
-                      <span className="shrink-0 rounded-md border border-border/70 bg-muted/50 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                        {item.badge}
-                      </span>
-                    </div>
-
-                    <ul className="mt-3.5 space-y-1.5 border-t border-border/50 pt-3 text-xs leading-relaxed text-muted-foreground">
-                      {item.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-          <div className="mt-10 rounded-2xl border bg-card/60 p-5 sm:p-7 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full border bg-muted/80 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-              <Layers className="size-3" />
-              <span>Official Integrations</span>
-            </div>
-            <h3 className="mt-2 text-lg font-bold sm:text-xl">{t("worksWith")}</h3>
-            <p className="mx-auto mt-1 max-w-xl text-xs text-muted-foreground">
-              Direct API integrations, webhook automations &amp; courier partnerships
-            </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-              {PARTNERS.map((partner) => {
-                const PartnerIcon = partner.Icon;
-                return (
-                  <a
-                    key={partner.id}
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={`Visit ${partner.name}`}
-                    className="group inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card hover:shadow-xs"
-                  >
-                    <PartnerIcon className="size-4 shrink-0 transition-transform duration-150 group-hover:scale-110" />
-                    <span className="font-semibold">{partner.name}</span>
-                    <span className="rounded bg-muted/80 px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                      {partner.badge}
-                    </span>
-                    <ExternalLink className="size-3 text-muted-foreground/60 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-primary" />
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
       <section
         id="how-it-works"
         className="mx-auto max-w-7xl px-5 py-20 sm:px-8"
@@ -680,6 +581,108 @@ export async function LandingPage() {
                 ))}
               </ul>
             </div>
+          </div>
+        </div>
+
+        {/* Official Integrations Card */}
+        <div className="mt-14 sm:mt-16 rounded-2xl border bg-card/60 p-5 sm:p-7 text-center">
+          <div className="inline-flex items-center gap-1.5 rounded-full border bg-muted/80 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+            <Layers className="size-3" />
+            <span>Official Integrations</span>
+          </div>
+          <h3 className="mt-2 text-lg font-bold sm:text-xl">{t("worksWith")}</h3>
+          <p className="mx-auto mt-1 max-w-xl text-xs text-muted-foreground">
+            Direct API integrations, webhook automations &amp; courier partnerships
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+            {PARTNERS.map((partner) => {
+              const PartnerIcon = partner.Icon;
+              return (
+                <a
+                  key={partner.id}
+                  href={partner.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Visit ${partner.name}`}
+                  className="group inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card hover:shadow-xs"
+                >
+                  <PartnerIcon className="size-4 shrink-0 transition-transform duration-150 group-hover:scale-110" />
+                  <span className="font-semibold">{partner.name}</span>
+                  <span className="rounded bg-muted/80 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                    {partner.badge}
+                  </span>
+                  <ExternalLink className="size-3 text-muted-foreground/60 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-primary" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="border-t">
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:py-20 sm:px-8">
+          {/* Section Header: Left Square Badge & Right Title/Description */}
+          <div className="flex flex-col sm:flex-row sm:items-stretch gap-4 sm:gap-6">
+            {/* Left Square Card - Full height matching right content */}
+            <div className="shrink-0 flex sm:flex-col items-center justify-center gap-3 sm:gap-2.5 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/15 via-violet-500/10 to-primary/5 px-4 py-3 sm:p-4 sm:w-28 shadow-xs">
+              <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white shadow-md shadow-indigo-500/25">
+                <Workflow className="size-5" />
+              </div>
+              <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 text-center">
+                {t("featureEyebrow")}
+              </span>
+            </div>
+
+            {/* Right: Title and Description */}
+            <div className="flex flex-col justify-center max-w-3xl">
+              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl text-foreground">
+                Keep the path from chat to cash clear.
+              </h2>
+              <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
+                An integrated operating system designed for modern social commerce sellers and growing retail brands.
+              </p>
+            </div>
+          </div>
+
+          {/* Compact 9 Feature Cards Grid */}
+          <div className="mt-8 sm:mt-12 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featureCards.map((item) => {
+              const Icon = item.icon;
+              return (
+                <article
+                  key={item.key}
+                  id={item.key}
+                  className="group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`grid size-9 shrink-0 place-items-center rounded-lg border ${item.color}`}
+                        >
+                          <Icon className="size-4.5" />
+                        </div>
+                        <h3 className="text-sm font-bold text-foreground">
+                          {t(`features.${item.key}.title`)}
+                        </h3>
+                      </div>
+                      <span className="shrink-0 rounded-md border border-border/70 bg-muted/50 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                        {item.badge}
+                      </span>
+                    </div>
+
+                    <ul className="mt-3.5 space-y-1.5 border-t border-border/50 pt-3 text-xs leading-relaxed text-muted-foreground">
+                      {item.points.map((point) => (
+                        <li key={point} className="flex items-start gap-2">
+                          <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
