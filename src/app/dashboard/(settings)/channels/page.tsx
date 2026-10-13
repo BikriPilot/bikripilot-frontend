@@ -19,6 +19,7 @@ import { ErrorState } from "@/components/common/PageStates";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { channelsApi } from "@/lib/api/channels.api";
 import { shopsApi } from "@/lib/api/shops.api";
+import { authApi } from "@/lib/api/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { CredentialSecurityNotice } from "@/components/common/CredentialSecurityNotice";
 import type { ChannelDTO } from "@/types/channel";
@@ -63,13 +64,27 @@ export default function ChannelsPage() {
   });
   const shop = shopQuery.data;
 
+  const [resendingVerification, setResendingVerification] = useState(false);
   const isProfileComplete = Boolean(
     user?.name?.trim() && user?.phone?.trim() && user?.email && user?.district,
   );
+  const isEmailVerified = Boolean(user?.emailVerified);
   const isShopComplete = Boolean(
     shop?.name?.trim() && shop?.logoUrl && shop?.facebookPageUrl?.trim(),
   );
-  const canConnectChannels = isProfileComplete && isShopComplete;
+  const canConnectChannels = isProfileComplete && isEmailVerified && isShopComplete;
+
+  const handleResendVerification = async () => {
+    setResendingVerification(true);
+    try {
+      await authApi.resendVerification();
+      toast.success("Verification email sent! Please check your inbox and spam folder.");
+    } catch {
+      toast.error("Could not send verification email. Please try again later.");
+    } finally {
+      setResendingVerification(false);
+    }
+  };
 
   const query = useQuery({
     queryKey: ["channels", shopId],
@@ -86,9 +101,11 @@ export default function ChannelsPage() {
 
   const connectFacebook = async () => {
     if (!canConnectChannels) {
-      toast.error(
-        "Please complete your profile and shop details before connecting channels.",
-      );
+      if (!isEmailVerified) {
+        toast.error("Please verify your email address before connecting channels.");
+      } else {
+        toast.error("Please complete your profile and shop details before connecting channels.");
+      }
       return;
     }
     try {
@@ -127,9 +144,11 @@ export default function ChannelsPage() {
   const openWhatsAppModal = async () => {
     if (!shopId) return;
     if (!canConnectChannels) {
-      toast.error(
-        "Please complete your profile and shop details before connecting channels.",
-      );
+      if (!isEmailVerified) {
+        toast.error("Please verify your email address before connecting channels.");
+      } else {
+        toast.error("Please complete your profile and shop details before connecting channels.");
+      }
       return;
     }
     setQrModalOpen(true);
@@ -274,43 +293,78 @@ export default function ChannelsPage() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 text-xs">
-            <div className={`p-3.5 rounded-xl border ${isProfileComplete ? "bg-card/70 border-emerald-500/30" : "bg-card border-amber-500/30"}`}>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  {isProfileComplete ? (
-                    <CheckCircle2 size={14} className="text-emerald-600" />
-                  ) : (
-                    <span className="size-2 rounded-full bg-amber-500" />
-                  )}
-                  <span>1. Seller Profile ({isProfileComplete ? "Complete" : "Incomplete"})</span>
-                </span>
-                <Link href="/dashboard/profile" className="text-xs font-semibold text-primary hover:underline">
-                  Edit Profile →
-                </Link>
+          <div className="grid gap-3 sm:grid-cols-3 text-xs">
+            {/* 1. Profile Details */}
+            <div className={`p-3.5 rounded-xl border flex flex-col justify-between ${isProfileComplete ? "bg-card/70 border-emerald-500/30" : "bg-card border-amber-500/30"}`}>
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    {isProfileComplete ? (
+                      <CheckCircle2 size={14} className="text-emerald-600" />
+                    ) : (
+                      <span className="size-2 rounded-full bg-amber-500" />
+                    )}
+                    <span>1. Profile ({isProfileComplete ? "Complete" : "Incomplete"})</span>
+                  </span>
+                  <Link href="/dashboard/profile" className="text-xs font-semibold text-primary hover:underline">
+                    Edit →
+                  </Link>
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Required: Name, Phone, District
+                </p>
               </div>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                Required: Name, Phone, Email, District
-              </p>
             </div>
 
-            <div className={`p-3.5 rounded-xl border ${isShopComplete ? "bg-card/70 border-emerald-500/30" : "bg-card border-amber-500/30"}`}>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  {isShopComplete ? (
-                    <CheckCircle2 size={14} className="text-emerald-600" />
-                  ) : (
-                    <span className="size-2 rounded-full bg-amber-500" />
+            {/* 2. Email Verification */}
+            <div className={`p-3.5 rounded-xl border flex flex-col justify-between ${isEmailVerified ? "bg-card/70 border-emerald-500/30" : "bg-card border-amber-500/30"}`}>
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    {isEmailVerified ? (
+                      <CheckCircle2 size={14} className="text-emerald-600" />
+                    ) : (
+                      <span className="size-2 rounded-full bg-amber-500" />
+                    )}
+                    <span>2. Email ({isEmailVerified ? "Verified" : "Unverified"})</span>
+                  </span>
+                  {!isEmailVerified && (
+                    <button
+                      type="button"
+                      disabled={resendingVerification}
+                      onClick={handleResendVerification}
+                      className="text-xs font-semibold text-primary hover:underline disabled:opacity-50"
+                    >
+                      {resendingVerification ? "Sending..." : "Resend →"}
+                    </button>
                   )}
-                  <span>2. Shop Details ({isShopComplete ? "Complete" : "Incomplete"})</span>
-                </span>
-                <Link href="/dashboard/settings" className="text-xs font-semibold text-primary hover:underline">
-                  Edit Shop →
-                </Link>
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground truncate">
+                  {isEmailVerified ? "Email address verified" : `Sent to ${user?.email || "your email"}`}
+                </p>
               </div>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                Required: Shop Name, Logo Image, Facebook Page URL
-              </p>
+            </div>
+
+            {/* 3. Shop Details */}
+            <div className={`p-3.5 rounded-xl border flex flex-col justify-between ${isShopComplete ? "bg-card/70 border-emerald-500/30" : "bg-card border-amber-500/30"}`}>
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    {isShopComplete ? (
+                      <CheckCircle2 size={14} className="text-emerald-600" />
+                    ) : (
+                      <span className="size-2 rounded-full bg-amber-500" />
+                    )}
+                    <span>3. Shop ({isShopComplete ? "Complete" : "Incomplete"})</span>
+                  </span>
+                  <Link href="/dashboard/settings" className="text-xs font-semibold text-primary hover:underline">
+                    Edit →
+                  </Link>
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Required: Shop Name, Logo, Page URL
+                </p>
+              </div>
             </div>
           </div>
         </section>

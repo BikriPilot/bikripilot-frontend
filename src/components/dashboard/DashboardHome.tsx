@@ -1,15 +1,20 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
   ArrowUpRight,
-  BookOpen,
+  Bot,
   CheckCircle2,
   ClipboardCheck,
+  Mail,
   MessageSquare,
   PackagePlus,
+  RefreshCw,
+  Send,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { EmptyState, ErrorState } from "@/components/common/PageStates";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -19,6 +24,8 @@ import {
   useDashboardSummary,
 } from "@/hooks/queries/useAnalytics";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
+import { useAuthStore } from "@/stores/authStore";
+import { authApi } from "@/lib/api/auth.api";
 import { formatMoney } from "@/lib/money";
 
 const checklistConfig: Record<
@@ -77,10 +84,36 @@ const statusKeys: Record<string, string> = {
 export function DashboardHome() {
   const t = useTranslations("dashboard");
   const tStep8 = useTranslations("step8");
+  const user = useAuthStore((state) => state.user);
   const query = useDashboardSummary();
   const { can } = useCurrentShop();
   const canReadOrders = can("order.read");
   const onHold = useDashboardOnHoldCount(canReadOrders);
+
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  const handleResend = async () => {
+    if (resending || resendCooldown > 0) return;
+    setResending(true);
+    try {
+      await authApi.resendVerification();
+      toast.success(t("verificationSent"));
+      setResendCooldown(60);
+    } catch {
+      toast.error(tStep8("genericError"));
+    } finally {
+      setResending(false);
+    }
+  };
 
   if (query.isPending || (canReadOrders && onHold.isPending)) {
     return (
@@ -235,7 +268,58 @@ export function DashboardHome() {
 
   return (
     <div className="space-y-7">
-      <PageHeader title={t("title")} description={t("description")} />
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        action={
+          user?.emailVerified ? (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              <CheckCircle2 size={14} className="text-emerald-500" />
+              <span>{t("emailVerifiedBadge")}</span>
+            </div>
+          ) : null
+        }
+      />
+
+      {user && !user.emailVerified && (
+        <section
+          aria-label="Email verification"
+          className="rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in"
+        >
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
+              <Mail size={18} />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm font-semibold text-foreground">
+                {t("emailVerifyTitle")}
+              </h2>
+              <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+                {t("emailVerifyBanner", { email: user.email })}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            <button
+              type="button"
+              disabled={resending || resendCooldown > 0}
+              onClick={handleResend}
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-xl bg-amber-500/20 px-3.5 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-500/30 dark:bg-amber-500/20 dark:text-amber-300 dark:hover:bg-amber-500/30 transition-colors disabled:opacity-50"
+            >
+              {resending ? (
+                <RefreshCw size={13} className="animate-spin" />
+              ) : (
+                <Send size={13} />
+              )}
+              <span>
+                {resendCooldown > 0
+                  ? t("resendCooldown", { seconds: resendCooldown })
+                  : t("resendVerification")}
+              </span>
+            </button>
+          </div>
+        </section>
+      )}
 
       <section
         aria-label={t("today")}
@@ -341,13 +425,11 @@ export function DashboardHome() {
                   icon={<MessageSquare size={16} />}
                 />
               ) : null}
-              {can("hisab.read") ? (
-                <QuickAction
-                  href="/dashboard/hisab"
-                  label={t("openLedger")}
-                  icon={<BookOpen size={16} />}
-                />
-              ) : null}
+              <QuickAction
+                href="/dashboard/ai"
+                label={t("openAiAssistant")}
+                icon={<Bot size={16} />}
+              />
             </div>
 
             {/* Attention items if any */}

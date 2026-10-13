@@ -45,6 +45,19 @@ export default function ProfilePage() {
   const [address, setAddress] = useState(user?.address ?? "");
   const [postalCode, setPostalCode] = useState(user?.postalCode ?? "");
   const [profileSaving, setProfileSaving] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState(false);
+
+  const resendProfileVerification = async () => {
+    setResendingEmail(true);
+    try {
+      await authApi.resendVerification();
+      toast.success("Verification email sent! Please check your inbox and spam folder.");
+    } catch {
+      toast.error(t("genericError"));
+    } finally {
+      setResendingEmail(false);
+    }
+  };
 
   const [setup, setSetup] = useState<{
     otpauthUrl: string;
@@ -159,11 +172,11 @@ export default function ProfilePage() {
       />
 
       {/* Top Grid: Left (Profile Card) | Right (2FA + Change Password Stacked) */}
-      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         {/* Left Column: Personal Information Form (Expanded with address & postal code) */}
         <form
           onSubmit={saveProfile}
-          className="flex flex-col justify-between rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-6 h-full"
+          className="rounded-2xl border bg-card p-5 shadow-xs sm:p-6 space-y-5"
         >
           <div className="space-y-5">
             <div className="flex items-center justify-between border-b pb-4">
@@ -215,16 +228,35 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* Row 2: Email & District (District select fixed overflow) */}
+              {/* Row 2: Email (with verified status/resend) & District */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field
-                  label={`${t("email")} *`}
-                  value={user.email}
-                  readOnly
-                  autoComplete="email"
-                  className="bg-muted/50 cursor-not-allowed opacity-90"
-                  required
-                />
+                <div className="space-y-1.5 min-w-0">
+                  <div className="flex items-center justify-between gap-2 min-w-0">
+                    <span className="text-sm font-medium text-foreground truncate">{`${t("email")} *`}</span>
+                    {user.emailVerified ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 size={12} />
+                        Verified
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={resendProfileVerification}
+                        disabled={resendingEmail}
+                        className="shrink-0 text-[11px] font-semibold text-amber-600 dark:text-amber-400 hover:underline disabled:opacity-50"
+                      >
+                        {resendingEmail ? "Sending..." : "Verify email →"}
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    value={user.email}
+                    readOnly
+                    autoComplete="email"
+                    className="h-11 w-full min-w-0 rounded-lg border bg-muted/50 px-3 text-sm outline-none cursor-not-allowed opacity-90"
+                    required
+                  />
+                </div>
                 <label className="grid min-w-0 gap-1.5 text-sm font-medium">
                   <span className="text-foreground">{`${t("district")} *`}</span>
                   <select
@@ -243,8 +275,8 @@ export default function ProfilePage() {
                 </label>
               </div>
 
-              {/* Row 3: Address & Postal Code (Optional fields) */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_160px]">
+              {/* Row 3: Address & Postal Code (Balanced 50/50 columns, no overflow) */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
                   label={`${t("address")} (Optional)`}
                   value={address}
@@ -274,10 +306,10 @@ export default function ProfilePage() {
         </form>
 
         {/* Right Column: Two-Factor Authentication & Change Password Stacked */}
-        <div className="flex flex-col gap-6 justify-between h-full">
+        <div className="flex flex-col gap-5">
           {/* Two-Factor Authentication Card */}
           <section
-            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 flex-1 ${
+            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-5 space-y-3.5 ${
               searchParams.get("setup2fa") === "1"
                 ? "border-primary ring-2 ring-primary/20"
                 : ""
@@ -431,7 +463,7 @@ export default function ProfilePage() {
           {/* Change Password Card */}
           <form
             onSubmit={changePassword}
-            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 flex-1 flex flex-col justify-between"
+            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-5 space-y-3.5"
           >
             <div className="space-y-4">
               <div className="flex items-center gap-2">

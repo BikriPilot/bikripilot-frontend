@@ -46,18 +46,18 @@ export function PasswordField({
   ].filter(Boolean).length;
 
   return (
-    <div className="grid gap-1.5 text-sm font-medium">
-      <label htmlFor={id} className="text-foreground">
+    <div className="grid min-w-0 gap-1.5 text-sm font-medium">
+      <label htmlFor={id} className="text-foreground truncate">
         {label}
       </label>
-      <div className="relative">
+      <div className="relative min-w-0">
         <input
           id={id}
           type={visible ? "text" : "password"}
           value={value}
           onChange={onChange}
           autoComplete={autoComplete}
-          className={`h-11 w-full rounded-lg border bg-card pl-3 pr-11 text-base outline-none placeholder:text-muted-foreground focus:border-primary ${className}`}
+          className={`h-11 w-full min-w-0 rounded-lg border bg-card pl-3 pr-11 text-sm outline-none placeholder:text-muted-foreground focus:border-primary ${className}`}
           {...props}
         />
         <button
