@@ -940,6 +940,7 @@
     "verifyTitle": "ইমেইল যাচাই করুন",
     "verifySuccess": "আপনার ইমেইল যাচাই হয়েছে। ড্যাশবোর্ডে যেতে পারেন।",
     "verifyEmail": "ইমেইল যাচাই করুন",
+    "verifyAuthenticator": "অথেনটিকেটর যাচাই করুন",
     "resendVerification": "আবার যাচাই ইমেইল পাঠান",
     "twoFactorTitle": "সিকিউরিটি কোড দিন",
     "twoFactorDescription": "আপনার অথেনটিকেটর অ্যাপের 6 সংখ্যার কোড দিন.",

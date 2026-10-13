@@ -940,6 +940,7 @@
     "verifyTitle": "Verify your email",
     "verifySuccess": "Your email is verified. You can continue to your dashboard.",
     "verifyEmail": "Verify email",
+    "verifyAuthenticator": "Verify authenticator",
     "resendVerification": "Resend verification email",
     "twoFactorTitle": "Enter your security code",
     "twoFactorDescription": "Enter the 6-digit code from your authenticator app.",
