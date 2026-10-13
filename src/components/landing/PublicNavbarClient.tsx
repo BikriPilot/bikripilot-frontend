@@ -54,6 +54,7 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const resourcesRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
 
   const isAdmin =
@@ -84,7 +85,34 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  // Handle mouse hover with delay to avoid accidental close
+  // Click outside and escape handler
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        resourcesRef.current &&
+        !resourcesRef.current.contains(e.target as Node)
+      ) {
+        setResourcesOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setResourcesOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("keydown", handleKeyDown);
+      if (closeTimeout.current) {
+        clearTimeout(closeTimeout.current);
+      }
+    };
+  }, []);
+
+  // Handle mouse hover with snappy opening and smooth grace period
   const handleMouseEnter = () => {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current);
@@ -94,9 +122,12 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
   };
 
   const handleMouseLeave = () => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
     closeTimeout.current = setTimeout(() => {
       setResourcesOpen(false);
-    }, 150);
+    }, 120);
   };
 
   // Resources Mega Menu Items (Image 2 style with Track Orders, Contact, Data Deletion, FAQ, Privacy, Terms)
@@ -172,77 +203,103 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
             {t.navWorkflows || "Workflows"}
           </Link>
 
-          {/* 3. Resources Mega Menu Dropdown (Matches Image 2) */}
+          {/* 3. Resources Mega Menu Dropdown */}
           <div
+            ref={resourcesRef}
             className="relative"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
             <button
               type="button"
-              onClick={() => setResourcesOpen(!resourcesOpen)}
-              className={`flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
+              onClick={(e) => {
+                e.preventDefault();
+                if (closeTimeout.current) {
+                  clearTimeout(closeTimeout.current);
+                  closeTimeout.current = null;
+                }
+                setResourcesOpen((prev) => !prev);
+              }}
+              aria-expanded={resourcesOpen}
+              aria-haspopup="true"
+              className={`flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-150 ${
                 resourcesOpen
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-muted text-foreground ring-1 ring-border/50"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
               }`}
             >
               <span>{t.navResources || "Resources"}</span>
               <ChevronDown
-                className={`size-3.5 transition-transform duration-200 ${
+                className={`size-3.5 transition-transform duration-200 ease-out ${
                   resourcesOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
 
-            {/* Mega Menu Floating Card (Image 2 style) */}
-            {resourcesOpen && (
-              <div className="absolute left-1/2 top-full z-50 w-[720px] -translate-x-1/2 pt-2 animate-in fade-in-0 zoom-in-95 duration-150">
-                <div className="rounded-2xl border border-border/80 bg-card/98 p-5 shadow-2xl backdrop-blur-xl">
-                  <div className="grid grid-cols-3 gap-2.5">
-                    {resourcesItems.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`group flex flex-col justify-between rounded-xl p-3 transition-colors hover:bg-muted/70 ${
-                            item.featured ? "bg-muted/30 border border-border/50" : ""
-                          }`}
-                        >
-                          <div>
-                            <div
-                              className={`grid size-8 shrink-0 place-items-center rounded-lg mb-2.5 transition-transform group-hover:scale-105 ${item.color}`}
-                            >
-                              <Icon className="size-4" />
-                            </div>
-                            <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
-                              {item.title}
-                            </p>
-                            <p className="mt-1 text-[11px] text-muted-foreground leading-snug">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
+            {/* Mega Menu Floating Card with smooth fast transition */}
+            <div
+              className={`absolute left-1/2 top-full z-50 w-[720px] -translate-x-1/2 pt-2 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                resourcesOpen
+                  ? "pointer-events-auto visible opacity-100 translate-y-0 scale-100"
+                  : "pointer-events-none invisible opacity-0 -translate-y-2 scale-[0.98]"
+              }`}
+              role="region"
+              aria-label={t.navResources || "Resources"}
+            >
+              {/* Invisible bridge element ensuring no gap between button and card */}
+              <div
+                className="absolute -top-3 left-0 right-0 h-4"
+                aria-hidden="true"
+              />
 
-                  <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-xs">
-                    <span className="text-muted-foreground">
-                      Need custom setup assistance?
-                    </span>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
-                    >
-                      <Headset className="size-3.5" />
-                      <span>{t.supportBtn || "Support"} Desk →</span>
-                    </Link>
-                  </div>
+              <div className="rounded-2xl border border-border/80 bg-card/95 p-5 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)] backdrop-blur-xl ring-1 ring-black/5 dark:ring-white/10">
+                <div className="grid grid-cols-3 gap-2.5">
+                  {resourcesItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setResourcesOpen(false)}
+                        className={`group flex flex-col justify-between rounded-xl p-3 transition-all duration-150 hover:bg-muted/80 hover:-translate-y-0.5 active:translate-y-0 ${
+                          item.featured
+                            ? "bg-muted/30 border border-border/50"
+                            : "hover:border hover:border-border/40 border border-transparent"
+                        }`}
+                      >
+                        <div>
+                          <div
+                            className={`grid size-8 shrink-0 place-items-center rounded-lg mb-2.5 transition-transform duration-200 group-hover:scale-110 ${item.color}`}
+                          >
+                            <Icon className="size-4" />
+                          </div>
+                          <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                            {item.title}
+                          </p>
+                          <p className="mt-1 text-[11px] text-muted-foreground leading-snug">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-xs">
+                  <span className="text-muted-foreground">
+                    Need custom setup assistance?
+                  </span>
+                  <Link
+                    href="/contact"
+                    onClick={() => setResourcesOpen(false)}
+                    className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                  >
+                    <Headset className="size-3.5" />
+                    <span>{t.supportBtn || "Support"} Desk →</span>
+                  </Link>
                 </div>
               </div>
-            )}
+            </div>
           </div>
 
           {/* 4. Pricing Link */}
