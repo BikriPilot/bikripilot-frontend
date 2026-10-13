@@ -72,7 +72,7 @@ export default function ShopSettingsPage() {
   const isShopComplete = Boolean(shop.name?.trim() && shop.logoUrl && shop.facebookPageUrl?.trim());
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-5xl space-y-6">
       <PageHeader
         title={t("shopSettingsTitle")}
         description={t("shopSettingsDescription")}
@@ -80,7 +80,7 @@ export default function ShopSettingsPage() {
 
       <form
         onSubmit={save}
-        className="max-w-4xl rounded-2xl border bg-card p-6 shadow-xs sm:p-8 space-y-7"
+        className="w-full rounded-2xl border bg-card p-6 shadow-xs sm:p-8 space-y-8"
       >
         {/* Status indicator */}
         {!isShopComplete && (
@@ -93,15 +93,15 @@ export default function ShopSettingsPage() {
         )}
 
         {/* Section 1: Logo & Store Identity */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 border-b pb-2">
+        <div className="space-y-5">
+          <div className="flex items-center gap-2 border-b pb-3">
             <Store size={18} className="text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Store Identity (শপের পরিচিতি)
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-[140px_1fr] sm:items-start">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr] md:items-start">
             <div className="grid gap-2 text-sm font-medium">
               <span className="flex items-center gap-1">
                 <span>{t("shopLogo")}</span>

@@ -11,6 +11,7 @@ import {
   Laptop,
   CheckCircle2,
   AlertTriangle,
+  User,
 } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { Field } from "@/components/common/Field";
@@ -41,6 +42,8 @@ export default function ProfilePage() {
   const [name, setName] = useState(user?.name ?? "");
   const [phone, setPhone] = useState(user?.phone ?? "");
   const [district, setDistrict] = useState(user?.district ?? "");
+  const [address, setAddress] = useState(user?.address ?? "");
+  const [postalCode, setPostalCode] = useState(user?.postalCode ?? "");
   const [profileSaving, setProfileSaving] = useState(false);
 
   const [setup, setSetup] = useState<{
@@ -74,6 +77,8 @@ export default function ProfilePage() {
         name: name.trim(),
         phone: phone.trim() || null,
         district: district || undefined,
+        address: address.trim() || null,
+        postalCode: postalCode.trim() || null,
       });
       setUser(result);
       toast.success(t("saved"));
@@ -153,22 +158,27 @@ export default function ProfilePage() {
         description={t("securityDescription")}
       />
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        {/* Left Column: Personal Information & Password Change */}
-        <div className="space-y-6">
-          {/* Personal Information Form */}
-          <form
-            onSubmit={saveProfile}
-            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-5"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  {t("securityTitle")}
-                </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Essential seller credentials required for sales channels.
-                </p>
+      {/* Top Grid: Left (Profile Card) | Right (2FA + Change Password Stacked) */}
+      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        {/* Left Column: Personal Information Form (Expanded with address & postal code) */}
+        <form
+          onSubmit={saveProfile}
+          className="flex flex-col justify-between rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-6 h-full"
+        >
+          <div className="space-y-5">
+            <div className="flex items-center justify-between border-b pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <User size={18} />
+                </div>
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">
+                    {t("securityTitle")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Essential seller credentials required for sales channels.
+                  </p>
+                </div>
               </div>
               {isProfileComplete ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
@@ -184,7 +194,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-4">
-              {/* Row 1: Name & Phone (1 line side-by-side) */}
+              {/* Row 1: Name & Phone */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
                   label={`${t("name")} *`}
@@ -205,7 +215,7 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* Row 2: Email & District (1 line side-by-side) */}
+              {/* Row 2: Email & District (District select fixed overflow) */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
                   label={`${t("email")} *`}
@@ -215,10 +225,10 @@ export default function ProfilePage() {
                   className="bg-muted/50 cursor-not-allowed opacity-90"
                   required
                 />
-                <label className="grid gap-1.5 text-sm font-medium">
+                <label className="grid min-w-0 gap-1.5 text-sm font-medium">
                   <span className="text-foreground">{`${t("district")} *`}</span>
                   <select
-                    className="h-11 rounded-lg border bg-card px-3 text-base outline-none focus:border-primary"
+                    className="h-11 w-full min-w-0 max-w-full truncate rounded-lg border bg-card px-3 text-sm outline-none focus:border-primary"
                     value={district}
                     onChange={(event) => setDistrict(event.target.value)}
                     required
@@ -232,83 +242,42 @@ export default function ProfilePage() {
                   </select>
                 </label>
               </div>
-            </div>
 
-            <div className="pt-2 flex justify-end">
-              <button
-                type="submit"
-                disabled={profileSaving}
-                className="min-h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
-              >
-                {profileSaving ? t("loading") : t("saveChanges")}
-              </button>
-            </div>
-          </form>
-
-          {/* Password Change Form */}
-          <form
-            onSubmit={changePassword}
-            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4"
-          >
-            <div className="flex items-center gap-2">
-              <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
-                <KeyRound size={16} />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  {t("changePassword")}
-                </h2>
-                <p className="text-xs text-muted-foreground">
-                  Update your login credentials securely.
-                </p>
+              {/* Row 3: Address & Postal Code (Optional fields) */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_160px]">
+                <Field
+                  label={`${t("address")} (Optional)`}
+                  value={address}
+                  onChange={(event) => setAddress(event.target.value)}
+                  placeholder="Street, area, house details"
+                />
+                <Field
+                  label={`${t("postalCode")} (Optional)`}
+                  value={postalCode}
+                  onChange={(event) => setPostalCode(event.target.value)}
+                  placeholder="1200"
+                  inputMode="numeric"
+                />
               </div>
             </div>
+          </div>
 
-            {passwordError ? (
-              <p
-                role="alert"
-                className="rounded-lg bg-danger-soft p-3 text-xs text-danger"
-              >
-                {passwordError}
-              </p>
-            ) : null}
+          <div className="pt-4 border-t flex justify-end">
+            <button
+              type="submit"
+              disabled={profileSaving}
+              className="min-h-11 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
+            >
+              {profileSaving ? t("loading") : t("saveChanges")}
+            </button>
+          </div>
+        </form>
 
-            <PasswordField
-              label={t("currentPassword")}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
-              placeholder="••••••••"
-              required
-            />
-
-            <PasswordField
-              label={t("newPassword")}
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              autoComplete="new-password"
-              showStrengthIndicator={true}
-              placeholder="••••••••"
-              required
-            />
-
-            <div className="pt-2 flex justify-end">
-              <button
-                type="submit"
-                disabled={passwordSaving}
-                className="min-h-11 rounded-xl border bg-card px-5 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
-              >
-                {passwordSaving ? t("loading") : t("saveChanges")}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Right Column: Two-Factor Authentication & Active Sessions */}
-        <div className="space-y-6">
+        {/* Right Column: Two-Factor Authentication & Change Password Stacked */}
+        <div className="flex flex-col gap-6 justify-between h-full">
           {/* Two-Factor Authentication Card */}
           <section
-            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 ${
+            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 flex-1 ${
               searchParams.get("setup2fa") === "1"
                 ? "border-primary ring-2 ring-primary/20"
                 : ""
@@ -459,73 +428,133 @@ export default function ProfilePage() {
             )}
           </section>
 
-          {/* Active Sessions Card */}
-          <section className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="grid size-9 place-items-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
-                  <Laptop size={20} />
+          {/* Change Password Card */}
+          <form
+            onSubmit={changePassword}
+            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 flex-1 flex flex-col justify-between"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
+                  <KeyRound size={16} />
                 </div>
                 <div>
                   <h2 className="text-base font-semibold text-foreground">
-                    {t("activeSessions")}
+                    {t("changePassword")}
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    Devices currently signed into this account
+                    Update your login credentials securely.
                   </p>
                 </div>
               </div>
+
+              {passwordError ? (
+                <p
+                  role="alert"
+                  className="rounded-lg bg-danger-soft p-3 text-xs text-danger"
+                >
+                  {passwordError}
+                </p>
+              ) : null}
+
+              <PasswordField
+                label={t("currentPassword")}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                autoComplete="current-password"
+                placeholder="••••••••"
+                required
+              />
+
+              <PasswordField
+                label={t("newPassword")}
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                autoComplete="new-password"
+                showStrengthIndicator={true}
+                placeholder="••••••••"
+                required
+              />
             </div>
 
-            {sessions.isPending ? (
-              <div className="h-24 animate-pulse rounded-xl bg-muted" />
-            ) : sessions.isError ? (
-              <ErrorState onRetry={() => void sessions.refetch()} />
-            ) : (
-              <div className="space-y-3">
-                <div className="divide-y rounded-xl border bg-muted/20">
-                  {sessions.data.map((session) => (
-                    <div
-                      key={session.id}
-                      className="flex items-center justify-between gap-3 p-3.5 text-xs"
-                    >
-                      <div className="space-y-0.5">
-                        <p className="font-medium text-foreground truncate max-w-xs">
-                          {session.userAgent ?? "Web Browser"}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          IP: {session.ipMasked} • {new Date(session.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      {session.current ? (
-                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                          {t("currentSession")}
-                        </span>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void authApi
-                        .logoutAll()
-                        .then(() => clearAuth())
-                        .then(() => toast.success(t("loggedOutAll")))
-                        .catch(() => toast.error(t("genericError")))
-                    }
-                    className="min-h-10 w-full rounded-xl border border-danger/30 text-xs font-semibold text-danger hover:bg-danger/10 transition-colors"
-                  >
-                    {t("logoutAll")}
-                  </button>
-                </div>
-              </div>
-            )}
-          </section>
+            <div className="pt-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={passwordSaving}
+                className="min-h-11 rounded-xl border bg-card px-5 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
+              >
+                {passwordSaving ? t("loading") : t("saveChanges")}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
+
+      {/* Bottom Full-Width Section: Active Sessions Card */}
+      <section className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="grid size-9 place-items-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+              <Laptop size={20} />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-foreground">
+                {t("activeSessions")}
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Devices currently signed into this account
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {sessions.isPending ? (
+          <div className="h-24 animate-pulse rounded-xl bg-muted" />
+        ) : sessions.isError ? (
+          <ErrorState onRetry={() => void sessions.refetch()} />
+        ) : (
+          <div className="space-y-3">
+            <div className="divide-y rounded-xl border bg-muted/20">
+              {sessions.data.map((session) => (
+                <div
+                  key={session.id}
+                  className="flex items-center justify-between gap-3 p-3.5 text-xs"
+                >
+                  <div className="space-y-0.5">
+                    <p className="font-medium text-foreground truncate max-w-xs">
+                      {session.userAgent ?? "Web Browser"}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      IP: {session.ipMasked} • {new Date(session.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  {session.current ? (
+                    <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                      {t("currentSession")}
+                    </span>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() =>
+                  void authApi
+                    .logoutAll()
+                    .then(() => clearAuth())
+                    .then(() => toast.success(t("loggedOutAll")))
+                    .catch(() => toast.error(t("genericError")))
+                }
+                className="min-h-10 w-full rounded-xl border border-danger/30 text-xs font-semibold text-danger hover:bg-danger/10 transition-colors"
+              >
+                {t("logoutAll")}
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

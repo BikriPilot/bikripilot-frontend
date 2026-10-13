@@ -139,14 +139,14 @@ export default function DeliverySettingsPage() {
     }
   };
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-5xl space-y-6">
       <PageHeader
         title={t("deliveryTitle")}
         description={t("deliveryDescription")}
       />
       <form
         onSubmit={save}
-        className="max-w-4xl space-y-6 rounded-2xl border bg-card p-6 shadow-xs sm:p-8"
+        className="w-full space-y-8 rounded-2xl border bg-card p-6 shadow-xs sm:p-8"
       >
         {/* Section 1: Standard Delivery Rates */}
         <div>

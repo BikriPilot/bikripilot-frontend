@@ -78,11 +78,13 @@ export function ImageUploader({
         void upload(event.dataTransfer.files);
       }}
     >
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className={max === 1 ? "w-full" : "grid grid-cols-2 gap-3 sm:grid-cols-4"}>
         {value.map((url, index) => (
           <div
             key={`${url}-${index}`}
-            className="relative aspect-square overflow-hidden rounded-lg border bg-muted"
+            className={`relative aspect-square overflow-hidden rounded-xl border bg-muted ${
+              max === 1 ? "w-full max-w-[220px]" : ""
+            }`}
           >
             <img src={url} alt="" className="size-full object-cover" />
             <button
@@ -91,7 +93,7 @@ export function ImageUploader({
               onClick={() =>
                 onChange(value.filter((_, imageIndex) => imageIndex !== index))
               }
-              className="absolute right-1 top-1 grid size-8 place-items-center rounded-full bg-foreground/70 text-background"
+              className="absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-foreground/75 text-background shadow-xs hover:bg-foreground transition-colors"
               aria-label={t("removeImage")}
               title={t("removeImage")}
             >
@@ -128,12 +130,19 @@ export function ImageUploader({
             type="button"
             onClick={() => input.current?.click()}
             disabled={busy}
-            className="grid aspect-square place-items-center rounded-xl border border-dashed text-muted-foreground hover:bg-muted"
+            className={`grid aspect-square place-items-center rounded-xl border-2 border-dashed border-border text-muted-foreground hover:border-primary/50 hover:bg-muted/50 transition-colors ${
+              max === 1 ? "w-full max-w-[220px] p-4 gap-2" : ""
+            }`}
           >
-            <ImagePlus size={22} />
-            <span className="text-xs">
+            <ImagePlus size={max === 1 ? 32 : 22} className={max === 1 ? "text-primary/70" : ""} />
+            <span className={max === 1 ? "text-xs font-medium text-foreground" : "text-xs"}>
               {busy ? t("uploading") : t("addImage")}
             </span>
+            {max === 1 ? (
+              <span className="text-[11px] text-muted-foreground text-center">
+                JPG, PNG, WebP (Max 5MB)
+              </span>
+            ) : null}
           </button>
         ) : null}
       </div>

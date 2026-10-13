@@ -5,9 +5,9 @@ import {
   ArrowUpRight,
   BookOpen,
   CheckCircle2,
+  ClipboardCheck,
   MessageSquare,
   PackagePlus,
-  Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -255,13 +255,134 @@ export function DashboardHome() {
         ))}
       </section>
 
-      <div className="grid gap-7 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
-        <div className="space-y-7">
-          <section className="rounded-2xl border border-border bg-card p-5 shadow-xs">
+      {/* Row 1: Plan usage & Quick actions side-by-side */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Plan Usage Card */}
+        {can("billing.read") ? (
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
+                <h2 className="text-sm font-semibold text-foreground">{t("usageTitle")}</h2>
+                <Link
+                  href="/dashboard/billing"
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  {t("viewPlans")} →
+                </Link>
+              </div>
+              {usage.length ? (
+                <div className="mt-4 grid gap-x-6 gap-y-3.5 sm:grid-cols-2">
+                  {usage.slice(0, 6).map((feature) => {
+                    const used = feature.used ?? 0;
+                    const limit = feature.limit ?? 0;
+                    const percentage = feature.unlimited
+                      ? 0
+                      : Math.min(100, (used / Math.max(1, limit)) * 100);
+                    return (
+                      <div key={feature.key} className="space-y-1">
+                        <div className="flex justify-between gap-2 text-xs">
+                          <span className="font-medium text-foreground truncate">
+                            {tStep8(`features.${feature.key}` as never)}
+                          </span>
+                          <span className="shrink-0 text-muted-foreground tabular-nums">
+                            {feature.unlimited
+                              ? t("unlimited")
+                              : t("usedOf", { used, limit })}
+                          </span>
+                        </div>
+                        {!feature.unlimited ? (
+                          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                            <div
+                              className="h-full rounded-full bg-primary"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="mt-4 text-xs text-muted-foreground">{t("noUsage")}</p>
+              )}
+            </div>
+          </section>
+        ) : (
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex items-center justify-center">
+            <p className="text-xs text-muted-foreground">{t("noUsage")}</p>
+          </div>
+        )}
+
+        {/* Quick Actions & Attention Card */}
+        <section className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h2 className="text-sm font-semibold text-foreground">{t("quickActions")}</h2>
+              {attention.length ? (
+                <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  {attention.length} {t("needsAttention")}
+                </span>
+              ) : null}
+            </div>
+
+            {/* Quick action buttons */}
+            <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+              {can("order.write") ? (
+                <QuickAction
+                  href="/dashboard/orders/new"
+                  label={t("newOrder")}
+                  icon={<PackagePlus size={16} />}
+                />
+              ) : null}
+              {can("inbox.read") ? (
+                <QuickAction
+                  href="/dashboard/inbox"
+                  label={t("openInbox")}
+                  icon={<MessageSquare size={16} />}
+                />
+              ) : null}
+              {can("hisab.read") ? (
+                <QuickAction
+                  href="/dashboard/hisab"
+                  label={t("openLedger")}
+                  icon={<BookOpen size={16} />}
+                />
+              ) : null}
+            </div>
+
+            {/* Attention items if any */}
+            {attention.length ? (
+              <div className="mt-4 pt-3 border-t border-border/60">
+                <ul className="divide-y divide-border/60">
+                  {attention.map((item) => (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className="flex min-h-10 items-center justify-between gap-3 py-1.5 text-xs hover:text-primary transition-colors"
+                      >
+                        <span className="text-muted-foreground">{item.label}</span>
+                        <span className="font-semibold tabular-nums text-foreground">
+                          {item.count} <span aria-hidden="true">→</span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </section>
+      </div>
+
+      {/* Row 2: Checklist (Left) & Recent Orders (Right) with matched heights */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 items-stretch">
+        {/* Store & Business Preparation Checklist */}
+        <section className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between h-full">
+          <div>
             <div className="flex items-center justify-between gap-3 pb-3 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
-                  <Sparkles className="size-4" />
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-xl bg-primary/10 text-primary">
+                  <ClipboardCheck className="size-4" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">
@@ -306,7 +427,7 @@ export function DashboardHome() {
                     {item.done ? (
                       <CheckCircle2 className="size-4 shrink-0 text-emerald-500" />
                     ) : (
-                      <AlertCircle className="size-4 shrink-0 text-muted-foreground" />
+                      <AlertCircle className="size-4 shrink-0 text-rose-500" />
                     )}
                     <span
                       className={cn(
@@ -334,81 +455,30 @@ export function DashboardHome() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
 
-            <div className="mt-4 rounded-xl bg-muted/40 p-3 text-xs text-muted-foreground">
-              {t("checklistNote")}
-            </div>
-          </section>
-
-          {can("billing.read") ? (
-            <section className="border-y py-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="font-semibold">{t("usageTitle")}</h2>
-                <Link
-                  href="/dashboard/billing"
-                  className="text-sm font-medium text-primary"
-                >
-                  {t("viewPlans")}
-                </Link>
-              </div>
-              {usage.length ? (
-                <div className="mt-4 grid gap-x-6 gap-y-4 md:grid-cols-2">
-                  {usage.slice(0, 6).map((feature) => {
-                    const used = feature.used ?? 0;
-                    const limit = feature.limit ?? 0;
-                    const percentage = feature.unlimited
-                      ? 0
-                      : Math.min(100, (used / Math.max(1, limit)) * 100);
-                    return (
-                      <div key={feature.key}>
-                        <div className="flex justify-between gap-3 text-sm">
-                          <span>
-                            {tStep8(`features.${feature.key}` as never)}
-                          </span>
-                          <span className="shrink-0 text-muted-foreground">
-                            {feature.unlimited
-                              ? t("unlimited")
-                              : t("usedOf", { used, limit })}
-                          </span>
-                        </div>
-                        {!feature.unlimited ? (
-                          <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-                            <div
-                              className="h-full rounded-full bg-primary"
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="mt-3 text-sm text-muted-foreground">
-                  {t("noUsage")}
-                </p>
-              )}
-            </section>
-          ) : null}
-
-          {can("order.read") ? (
-            <section className="border-y py-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="font-semibold">{t("recentOrders")}</h2>
+        {/* Recent Orders Card */}
+        {can("order.read") ? (
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between h-full">
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
+                <h2 className="text-sm font-semibold text-foreground">{t("recentOrders")}</h2>
                 <Link
                   href="/dashboard/orders"
-                  className="text-sm font-medium text-primary"
+                  className="text-xs font-semibold text-primary hover:underline"
                 >
-                  {t("viewAllOrders")}
+                  {t("viewAllOrders")} →
                 </Link>
               </div>
+
               {data.recentOrders.length ? (
-                <ul className="mt-3 divide-y">
+                <ul className="mt-2 divide-y divide-border flex-1">
                   {data.recentOrders.map((order) => (
                     <li key={order.id}>
                       <Link
                         href={`/dashboard/orders/${order.id}`}
-                        className="flex min-h-14 items-center justify-between gap-3 py-2 hover:text-primary"
+                        className="flex min-h-12 items-center justify-between gap-3 py-2 hover:text-primary transition-colors"
                       >
                         <span className="min-w-0">
                           <span className="block truncate text-sm font-medium">
@@ -426,62 +496,13 @@ export function DashboardHome() {
                   ))}
                 </ul>
               ) : (
-                <div className="mt-4">
+                <div className="flex-1 flex items-center justify-center min-h-[300px]">
                   <EmptyState title={t("noRecentOrders")} />
                 </div>
               )}
-            </section>
-          ) : null}
-        </div>
-
-        <aside className="space-y-7">
-          {attention.length ? (
-            <section className="border-y py-5">
-              <h2 className="font-semibold">{t("needsAttention")}</h2>
-              <ul className="mt-3 divide-y">
-                {attention.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="flex min-h-12 items-center justify-between gap-3 py-2 text-sm hover:text-primary"
-                    >
-                      <span>{item.label}</span>
-                      <span className="tabular-nums">
-                        {item.count} <span aria-hidden="true">→</span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-          <section className="border-y py-5">
-            <h2 className="font-semibold">{t("quickActions")}</h2>
-            <div className="mt-3 grid gap-2 sm:grid-cols-3 xl:grid-cols-1">
-              {can("order.write") ? (
-                <QuickAction
-                  href="/dashboard/orders/new"
-                  label={t("newOrder")}
-                  icon={<PackagePlus size={17} />}
-                />
-              ) : null}
-              {can("inbox.read") ? (
-                <QuickAction
-                  href="/dashboard/inbox"
-                  label={t("openInbox")}
-                  icon={<MessageSquare size={17} />}
-                />
-              ) : null}
-              {can("hisab.read") ? (
-                <QuickAction
-                  href="/dashboard/hisab"
-                  label={t("openLedger")}
-                  icon={<BookOpen size={17} />}
-                />
-              ) : null}
             </div>
           </section>
-        </aside>
+        ) : null}
       </div>
     </div>
   );

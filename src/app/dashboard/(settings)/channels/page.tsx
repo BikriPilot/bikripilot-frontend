@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   X,
   ShieldCheck,
-  Sparkles,
   AlertTriangle,
 } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -269,10 +268,7 @@ export default function ChannelsPage() {
               <AlertTriangle size={18} />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-foreground">
-                Action Required: Complete Profile & Shop Details First
-              </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs sm:text-sm font-semibold text-foreground">
                 Before linking Facebook or WhatsApp, you must complete your seller credentials and store identity.
               </p>
             </div>
@@ -374,9 +370,8 @@ export default function ChannelsPage() {
                   {t("active")}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                  <Sparkles size={11} className="text-amber-500" />
-                  <span>No Card Needed</span>
+                <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+                  No Card Needed
                 </span>
               )}
             </div>
