@@ -4,3 +4,10 @@ export type ChannelDTO = {
   webhookSubscribedAt: string | null; connectedAt: string;
 };
 export type PendingPageDTO = { pageId: string; name: string; pictureUrl: string | null; tasks: string[] };
+export type WhatsAppStatusDTO = {
+  status: "CONNECTED" | "SCAN_QR" | "DISCONNECTED";
+  phone: string | null;
+  qr: string | null;
+  lastError?: string | null;
+};
+

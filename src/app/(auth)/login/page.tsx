@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { Field } from "@/components/common/Field";
+import { PasswordField } from "@/components/common/PasswordField";
 import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 import { ApiClientError } from "@/lib/api/client";
 import { authApi } from "@/lib/api/auth.api";
@@ -133,9 +134,8 @@ function LoginForm() {
             autoComplete="email"
             required
           />
-          <Field
+          <PasswordField
             label={t("password")}
-            type="password"
             value={form.password}
             onChange={(event) => update("password", event.target.value)}
             autoComplete="current-password"

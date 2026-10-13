@@ -84,7 +84,20 @@ export function CustomerPanel({
             <h4 className="font-semibold text-base text-foreground">
               {customer.name ?? t("guestCustomer")}
             </h4>
-            <p className="text-xs text-muted-foreground">{conversation.channel.name}</p>
+            <div className="mt-1 flex items-center justify-center gap-1.5 flex-wrap">
+              <span
+                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                  conversation.channel.type === "WHATSAPP"
+                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
+                    : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-300 dark:border-blue-800"
+                }`}
+              >
+                {conversation.channel.type === "WHATSAPP" ? "WhatsApp" : "Facebook"}
+              </span>
+              <span className="text-xs text-muted-foreground truncate max-w-[150px]">
+                {conversation.channel.name}
+              </span>
+            </div>
           </div>
 
           {customer.phone && (
@@ -95,6 +108,16 @@ export function CustomerPanel({
               >
                 <Phone size={12} className="text-primary" />
                 <span>{customer.phone}</span>
+              </a>
+              <a
+                href={`https://wa.me/${customer.phone.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 transition-colors"
+                title="WhatsApp"
+              >
+                <span className="text-[10px] font-bold">WA</span>
+                <span>WhatsApp</span>
               </a>
               <button
                 type="button"

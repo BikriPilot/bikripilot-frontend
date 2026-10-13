@@ -5,8 +5,10 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ChannelsPage from "@/app/dashboard/(settings)/channels/page";
+
+import { useAuthStore } from "@/stores/authStore";
 
 const mocks = vi.hoisted(() => ({
   oauthUrl: vi.fn().mockRejectedValue(new Error("OAuth navigation test")),
@@ -21,18 +23,48 @@ vi.mock("@/hooks/useCurrentShop", () => ({
 }));
 vi.mock("@/lib/api/channels.api", () => ({ channelsApi: mocks }));
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: ({ queryKey }: { queryKey: string[] }) =>
-    queryKey[0] === "channels"
-      ? {
-          data: [{ id: "channel", name: "Page", status: "NEEDS_RECONNECT" }],
-          refetch: vi.fn(),
-        }
-      : {},
+  useQuery: ({ queryKey }: { queryKey: string[] }) => {
+    if (queryKey[0] === "channels") {
+      return {
+        data: [{ id: "channel", name: "Page", status: "NEEDS_RECONNECT" }],
+        refetch: vi.fn(),
+      };
+    }
+    if (queryKey[0] === "shop") {
+      return {
+        data: {
+          id: "shop",
+          name: "Shop Name",
+          logoUrl: "https://example.com/logo.png",
+          facebookPageUrl: "https://facebook.com/page",
+        },
+      };
+    }
+    return {};
+  },
 }));
 
 describe("Facebook Page reconnection", () => {
+  beforeEach(() => {
+    useAuthStore.getState().setUser({
+      id: "user-1",
+      name: "Seller",
+      phone: "01711111111",
+      email: "seller@example.com",
+      district: "Dhaka",
+      locale: "bn",
+      platformRole: "USER",
+      emailVerified: true,
+      createdAt: "2026-10-08T00:00:00Z",
+      twoFactorEnabled: false,
+      twoFactorSetupRequired: false,
+      memberships: [],
+      impersonation: null,
+    });
+  });
   afterEach(() => {
     cleanup();
+    useAuthStore.getState().clear();
     vi.clearAllMocks();
   });
   it("requests fresh OAuth authorization instead of reusing a revoked token", async () => {

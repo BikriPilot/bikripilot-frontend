@@ -33,6 +33,12 @@ export default function DeliverySettingsPage() {
       | "publicTrackingEnabled"
       | "advanceMode"
       | "partialAdvancePaisa"
+      | "bkashNumber"
+      | "bkashType"
+      | "nagadNumber"
+      | "nagadType"
+      | "rocketNumber"
+      | "rocketType"
     >
   > & {
     freeDeliveryMinPaisa?: string;
@@ -102,6 +108,24 @@ export default function DeliverySettingsPage() {
           : {}),
         ...(form.publicTrackingEnabled !== undefined
           ? { publicTrackingEnabled: form.publicTrackingEnabled }
+          : {}),
+        ...(form.bkashNumber !== undefined
+          ? { bkashNumber: form.bkashNumber ? form.bkashNumber.trim() : null }
+          : {}),
+        ...(form.bkashType !== undefined
+          ? { bkashType: form.bkashType }
+          : {}),
+        ...(form.nagadNumber !== undefined
+          ? { nagadNumber: form.nagadNumber ? form.nagadNumber.trim() : null }
+          : {}),
+        ...(form.nagadType !== undefined
+          ? { nagadType: form.nagadType }
+          : {}),
+        ...(form.rocketNumber !== undefined
+          ? { rocketNumber: form.rocketNumber ? form.rocketNumber.trim() : null }
+          : {}),
+        ...(form.rocketType !== undefined
+          ? { rocketType: form.rocketType }
           : {}),
       };
       await shopsApi.updateSettings(shopId!, body);
@@ -264,6 +288,112 @@ export default function DeliverySettingsPage() {
                 ))}
               </select>
             </label>
+          </div>
+        </div>
+
+        {/* Section 2.5: MFS Advance Payment Accounts */}
+        <div className="border-t pt-6 space-y-4">
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("mfsTitle")}
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              {t("mfsDescription")}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* bKash */}
+            <div className="rounded-xl border bg-muted/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-sm text-pink-600 dark:text-pink-400">bKash (বিকাশ)</span>
+              </div>
+              <Field
+                label={t("accountNumber")}
+                placeholder="01XXXXXXXXX"
+                value={form.bkashNumber !== undefined ? (form.bkashNumber ?? "") : (settings.bkashNumber ?? "")}
+                onChange={(event) =>
+                  setForm({ ...form, bkashNumber: event.target.value })
+                }
+              />
+              <label className="grid gap-1.5 text-xs font-medium">
+                {t("accountType")}
+                <select
+                  value={form.bkashType ?? settings.bkashType ?? "PERSONAL"}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      bkashType: event.target.value as "PERSONAL" | "MERCHANT",
+                    })
+                  }
+                  className="h-10 rounded-lg border bg-background px-3 text-sm"
+                >
+                  <option value="PERSONAL">{t("typePersonal")}</option>
+                  <option value="MERCHANT">{t("typeMerchant")}</option>
+                </select>
+              </label>
+            </div>
+
+            {/* Nagad */}
+            <div className="rounded-xl border bg-muted/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-sm text-amber-600 dark:text-amber-400">Nagad (নগদ)</span>
+              </div>
+              <Field
+                label={t("accountNumber")}
+                placeholder="01XXXXXXXXX"
+                value={form.nagadNumber !== undefined ? (form.nagadNumber ?? "") : (settings.nagadNumber ?? "")}
+                onChange={(event) =>
+                  setForm({ ...form, nagadNumber: event.target.value })
+                }
+              />
+              <label className="grid gap-1.5 text-xs font-medium">
+                {t("accountType")}
+                <select
+                  value={form.nagadType ?? settings.nagadType ?? "PERSONAL"}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      nagadType: event.target.value as "PERSONAL" | "MERCHANT",
+                    })
+                  }
+                  className="h-10 rounded-lg border bg-background px-3 text-sm"
+                >
+                  <option value="PERSONAL">{t("typePersonal")}</option>
+                  <option value="MERCHANT">{t("typeMerchant")}</option>
+                </select>
+              </label>
+            </div>
+
+            {/* Rocket */}
+            <div className="rounded-xl border bg-muted/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-sm text-purple-600 dark:text-purple-400">Rocket (রকেট)</span>
+              </div>
+              <Field
+                label={t("accountNumber")}
+                placeholder="01XXXXXXXXX"
+                value={form.rocketNumber !== undefined ? (form.rocketNumber ?? "") : (settings.rocketNumber ?? "")}
+                onChange={(event) =>
+                  setForm({ ...form, rocketNumber: event.target.value })
+                }
+              />
+              <label className="grid gap-1.5 text-xs font-medium">
+                {t("accountType")}
+                <select
+                  value={form.rocketType ?? settings.rocketType ?? "PERSONAL"}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      rocketType: event.target.value as "PERSONAL" | "MERCHANT",
+                    })
+                  }
+                  className="h-10 rounded-lg border bg-background px-3 text-sm"
+                >
+                  <option value="PERSONAL">{t("typePersonal")}</option>
+                  <option value="MERCHANT">{t("typeMerchant")}</option>
+                </select>
+              </label>
+            </div>
           </div>
         </div>
 

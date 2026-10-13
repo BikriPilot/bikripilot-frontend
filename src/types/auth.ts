@@ -17,6 +17,7 @@ export interface MeDTO {
   name: string;
   email: string;
   phone: string | null;
+  district: string | null;
   locale: "bn" | "en";
   platformRole: PlatformRole;
   emailVerified: boolean;

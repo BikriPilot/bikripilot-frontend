@@ -1,29 +1,48 @@
 "use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
+import {
+  ShieldCheck,
+  KeyRound,
+  Laptop,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { Field } from "@/components/common/Field";
+import {
+  PasswordField,
+  isPasswordSecure,
+} from "@/components/common/PasswordField";
 import { ErrorState } from "@/components/common/PageStates";
 import { FormSkeleton } from "@/components/common/skeletons";
 import { authApi } from "@/lib/api/auth.api";
 import { useAuthStore } from "@/stores/authStore";
+import { BD_DISTRICTS } from "@/constants/districts";
 import { toast } from "sonner";
+
 export default function ProfilePage() {
   const t = useTranslations("step8");
+  const tDistricts = useTranslations("districts");
   const searchParams = useSearchParams();
-  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const clearAuth = useAuthStore((state) => state.clear);
+
   const sessions = useQuery({
     queryKey: ["sessions"],
     queryFn: authApi.sessions,
   });
+
   const [name, setName] = useState(user?.name ?? "");
   const [phone, setPhone] = useState(user?.phone ?? "");
+  const [district, setDistrict] = useState(user?.district ?? "");
+  const [profileSaving, setProfileSaving] = useState(false);
+
   const [setup, setSetup] = useState<{
     otpauthUrl: string;
     secretBase32: string;
@@ -31,19 +50,40 @@ export default function ProfilePage() {
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+
+  const [disableOpen, setDisableOpen] = useState(false);
   const [disableCode, setDisableCode] = useState("");
   const [disablePassword, setDisablePassword] = useState("");
+  const [disableBusy, setDisableBusy] = useState(false);
+
   if (!user) return <FormSkeleton fields={5} />;
+
   const saveProfile = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!name.trim() || !phone.trim() || !district) {
+      toast.error(
+        "Please fill in all required fields: Name, Phone, and District.",
+      );
+      return;
+    }
+    setProfileSaving(true);
     try {
-      const result = await authApi.updateMe({ name, phone: phone || null });
+      const result = await authApi.updateMe({
+        name: name.trim(),
+        phone: phone.trim() || null,
+        district: district || undefined,
+      });
       setUser(result);
       toast.success(t("saved"));
     } catch {
       toast.error(t("genericError"));
+    } finally {
+      setProfileSaving(false);
     }
   };
+
   const enable = async () => {
     try {
       const result = await authApi.enableTwoFactor(code);
@@ -55,8 +95,41 @@ export default function ProfilePage() {
       toast.error(t("genericError"));
     }
   };
+
+  const disable2fa = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setDisableBusy(true);
+    try {
+      const result = await authApi.disableTwoFactor({
+        password: disablePassword,
+        code: disableCode,
+      });
+      setUser(result);
+      setDisableOpen(false);
+      setDisableCode("");
+      setDisablePassword("");
+      toast.success(t("saved"));
+    } catch {
+      toast.error(t("genericError"));
+    } finally {
+      setDisableBusy(false);
+    }
+  };
+
   const changePassword = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!password) {
+      setPasswordError("Please enter your current password.");
+      return;
+    }
+    if (!isPasswordSecure(newPassword)) {
+      setPasswordError(
+        "New password must be at least 8 characters and include a letter, a number, and a special character.",
+      );
+      return;
+    }
+    setPasswordError("");
+    setPasswordSaving(true);
     try {
       await authApi.changePassword({ currentPassword: password, newPassword });
       setPassword("");
@@ -64,8 +137,15 @@ export default function ProfilePage() {
       toast.success(t("saved"));
     } catch {
       toast.error(t("genericError"));
+    } finally {
+      setPasswordSaving(false);
     }
   };
+
+  const isProfileComplete = Boolean(
+    user.name?.trim() && user.phone?.trim() && user.email && user.district,
+  );
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -74,192 +154,375 @@ export default function ProfilePage() {
       />
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        {/* Left Column: Personal Information & Password */}
+        {/* Left Column: Personal Information & Password Change */}
         <div className="space-y-6">
+          {/* Personal Information Form */}
           <form
             onSubmit={saveProfile}
-            className="grid gap-4 rounded-2xl border bg-card p-5 shadow-xs sm:p-7"
+            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-5"
           >
-            <h2 className="text-lg font-semibold">{t("securityTitle")}</h2>
-            <Field
-              label={t("name")}
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-            <Field
-              label={t("phone")}
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              inputMode="tel"
-            />
-            <Field label={t("email")} value={user.email} readOnly />
-            <button className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90">
-              {t("saveChanges")}
-            </button>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-foreground">
+                  {t("securityTitle")}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Essential seller credentials required for sales channels.
+                </p>
+              </div>
+              {isProfileComplete ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                  <CheckCircle2 size={12} />
+                  <span>Complete</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                  <AlertTriangle size={12} />
+                  <span>Action Required</span>
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              {/* Row 1: Name & Phone (1 line side-by-side) */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  label={`${t("name")} *`}
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  autoComplete="name"
+                  placeholder="Your full name"
+                  required
+                />
+                <Field
+                  label={`${t("phone")} *`}
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="01XXXXXXXXX"
+                  required
+                />
+              </div>
+
+              {/* Row 2: Email & District (1 line side-by-side) */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  label={`${t("email")} *`}
+                  value={user.email}
+                  readOnly
+                  autoComplete="email"
+                  className="bg-muted/50 cursor-not-allowed opacity-90"
+                  required
+                />
+                <label className="grid gap-1.5 text-sm font-medium">
+                  <span className="text-foreground">{`${t("district")} *`}</span>
+                  <select
+                    className="h-11 rounded-lg border bg-card px-3 text-base outline-none focus:border-primary"
+                    value={district}
+                    onChange={(event) => setDistrict(event.target.value)}
+                    required
+                  >
+                    <option value="">Select district (জেলা নির্বাচন করুন)</option>
+                    {BD_DISTRICTS.map((dist) => (
+                      <option key={dist} value={dist}>
+                        {tDistricts(dist as never)} ({dist})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={profileSaving}
+                className="min-h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
+              >
+                {profileSaving ? t("loading") : t("saveChanges")}
+              </button>
+            </div>
           </form>
 
+          {/* Password Change Form */}
           <form
             onSubmit={changePassword}
-            className="grid gap-4 rounded-2xl border bg-card p-5 shadow-xs sm:p-7"
+            className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4"
           >
-            <h2 className="text-lg font-semibold">{t("changePassword")}</h2>
-            <Field
+            <div className="flex items-center gap-2">
+              <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
+                <KeyRound size={16} />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-foreground">
+                  {t("changePassword")}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  Update your login credentials securely.
+                </p>
+              </div>
+            </div>
+
+            {passwordError ? (
+              <p
+                role="alert"
+                className="rounded-lg bg-danger-soft p-3 text-xs text-danger"
+              >
+                {passwordError}
+              </p>
+            ) : null}
+
+            <PasswordField
               label={t("currentPassword")}
-              type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+              placeholder="••••••••"
               required
             />
-            <Field
+
+            <PasswordField
               label={t("newPassword")}
-              type="password"
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
+              autoComplete="new-password"
+              showStrengthIndicator={true}
+              placeholder="••••••••"
               required
             />
-            <button className="min-h-11 rounded-lg border px-4 text-sm font-semibold transition-colors hover:bg-muted">
-              {t("saveChanges")}
-            </button>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={passwordSaving}
+                className="min-h-11 rounded-xl border bg-card px-5 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
+              >
+                {passwordSaving ? t("loading") : t("saveChanges")}
+              </button>
+            </div>
           </form>
         </div>
 
-        {/* Right Column: Two-Factor Authentication & Sessions */}
+        {/* Right Column: Two-Factor Authentication & Active Sessions */}
         <div className="space-y-6">
+          {/* Two-Factor Authentication Card */}
           <section
-            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 ${
+            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4 ${
               searchParams.get("setup2fa") === "1"
                 ? "border-primary ring-2 ring-primary/20"
                 : ""
             }`}
           >
-            <h2 className="text-lg font-semibold">{t("twoFactor")}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {user.twoFactorEnabled ? t("twoFactorOn") : t("twoFactorOff")}
-            </p>
-            {!user.twoFactorEnabled && !setup ? (
-              <button
-                type="button"
-                onClick={() =>
-                  void authApi
-                    .setupTwoFactor()
-                    .then(setSetup)
-                    .catch(() => toast.error(t("genericError")))
-                }
-                className="mt-5 min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
-              >
-                {t("setupTwoFactor")}
-              </button>
-            ) : null}
-            {setup ? (
-              <div className="mt-5 grid gap-4 sm:grid-cols-[160px_1fr]">
-                <QRCodeSVG
-                  value={setup.otpauthUrl}
-                  size={160}
-                  className="rounded-lg border p-2"
-                />
-                <div className="grid gap-3">
-                  <p className="break-all text-xs text-muted-foreground">
-                    {setup.secretBase32}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="grid size-9 place-items-center rounded-xl bg-purple-500/10 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400">
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">
+                    {t("twoFactor")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    TOTP Google Authenticator or Microsoft Authenticator
                   </p>
-                  <Field
-                    label={t("code")}
-                    value={code}
-                    onChange={(event) =>
-                      setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
-                    }
-                    inputMode="numeric"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => void enable()}
-                    className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-                  >
-                    {t("enableTwoFactor")}
-                  </button>
                 </div>
               </div>
-            ) : null}
-            {user.twoFactorEnabled ? (
-              <div className="mt-5 grid gap-3 border-t pt-5">
-                <Field
-                  label={t("currentPassword")}
-                  type="password"
-                  value={disablePassword}
-                  onChange={(event) => setDisablePassword(event.target.value)}
-                />
-                <Field
-                  label={t("code")}
-                  value={disableCode}
-                  onChange={(event) =>
-                    setDisableCode(
-                      event.target.value.replace(/\D/g, "").slice(0, 6),
-                    )
-                  }
-                  inputMode="numeric"
-                />
+              {user.twoFactorEnabled ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                  <span className="size-1.5 rounded-full bg-emerald-600" />
+                  <span>{t("twoFactorOn")}</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                  <AlertTriangle size={12} />
+                  <span>{t("twoFactorOff")}</span>
+                </span>
+              )}
+            </div>
+
+            {!user.twoFactorEnabled && !setup ? (
+              <div className="pt-2">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Protect your business account with two-factor authentication. Each login will require a 6-digit code from your phone.
+                </p>
                 <button
                   type="button"
                   onClick={() =>
                     void authApi
-                      .disableTwoFactor({
-                        password: disablePassword,
-                        code: disableCode,
-                      })
-                      .then(setUser)
-                      .then(() => toast.success(t("saved")))
+                      .setupTwoFactor()
+                      .then(setSetup)
                       .catch(() => toast.error(t("genericError")))
                   }
-                  className="min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
+                  className="mt-4 min-h-10 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
                 >
-                  {t("disableTwoFactor")}
+                  {t("setupTwoFactor")}
                 </button>
               </div>
             ) : null}
-          </section>
 
-          <section className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7">
-            <h2 className="text-lg font-semibold">{t("sessions")}</h2>
-            {sessions.isError ? (
-              <ErrorState onRetry={() => void sessions.refetch()} />
-            ) : (
-              <div className="mt-4 divide-y">
-                {sessions.data?.map((session) => (
-                  <div
-                    key={session.id}
-                    className="flex items-center justify-between py-3 text-sm"
-                  >
-                    <div>
-                      <p className="font-medium">
-                        {session.userAgent ?? "Browser"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {session.ipMasked ?? ""}
-                      </p>
-                    </div>
-                    {session.current ? (
-                      <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                        {t("currentSession")}
-                      </span>
-                    ) : null}
+            {/* 2FA QR Code Setup */}
+            {setup ? (
+              <div className="mt-3 rounded-xl border bg-muted/20 p-4 space-y-4">
+                <div className="grid gap-4 sm:grid-cols-[160px_1fr] items-center">
+                  <div className="bg-white p-2 rounded-xl border flex items-center justify-center">
+                    <QRCodeSVG value={setup.otpauthUrl} size={144} />
                   </div>
-                ))}
+                  <div className="space-y-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Scan this QR code with Google Authenticator or enter secret key:
+                    </p>
+                    <code className="block break-all rounded bg-background p-2 font-mono text-[11px] font-semibold border">
+                      {setup.secretBase32}
+                    </code>
+                    <Field
+                      label={t("code")}
+                      value={code}
+                      onChange={(event) =>
+                        setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
+                      }
+                      inputMode="numeric"
+                      placeholder="123456"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 justify-end pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSetup(null)}
+                    className="min-h-9 rounded-lg border px-3 text-xs font-semibold hover:bg-muted"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={code.length !== 6}
+                    onClick={() => void enable()}
+                    className="min-h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                  >
+                    {t("verifyEmail")}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Disable 2FA Section */}
+            {user.twoFactorEnabled && !disableOpen && (
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setDisableOpen(true)}
+                  className="text-xs font-semibold text-danger hover:underline"
+                >
+                  Disable two-factor authentication
+                </button>
               </div>
             )}
-            <button
-              type="button"
-              onClick={() =>
-                void authApi
-                  .logoutAll()
-                  .then(() => {
-                    clearAuth();
-                    router.replace("/login");
-                  })
-                  .catch(() => toast.error(t("genericError")))
-              }
-              className="mt-4 min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
-            >
-              {t("logoutAll")}
-            </button>
+
+            {disableOpen && (
+              <form onSubmit={disable2fa} className="rounded-xl border bg-danger-soft/20 p-4 space-y-3">
+                <p className="text-xs font-medium text-foreground">
+                  Confirm your password and 6-digit authenticator code to disable 2FA:
+                </p>
+                <PasswordField
+                  label={t("password")}
+                  value={disablePassword}
+                  onChange={(e) => setDisablePassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                />
+                <Field
+                  label={t("code")}
+                  value={disableCode}
+                  onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  inputMode="numeric"
+                  placeholder="123456"
+                  required
+                />
+                <div className="flex gap-2 justify-end pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setDisableOpen(false)}
+                    className="min-h-9 rounded-lg border px-3 text-xs font-semibold hover:bg-muted"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={disableBusy || disableCode.length !== 6}
+                    className="min-h-9 rounded-lg bg-danger px-4 text-xs font-semibold text-white hover:bg-danger/90 disabled:opacity-50"
+                  >
+                    {disableBusy ? t("loading") : "Disable 2FA"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
+
+          {/* Active Sessions Card */}
+          <section className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="grid size-9 place-items-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+                  <Laptop size={20} />
+                </div>
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">
+                    {t("activeSessions")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    Devices currently signed into this account
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {sessions.isPending ? (
+              <div className="h-24 animate-pulse rounded-xl bg-muted" />
+            ) : sessions.isError ? (
+              <ErrorState onRetry={() => void sessions.refetch()} />
+            ) : (
+              <div className="space-y-3">
+                <div className="divide-y rounded-xl border bg-muted/20">
+                  {sessions.data.map((session) => (
+                    <div
+                      key={session.id}
+                      className="flex items-center justify-between gap-3 p-3.5 text-xs"
+                    >
+                      <div className="space-y-0.5">
+                        <p className="font-medium text-foreground truncate max-w-xs">
+                          {session.userAgent ?? "Web Browser"}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          IP: {session.ipMasked} • {new Date(session.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      {session.current ? (
+                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                          {t("currentSession")}
+                        </span>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      void authApi
+                        .logoutAll()
+                        .then(() => clearAuth())
+                        .then(() => toast.success(t("loggedOutAll")))
+                        .catch(() => toast.error(t("genericError")))
+                    }
+                    className="min-h-10 w-full rounded-xl border border-danger/30 text-xs font-semibold text-danger hover:bg-danger/10 transition-colors"
+                  >
+                    {t("logoutAll")}
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
         </div>
       </div>

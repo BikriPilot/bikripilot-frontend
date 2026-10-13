@@ -38,6 +38,12 @@ export interface ShopSettingsDTO {
   publicTrackingEnabled: boolean;
   advanceMode: "NONE" | "DELIVERY_CHARGE" | "PARTIAL";
   partialAdvancePaisa: number;
+  bkashNumber?: string | null;
+  bkashType?: "PERSONAL" | "MERCHANT" | null;
+  nagadNumber?: string | null;
+  nagadType?: "PERSONAL" | "MERCHANT" | null;
+  rocketNumber?: string | null;
+  rocketType?: "PERSONAL" | "MERCHANT" | null;
 }
 export type OnboardingStepKey =
   | "business_info"
@@ -46,10 +52,17 @@ export type OnboardingStepKey =
   | "connect_page"
   | "add_product"
   | "connect_courier";
+export interface SetupChecklistItem {
+  key: string;
+  done: boolean;
+  href: string;
+}
+
 export interface OnboardingDTO {
   completed: boolean;
   dismissed: boolean;
   steps: { key: OnboardingStepKey; done: boolean }[];
+  setupChecklist?: SetupChecklistItem[];
 }
 export interface MemberDTO {
   id: string;

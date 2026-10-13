@@ -27,6 +27,7 @@ const user: MeDTO = {
   name: "Seller",
   email: "seller@example.com",
   phone: null,
+  district: null,
   locale: "bn",
   platformRole: "USER",
   emailVerified: true,

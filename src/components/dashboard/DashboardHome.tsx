@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
-import { BookOpen, MessageSquare, PackagePlus } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowUpRight,
+  BookOpen,
+  CheckCircle2,
+  MessageSquare,
+  PackagePlus,
+  Sparkles,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 import { EmptyState, ErrorState } from "@/components/common/PageStates";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StatCardsSkeleton } from "@/components/common/skeletons";
@@ -12,16 +21,45 @@ import {
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { formatMoney } from "@/lib/money";
 
-const stepKeys: Record<string, string> = {
-  BUSINESS: "businessInfo",
-  AI: "aiInfo",
-  FACEBOOK: "facebook",
-  COURIER: "courier",
-  business_info: "businessInfo",
-  delivery_charges: "delivery",
-  ai_business_info: "aiInfo",
-  connect_page: "facebook",
-  add_product: "product",
+const checklistConfig: Record<
+  string,
+  { titleKey: string; descKey: string; defaultHref: string }
+> = {
+  profile_details: {
+    titleKey: "checklistProfileTitle",
+    descKey: "checklistProfileDesc",
+    defaultHref: "/dashboard/profile",
+  },
+  shop_details: {
+    titleKey: "checklistShopTitle",
+    descKey: "checklistShopDesc",
+    defaultHref: "/dashboard/settings",
+  },
+  two_factor: {
+    titleKey: "checklist2faTitle",
+    descKey: "checklist2faDesc",
+    defaultHref: "/dashboard/profile",
+  },
+  facebook_page: {
+    titleKey: "checklistFbTitle",
+    descKey: "checklistFbDesc",
+    defaultHref: "/dashboard/channels",
+  },
+  whatsapp_connected: {
+    titleKey: "checklistWaTitle",
+    descKey: "checklistWaDesc",
+    defaultHref: "/dashboard/channels",
+  },
+  product_added: {
+    titleKey: "checklistProductTitle",
+    descKey: "checklistProductDesc",
+    defaultHref: "/dashboard/products/new",
+  },
+  ai_business_info: {
+    titleKey: "checklistAiTitle",
+    descKey: "checklistAiDesc",
+    defaultHref: "/dashboard/ai",
+  },
 };
 
 const statusKeys: Record<string, string> = {
@@ -160,7 +198,39 @@ export function DashboardHome() {
       : null,
   ].filter((item): item is NonNullable<typeof item> => item !== null);
   const usage = data.usage.filter((feature) => feature.type === "LIMIT");
-  const incompleteSteps = data.onboarding.steps.filter((step) => !step.done);
+  const checklistRaw =
+    data.onboarding.setupChecklist && data.onboarding.setupChecklist.length > 0
+      ? data.onboarding.setupChecklist
+      : [
+          { key: "profile_details", done: false, href: "/dashboard/profile" },
+          { key: "shop_details", done: false, href: "/dashboard/settings" },
+          { key: "two_factor", done: false, href: "/dashboard/profile" },
+          { key: "facebook_page", done: false, href: "/dashboard/channels" },
+          { key: "whatsapp_connected", done: false, href: "/dashboard/channels" },
+          { key: "product_added", done: false, href: "/dashboard/products/new" },
+          { key: "ai_business_info", done: false, href: "/dashboard/ai" },
+        ];
+
+  const checklistItems = checklistRaw.map((item) => {
+    const meta = checklistConfig[item.key] ?? {
+      titleKey: "checklistProfileTitle",
+      descKey: "checklistProfileDesc",
+      defaultHref: item.href,
+    };
+    return {
+      ...item,
+      title: t(meta.titleKey as never),
+      desc: t(meta.descKey as never),
+      href: item.href || meta.defaultHref,
+    };
+  });
+
+  const completedCount = checklistItems.filter((i) => i.done).length;
+  const totalCount = checklistItems.length;
+  const isAllCompleted = completedCount === totalCount;
+  const progressPercent = Math.round(
+    (completedCount / Math.max(1, totalCount)) * 100,
+  );
 
   return (
     <div className="space-y-7">
@@ -186,30 +256,88 @@ export function DashboardHome() {
 
       <div className="grid gap-7 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
         <div className="space-y-7">
-          {!data.onboarding.completed && !data.onboarding.dismissed ? (
-            <section className="border-y py-5">
-              <h2 className="font-semibold">{t("setupTitle")}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t("setupDescription")}
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {incompleteSteps.map((step) => (
-                  <li
-                    key={step.key}
-                    className="rounded-full bg-primary-soft px-3 py-1 text-sm text-primary"
-                  >
-                    {t(`steps.${stepKeys[step.key] ?? "businessInfo"}`)}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/onboarding"
-                className="mt-4 inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-xs">
+            <div className="flex items-center justify-between gap-3 pb-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
+                  <Sparkles className="size-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {t("checklistTitle")}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {t("checklistCompleted", {
+                      done: completedCount,
+                      total: totalCount,
+                    })}
+                  </p>
+                </div>
+              </div>
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                  isAllCompleted
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                    : "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+                )}
               >
-                {t("continueSetup")}
-              </Link>
-            </section>
-          ) : null}
+                {isAllCompleted
+                  ? t("checklistStatusReady")
+                  : t("checklistStatusInProgress")}
+              </span>
+            </div>
+
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-500 transition-all duration-500"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+
+            <div className="mt-4 space-y-2">
+              {checklistItems.map((item) => (
+                <div
+                  key={item.key}
+                  className="flex items-center justify-between gap-3 rounded-xl p-2.5 hover:bg-muted/50 transition-colors text-sm"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {item.done ? (
+                      <CheckCircle2 className="size-4 shrink-0 text-emerald-500" />
+                    ) : (
+                      <AlertCircle className="size-4 shrink-0 text-muted-foreground" />
+                    )}
+                    <span
+                      className={cn(
+                        "truncate",
+                        item.done
+                          ? "text-foreground font-medium"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {item.title}
+                    </span>
+                  </div>
+
+                  <Link
+                    href={item.href}
+                    className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  >
+                    <span>
+                      {item.done
+                        ? t("checklistViewAction")
+                        : t("checklistSetupAction")}
+                    </span>
+                    <ArrowUpRight className="size-3" />
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-xl bg-muted/40 p-3 text-xs text-muted-foreground">
+              {t("checklistNote")}
+            </div>
+          </section>
 
           {can("billing.read") ? (
             <section className="border-y py-5">

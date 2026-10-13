@@ -221,12 +221,20 @@ export default function OnboardingPage() {
             </Link>
           ) : null}
           {current === "facebook" ? (
-            <Link
-              href="/dashboard/channels"
-              className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-            >
-              {t("connectFacebook")}
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/dashboard/channels"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors"
+              >
+                <span>{t("connectFacebook")}</span>
+              </Link>
+              <Link
+                href="/dashboard/channels"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white shadow-xs hover:bg-emerald-700 transition-colors"
+              >
+                <span>WhatsApp (QR)</span>
+              </Link>
+            </div>
           ) : null}
           {current === "courier" ? (
             <Link

@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { ChannelDTO, PendingPageDTO } from "@/types/channel";
+import type { ChannelDTO, PendingPageDTO, WhatsAppStatusDTO } from "@/types/channel";
 const data = <T>(request: Promise<{ data: { data: T } }>) => request.then((response) => response.data.data);
 const path = (shopId: string, suffix = "") => `/shops/${shopId}/channels${suffix}`;
 export const channelsApi = {
@@ -9,4 +9,7 @@ export const channelsApi = {
   connect: (shopId: string, pendingId: string, pageId: string) => data<ChannelDTO>(api.post(path(shopId, "/meta/connect"), { pendingId, pageId })),
   resubscribe: (shopId: string, channelId: string) => data<ChannelDTO>(api.post(path(shopId, `/${channelId}/resubscribe`))),
   disconnect: (shopId: string, channelId: string) => data<{ disconnected: boolean }>(api.delete(path(shopId, `/${channelId}`))),
+  whatsappStatus: (shopId: string) => data<WhatsAppStatusDTO>(api.get(path(shopId, "/whatsapp/status"))),
+  whatsappStart: (shopId: string) => data<WhatsAppStatusDTO>(api.post(path(shopId, "/whatsapp/start"))),
+  whatsappDisconnect: (shopId: string) => data<{ disconnected: boolean }>(api.post(path(shopId, "/whatsapp/disconnect"))),
 };

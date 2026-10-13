@@ -51,6 +51,16 @@ export function ConversationItem({
           </div>
         )}
 
+        {/* Channel Icon Badge */}
+        <span
+          className={`absolute -bottom-0.5 -right-0.5 grid size-4 place-items-center rounded-full text-[8px] font-bold text-white shadow-xs ring-2 ring-card ${
+            channel.type === "WHATSAPP" ? "bg-emerald-600" : "bg-blue-600"
+          }`}
+          title={channel.type === "WHATSAPP" ? "WhatsApp" : "Facebook Messenger"}
+        >
+          {channel.type === "WHATSAPP" ? "W" : "f"}
+        </span>
+
         {conversation.unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 grid size-5 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-xs">
             {conversation.unreadCount > 9 ? "9+" : conversation.unreadCount}
@@ -85,8 +95,17 @@ export function ConversationItem({
 
         {/* Badges row */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="rounded bg-muted px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground">
-            {channel.name}
+          <span
+            className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${
+              channel.type === "WHATSAPP"
+                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800"
+                : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-300/60 dark:border-blue-800"
+            }`}
+          >
+            <span className="font-bold text-[9px]">
+              {channel.type === "WHATSAPP" ? "WA" : "FB"}
+            </span>
+            <span className="truncate max-w-[120px]">{channel.name}</span>
           </span>
 
           {conversation.needsHuman && (

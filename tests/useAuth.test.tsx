@@ -35,6 +35,7 @@ describe("authentication bootstrap", () => {
           name: "Seller",
           email: "seller@example.com",
           phone: null,
+          district: null,
           locale: "en",
           platformRole: "USER",
           emailVerified: true,

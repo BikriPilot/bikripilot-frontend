@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { Field } from "@/components/common/Field";
+import { PasswordField, isPasswordSecure } from "@/components/common/PasswordField";
 import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 import { authApi } from "@/lib/api/auth.api";
 import { ApiClientError } from "@/lib/api/client";
@@ -37,6 +38,11 @@ function RegisterForm() {
     event.preventDefault();
     setBusy(true);
     setError("");
+    if (!isPasswordSecure(form.password)) {
+      setError(t("passwordRule"));
+      setBusy(false);
+      return;
+    }
     try {
       const result = await authApi.register(
         Object.fromEntries(Object.entries(form).filter(([, value]) => value)),
@@ -76,17 +82,14 @@ function RegisterForm() {
           autoComplete="email"
           required
         />
-        <Field
+        <PasswordField
           label={t("password")}
-          type="password"
           value={form.password}
           onChange={(event) => update("password", event.target.value)}
           autoComplete="new-password"
+          showStrengthIndicator={true}
           required
         />
-        <p className="-mt-2 text-xs text-muted-foreground">
-          {t("passwordRule")}
-        </p>
         <details className="rounded-lg border p-3">
           <summary className="cursor-pointer text-sm font-semibold">
             {t("optionalBusiness")}

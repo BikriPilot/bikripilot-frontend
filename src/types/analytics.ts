@@ -1,5 +1,6 @@
 import type { FeatureEntitlementDTO } from "@/types/entitlement";
 import type { OrderListItemDTO, OrderSource, OrderStatus } from "@/types/order";
+import type { SetupChecklistItem } from "@/types/shop";
 
 export type AnalyticsInterval = "day" | "week" | "month";
 export interface AnalyticsRange {
@@ -96,6 +97,7 @@ export interface DashboardDTO {
     completed: boolean;
     dismissed: boolean;
     steps: { key: string; done: boolean }[];
+    setupChecklist?: SetupChecklistItem[];
   };
   usage: FeatureEntitlementDTO[];
   recentOrders: OrderListItemDTO[];
