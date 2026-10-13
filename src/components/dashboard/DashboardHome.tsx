@@ -93,6 +93,7 @@ export function DashboardHome() {
   if (query.isError || !query.data || (canReadOrders && onHold.isError)) {
     return (
       <ErrorState
+        error={query.error || (canReadOrders ? onHold.error : undefined)}
         onRetry={() => {
           void query.refetch();
           if (canReadOrders) void onHold.refetch();

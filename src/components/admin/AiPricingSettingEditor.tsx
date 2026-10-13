@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Code2, LayoutList, Sparkles, AlertCircle } from "lucide-react";
 
 export interface ModelPricingItem {
@@ -52,7 +52,7 @@ export function AiPricingSettingEditor({
   disabled = false,
 }: AiPricingSettingEditorProps) {
   const [mode, setMode] = useState<"visual" | "json">("visual");
-  const [jsonText, setJsonText] = useState("");
+  const [jsonText, setJsonText] = useState(() => JSON.stringify(normalizeValueToMap(value), null, 2));
   const [jsonError, setJsonError] = useState<string | null>(null);
 
   // New model inputs
@@ -61,16 +61,13 @@ export function AiPricingSettingEditor({
   const [newOutputPrice, setNewOutputPrice] = useState("");
 
   const currentMap = normalizeValueToMap(value);
+  const [prevValue, setPrevValue] = useState(value);
 
-  // Sync jsonText whenever value changes or mode switches
-  useEffect(() => {
-    try {
-      setJsonText(JSON.stringify(currentMap, null, 2));
-      setJsonError(null);
-    } catch {
-      // ignore
-    }
-  }, [value]);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setJsonText(JSON.stringify(currentMap, null, 2));
+    setJsonError(null);
+  }
 
   const handleUpdateModel = (
     key: string,
