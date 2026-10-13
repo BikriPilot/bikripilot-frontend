@@ -1488,6 +1488,16 @@ export function AdminWorkspace({
                   {t("actions.revokeSessions")}
                 </ActionButton>
               ) : null}
+              {item.twoFactorEnabled && canWrite ? (
+                <ActionButton
+                  onClick={() =>
+                    void perform("user.reset2fa", item as unknown as Row)
+                  }
+                >
+                  <RotateCcw size={14} />
+                  {t("actions.reset2fa")}
+                </ActionButton>
+              ) : null}
             </div>
           ))}
           {paging(result)}

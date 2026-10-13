@@ -2539,6 +2539,7 @@
       "disable": "বন্ধ করুন",
       "unlock": "আনলক",
       "revokeSessions": "সব সেশন বাতিল",
+      "reset2fa": "2FA রিসেট",
       "replay": "আবার চালান",
       "retryFailed": "ব্যর্থ জব আবার চালান",
       "diff": "পরিবর্তন দেখুন",

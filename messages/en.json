@@ -2539,6 +2539,7 @@
       "disable": "Disable",
       "unlock": "Unlock",
       "revokeSessions": "Revoke all sessions",
+      "reset2fa": "Reset 2FA",
       "replay": "Replay",
       "retryFailed": "Retry failed jobs",
       "diff": "View changes",
