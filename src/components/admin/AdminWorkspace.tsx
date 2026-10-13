@@ -14,7 +14,9 @@ import {
   ExternalLink,
   Eye,
   RefreshCw,
+  RotateCcw,
   ShieldAlert,
+  Sparkles,
   UserRoundX,
   X,
 } from "lucide-react";
@@ -35,6 +37,7 @@ import { adminApi } from "@/lib/api/admin.api";
 import { enterImpersonation as startImpersonation } from "@/lib/api/client";
 import { formatMoney } from "@/lib/money";
 import { useAuthStore } from "@/stores/authStore";
+import { AiPricingSettingEditor } from "./AiPricingSettingEditor";
 import type {
   AdminAnnouncementDTO,
   AdminAiUsageRowDTO,
@@ -1074,6 +1077,8 @@ export function AdminWorkspace({
     action?: (item: T) => React.ReactNode,
     key = (item: T) =>
       String((item as Row).id ?? (item as Row).key ?? JSON.stringify(item)),
+    footerRow?: React.ReactNode,
+    footerMobile?: React.ReactNode,
   ) => (
     <AdminTable
       rows={values}
@@ -1081,6 +1086,8 @@ export function AdminWorkspace({
       empty={t(emptyKey)}
       rowKey={key}
       rowActions={action}
+      footerRow={footerRow}
+      footerMobile={footerMobile}
     />
   );
 
@@ -2854,8 +2861,13 @@ export function AdminWorkspace({
       const values = Object.fromEntries(
         changed.map((setting) => {
           const raw = settingDraft[setting.key];
-          if (setting.input === "json" && typeof raw === "string")
-            return [setting.key, JSON.parse(raw) as unknown];
+          if (setting.input === "json" && typeof raw === "string") {
+            try {
+              return [setting.key, JSON.parse(raw) as unknown];
+            } catch {
+              throw new Error(`Invalid JSON in ${setting.labelEn}`);
+            }
+          }
           if (setting.input === "number" && raw !== null && raw !== "")
             return [setting.key, Number(raw)];
           return [setting.key, raw];
@@ -2885,91 +2897,120 @@ export function AdminWorkspace({
           ) : null}
         </div>
         <div className="divide-y border bg-card px-4">
-          {visible.map((setting) => (
-            <label
-              key={setting.key}
-              className="grid gap-2 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(240px,0.8fr)] sm:items-center"
-            >
-              <span>
-                <span className="block text-sm font-medium">
-                  {setting.labelEn}
+          {visible.map((setting) => {
+            if (setting.key === "ai.pricing") {
+              return (
+                <div key={setting.key} className="py-4 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <span className="block text-sm font-medium">
+                        {setting.labelEn}
+                      </span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {setting.key}
+                        {setting.descriptionEn ? ` · ${setting.descriptionEn}` : ""}
+                      </span>
+                    </div>
+                  </div>
+                  <AiPricingSettingEditor
+                    value={settingDraft[setting.key]}
+                    onChange={(val) =>
+                      setSettingDraft((draft) => ({
+                        ...draft,
+                        [setting.key]: val,
+                      }))
+                    }
+                    disabled={!canWrite}
+                  />
+                </div>
+              );
+            }
+            return (
+              <label
+                key={setting.key}
+                className="grid gap-2 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(240px,0.8fr)] sm:items-center"
+              >
+                <span>
+                  <span className="block text-sm font-medium">
+                    {setting.labelEn}
+                  </span>
+                  <span className="block break-all text-[11px] text-muted-foreground">
+                    {setting.key}
+                    {setting.descriptionEn ? ` · ${setting.descriptionEn}` : ""}
+                  </span>
                 </span>
-                <span className="block break-all text-[11px] text-muted-foreground">
-                  {setting.key}
-                  {setting.descriptionEn ? ` · ${setting.descriptionEn}` : ""}
-                </span>
-              </span>
-              {setting.input === "boolean" ? (
-                <input
-                  type="checkbox"
-                  disabled={!canWrite}
-                  checked={Boolean(settingDraft[setting.key])}
-                  onChange={(event) =>
-                    setSettingDraft((draft) => ({
-                      ...draft,
-                      [setting.key]: event.target.checked,
-                    }))
-                  }
-                  className="size-5 accent-primary"
-                />
-              ) : setting.input === "select" ? (
-                <select
-                  disabled={!canWrite}
-                  value={String(settingDraft[setting.key] ?? "")}
-                  onChange={(event) =>
-                    setSettingDraft((draft) => ({
-                      ...draft,
-                      [setting.key]: event.target.value,
-                    }))
-                  }
-                  className="min-h-11 min-w-0 rounded-md border bg-background px-3"
-                >
-                  {setting.options?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : setting.input === "textarea" || setting.input === "json" ? (
-                <textarea
-                  disabled={!canWrite}
-                  rows={setting.input === "json" ? 4 : 2}
-                  value={
-                    typeof settingDraft[setting.key] === "string"
-                      ? String(settingDraft[setting.key])
-                      : JSON.stringify(settingDraft[setting.key] ?? "", null, 2)
-                  }
-                  onChange={(event) =>
-                    setSettingDraft((draft) => ({
-                      ...draft,
-                      [setting.key]: event.target.value,
-                    }))
-                  }
-                  className="min-w-0 rounded-md border bg-background px-3 py-2 font-mono text-sm"
-                />
-              ) : (
-                <input
-                  disabled={!canWrite}
-                  type={setting.input === "number" ? "number" : "text"}
-                  value={
-                    settingDraft[setting.key] == null
-                      ? ""
-                      : String(settingDraft[setting.key])
-                  }
-                  onChange={(event) =>
-                    setSettingDraft((draft) => ({
-                      ...draft,
-                      [setting.key]:
-                        setting.input === "number"
-                          ? Number(event.target.value)
-                          : event.target.value,
-                    }))
-                  }
-                  className="min-h-11 min-w-0 rounded-md border bg-background px-3 text-sm"
-                />
-              )}
-            </label>
-          ))}
+                {setting.input === "boolean" ? (
+                  <input
+                    type="checkbox"
+                    disabled={!canWrite}
+                    checked={Boolean(settingDraft[setting.key])}
+                    onChange={(event) =>
+                      setSettingDraft((draft) => ({
+                        ...draft,
+                        [setting.key]: event.target.checked,
+                      }))
+                    }
+                    className="size-5 accent-primary"
+                  />
+                ) : setting.input === "select" ? (
+                  <select
+                    disabled={!canWrite}
+                    value={String(settingDraft[setting.key] ?? "")}
+                    onChange={(event) =>
+                      setSettingDraft((draft) => ({
+                        ...draft,
+                        [setting.key]: event.target.value,
+                      }))
+                    }
+                    className="min-h-11 min-w-0 rounded-md border bg-background px-3"
+                  >
+                    {setting.options?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : setting.input === "textarea" || setting.input === "json" ? (
+                  <textarea
+                    disabled={!canWrite}
+                    rows={setting.input === "json" ? 4 : 2}
+                    value={
+                      typeof settingDraft[setting.key] === "string"
+                        ? String(settingDraft[setting.key])
+                        : JSON.stringify(settingDraft[setting.key] ?? "", null, 2)
+                    }
+                    onChange={(event) =>
+                      setSettingDraft((draft) => ({
+                        ...draft,
+                        [setting.key]: event.target.value,
+                      }))
+                    }
+                    className="min-w-0 rounded-md border bg-background px-3 py-2 font-mono text-sm"
+                  />
+                ) : (
+                  <input
+                    disabled={!canWrite}
+                    type={setting.input === "number" ? "number" : "text"}
+                    value={
+                      settingDraft[setting.key] == null
+                        ? ""
+                        : String(settingDraft[setting.key])
+                    }
+                    onChange={(event) =>
+                      setSettingDraft((draft) => ({
+                        ...draft,
+                        [setting.key]:
+                          setting.input === "number"
+                            ? Number(event.target.value)
+                            : event.target.value,
+                      }))
+                    }
+                    className="min-h-11 min-w-0 rounded-md border bg-background px-3 text-sm"
+                  />
+                )}
+              </label>
+            );
+          })}
         </div>
       </div>
     );
@@ -3108,6 +3149,111 @@ export function AdminWorkspace({
 
   const renderUsage = (value: unknown) => {
     const result = pageRows<AdminUsageRowDTO | AdminAiUsageRowDTO>(value);
+
+    const aiItems = (tab === "ai" ? result.items : []) as AdminAiUsageRowDTO[];
+    const metaTotals = result.meta?.totals;
+
+    const totalRuns =
+      metaTotals?.runs ??
+      aiItems.reduce((acc, row) => acc + (row.runs || 0), 0);
+    const totalInputTokens =
+      metaTotals?.inputTokens ??
+      aiItems.reduce((acc, row) => acc + (row.inputTokens || 0), 0);
+    const totalOutputTokens =
+      metaTotals?.outputTokens ??
+      aiItems.reduce((acc, row) => acc + (row.outputTokens || 0), 0);
+    const totalTokens = totalInputTokens + totalOutputTokens;
+    const totalCostMicroUsd =
+      metaTotals?.costMicroUsd ??
+      aiItems.reduce((acc, row) => acc + (row.costMicroUsd || 0), 0);
+    const totalCostUsd = totalCostMicroUsd / 1_000_000;
+    const totalBlocked =
+      metaTotals?.blocked ??
+      aiItems.reduce((acc, row) => acc + (row.blocked || 0), 0);
+    const totalFailed =
+      metaTotals?.failed ??
+      aiItems.reduce((acc, row) => acc + (row.failed || 0), 0);
+
+    const setQuickDate = (
+      type: "all" | "today" | "7d" | "30d" | "thisMonth",
+    ) => {
+      setPage(1);
+      const now = new Date();
+      const todayStr = now.toISOString().slice(0, 10);
+      if (type === "all") {
+        setFrom("");
+        setTo("");
+      } else if (type === "today") {
+        setFrom(todayStr);
+        setTo(todayStr);
+      } else if (type === "7d") {
+        const d = new Date(Date.now() - 6 * 86_400_000);
+        setFrom(d.toISOString().slice(0, 10));
+        setTo(todayStr);
+      } else if (type === "30d") {
+        const d = new Date(Date.now() - 29 * 86_400_000);
+        setFrom(d.toISOString().slice(0, 10));
+        setTo(todayStr);
+      } else if (type === "thisMonth") {
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        setFrom(firstDay.toISOString().slice(0, 10));
+        setTo(todayStr);
+      }
+    };
+
+    const aiFooterRow = (
+      <tr className="border-t-2 border-border bg-muted/70 font-semibold text-foreground">
+        <td className="px-3 py-3 text-sm">
+          <span className="font-bold">সর্বমোট (Total)</span>
+        </td>
+        <td className="px-3 py-3 font-mono text-sm">
+          {totalRuns.toLocaleString()}
+        </td>
+        <td className="px-3 py-3 font-mono text-sm">
+          {totalInputTokens.toLocaleString()} /{" "}
+          {totalOutputTokens.toLocaleString()}
+        </td>
+        <td className="px-3 py-3 font-mono text-sm font-bold text-emerald-500">
+          ${totalCostUsd.toFixed(4)}
+        </td>
+        <td className="px-3 py-3 font-mono text-sm">{totalBlocked}</td>
+        <td className="px-3 py-3 font-mono text-sm text-destructive/90">
+          {totalFailed}
+        </td>
+      </tr>
+    );
+
+    const aiFooterMobile = (
+      <div className="space-y-1.5 text-xs">
+        <div className="border-b pb-1 text-sm font-bold">সর্বমোট (Total)</div>
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <div>
+            <span className="text-muted-foreground">মোট রান:</span>{" "}
+            <strong>{totalRuns.toLocaleString()}</strong>
+          </div>
+          <div>
+            <span className="text-muted-foreground">টোকেন:</span>{" "}
+            <strong>
+              {totalInputTokens.toLocaleString()} /{" "}
+              {totalOutputTokens.toLocaleString()}
+            </strong>
+          </div>
+          <div>
+            <span className="text-muted-foreground">মোট খরচ:</span>{" "}
+            <strong className="font-mono text-emerald-500">
+              ${totalCostUsd.toFixed(4)}
+            </strong>
+          </div>
+          <div>
+            <span className="text-muted-foreground">ব্যর্থ / ব্লক:</span>{" "}
+            <strong>
+              {totalFailed} / {totalBlocked}
+            </strong>
+          </div>
+        </div>
+      </div>
+    );
+
     return (
       <div className="space-y-4">
         {tabs(["usage", "ai"])}
@@ -3117,7 +3263,10 @@ export function AdminWorkspace({
               <span>{t("fields.featureKey")}</span>
               <input
                 value={featureFilter}
-                onChange={(event) => setFeatureFilter(event.target.value)}
+                onChange={(event) => {
+                  setFeatureFilter(event.target.value);
+                  setPage(1);
+                }}
                 className="block min-h-10 rounded-md border bg-background px-3 text-sm"
               />
             </label>
@@ -3126,31 +3275,147 @@ export function AdminWorkspace({
               <input
                 type="month"
                 value={periodFilter}
-                onChange={(event) => setPeriodFilter(event.target.value)}
+                onChange={(event) => {
+                  setPeriodFilter(event.target.value);
+                  setPage(1);
+                }}
                 className="block min-h-10 rounded-md border bg-background px-3 text-sm"
               />
             </label>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-3">
-            <label className="space-y-1 text-xs">
-              <span>{t("fields.from")}</span>
-              <input
-                type="date"
-                value={from}
-                onChange={(event) => setFrom(event.target.value)}
-                className="block min-h-10 rounded-md border bg-background px-3 text-sm"
-              />
-            </label>
-            <label className="space-y-1 text-xs">
-              <span>{t("fields.to")}</span>
-              <input
-                type="date"
-                value={to}
-                onChange={(event) => setTo(event.target.value)}
-                className="block min-h-10 rounded-md border bg-background px-3 text-sm"
-              />
-            </label>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-end gap-3">
+              <label className="space-y-1 text-xs">
+                <span>{t("fields.from")}</span>
+                <input
+                  type="date"
+                  value={from}
+                  onChange={(event) => {
+                    setFrom(event.target.value);
+                    setPage(1);
+                  }}
+                  className="block min-h-10 rounded-md border bg-background px-3 text-sm"
+                />
+              </label>
+              <label className="space-y-1 text-xs">
+                <span>{t("fields.to")}</span>
+                <input
+                  type="date"
+                  value={to}
+                  onChange={(event) => {
+                    setTo(event.target.value);
+                    setPage(1);
+                  }}
+                  className="block min-h-10 rounded-md border bg-background px-3 text-sm"
+                />
+              </label>
+
+              {/* Quick Preset Buttons */}
+              <div className="flex flex-wrap items-center gap-1.5 pb-0.5">
+                <button
+                  type="button"
+                  onClick={() => setQuickDate("today")}
+                  className="min-h-9 rounded-md border bg-muted/40 px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  আজকে (Today)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setQuickDate("7d")}
+                  className="min-h-9 rounded-md border bg-muted/40 px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  গত ৭ দিন
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setQuickDate("30d")}
+                  className="min-h-9 rounded-md border bg-muted/40 px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  গত ৩০ দিন
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setQuickDate("thisMonth")}
+                  className="min-h-9 rounded-md border bg-muted/40 px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  এই মাস
+                </button>
+                {(from || to) && (
+                  <button
+                    type="button"
+                    onClick={() => setQuickDate("all")}
+                    className="min-h-9 rounded-md border border-dashed px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
+                  >
+                    সব (রিসেট)
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Total Metric Cards */}
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-lg border bg-card p-4 shadow-xs space-y-1">
+                <span className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>সর্বমোট AI খরচ</span>
+                  <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
+                </span>
+                <div className="font-mono text-2xl font-bold text-emerald-500">
+                  ${totalCostUsd.toFixed(4)}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  নির্বাচিত সময়কালের সর্বমোট খরচ (USD)
+                </p>
+              </div>
+
+              <div className="rounded-lg border bg-card p-4 shadow-xs space-y-1">
+                <span className="text-xs text-muted-foreground">
+                  মোট AI রান (Runs)
+                </span>
+                <div className="font-mono text-2xl font-bold text-foreground">
+                  {totalRuns.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  মোট সফল ও সম্পন্ন রিকোয়েস্ট
+                </p>
+              </div>
+
+              <div className="rounded-lg border bg-card p-4 shadow-xs space-y-1">
+                <span className="text-xs text-muted-foreground">
+                  মোট টোকেন (Tokens)
+                </span>
+                <div className="font-mono text-2xl font-bold text-foreground">
+                  {totalTokens.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  ইনপুট: {totalInputTokens.toLocaleString()} · আউটপুট:{" "}
+                  {totalOutputTokens.toLocaleString()}
+                </p>
+              </div>
+
+              <div className="rounded-lg border bg-card p-4 shadow-xs space-y-1">
+                <span className="text-xs text-muted-foreground">ব্যর্থ ও ব্লক</span>
+                <div className="font-mono text-2xl font-bold">
+                  <span
+                    className={
+                      totalFailed > 0 ? "text-destructive" : "text-foreground"
+                    }
+                  >
+                    {totalFailed} ব্যর্থ
+                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {" "}
+                    ·{" "}
+                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {totalBlocked} ব্লক
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  ব্যর্থ বা সিস্টেমে ব্লক হওয়া রান
+                </p>
+              </div>
+            </div>
           </div>
         )}
         {tab === "usage"
@@ -3189,7 +3454,7 @@ export function AdminWorkspace({
               "empty.noUsage",
             )
           : table(
-              result.items as AdminAiUsageRowDTO[],
+              aiItems,
               [
                 {
                   key: "shop",
@@ -3224,6 +3489,10 @@ export function AdminWorkspace({
                 },
               ],
               "empty.noUsage",
+              undefined,
+              undefined,
+              aiFooterRow,
+              aiFooterMobile,
             )}
         {paging(result)}
       </div>

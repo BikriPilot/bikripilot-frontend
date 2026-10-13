@@ -44,12 +44,16 @@ export function AdminTable<T extends object>({
   empty,
   rowKey,
   rowActions,
+  footerRow,
+  footerMobile,
 }: {
   rows: T[];
   columns: AdminColumn<T>[];
   empty: string;
   rowKey: (row: T) => string;
   rowActions?: (row: T) => React.ReactNode;
+  footerRow?: React.ReactNode;
+  footerMobile?: React.ReactNode;
 }) {
   if (!rows.length)
     return (
@@ -88,6 +92,11 @@ export function AdminTable<T extends object>({
               </tr>
             ))}
           </tbody>
+          {footerRow ? (
+            <tfoot className="border-t-2 border-border bg-muted/50 font-medium">
+              {footerRow}
+            </tfoot>
+          ) : null}
         </table>
       </div>
       <div className="space-y-2 md:hidden">
@@ -110,6 +119,11 @@ export function AdminTable<T extends object>({
             ) : null}
           </article>
         ))}
+        {footerMobile ? (
+          <div className="border-2 border-border bg-muted/60 p-3">
+            {footerMobile}
+          </div>
+        ) : null}
       </div>
     </>
   );

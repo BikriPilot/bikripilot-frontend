@@ -2,7 +2,20 @@ import type { OrderDTO, OrderListItemDTO } from "@/types/order";
 
 export interface AdminPage<T> {
   items: T[];
-  meta?: { page?: number; limit?: number; total?: number; totalPages?: number };
+  meta?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
+    totals?: {
+      runs?: number;
+      inputTokens?: number;
+      outputTokens?: number;
+      costMicroUsd?: number;
+      blocked?: number;
+      failed?: number;
+    };
+  };
 }
 
 export interface AdminOverviewDTO {
