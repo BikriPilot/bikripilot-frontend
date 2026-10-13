@@ -1042,6 +1042,9 @@
     "inviteEmail": "Member email",
     "role": "Role",
     "invite": "Send invitation",
+    "twoFactorRequiredTitle": "Two-factor authentication required",
+    "twoFactorRequiredDesc": "You must enable two-factor authentication (2FA) on your account before inviting team members.",
+    "enable2faNow": "Enable 2FA in Profile Settings",
     "members": "Members",
     "pendingInvites": "Pending invitations",
     "remove": "Remove",
@@ -2540,6 +2543,7 @@
       "unlock": "Unlock",
       "revokeSessions": "Revoke all sessions",
       "reset2fa": "Reset 2FA",
+      "changeRole": "Role / Staff",
       "replay": "Replay",
       "retryFailed": "Retry failed jobs",
       "diff": "View changes",
@@ -2574,7 +2578,8 @@
       "user": {
         "block": "Block user",
         "unblock": "Unblock user",
-        "reset2fa": "Reset 2FA"
+        "reset2fa": "Reset 2FA",
+        "role": "Manage user role and status"
       },
       "payment": {
         "approve": "Approve payment",
@@ -2597,6 +2602,8 @@
       "content": { "create": "Add content", "edit": "Edit content" }
     },
     "fields": {
+      "platformRole": "Platform role",
+      "emailVerified": "Email verified",
       "reason": "Reason",
       "note": "Note",
       "suspendOwnedShops": "Suspend owned shops too",

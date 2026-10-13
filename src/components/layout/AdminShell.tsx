@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { AdminSidebar } from "./AdminSidebar";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { authApi } from "@/lib/api/auth.api";
@@ -57,13 +56,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher compact />
-          <Link
-            href="/dashboard"
-            className="inline-flex min-h-10 items-center gap-2 rounded-md px-2 text-xs font-medium hover:bg-muted sm:px-3 sm:text-sm"
-          >
-            <ArrowLeft size={16} />
-            <span className="hidden sm:inline">{t("backToShop")}</span>
-          </Link>
           <button
             type="button"
             onClick={logout}

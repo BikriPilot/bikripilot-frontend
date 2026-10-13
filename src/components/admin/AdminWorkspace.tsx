@@ -13,10 +13,13 @@ import {
   Check,
   ExternalLink,
   Eye,
+  LogOut,
   RefreshCw,
   RotateCcw,
+  Shield,
   ShieldAlert,
   Sparkles,
+  Unlock,
   UserRoundX,
   X,
 } from "lucide-react";
@@ -125,17 +128,44 @@ const input = (
 function ActionButton({
   children,
   onClick,
-  danger = false,
+  danger,
+  variant = "default",
+  className = "",
 }: {
   children: React.ReactNode;
   onClick: () => void;
   danger?: boolean;
+  variant?:
+    | "default"
+    | "danger"
+    | "success"
+    | "warning"
+    | "info"
+    | "purple"
+    | "teal";
+  className?: string;
 }) {
+  const resolved = danger ? "danger" : variant;
+  const variantStyles = {
+    default: "border-border text-foreground hover:bg-muted",
+    danger:
+      "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20",
+    success:
+      "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20",
+    warning:
+      "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20",
+    info:
+      "border-sky-500/30 bg-sky-500/10 text-sky-600 dark:text-sky-400 hover:bg-sky-500/20",
+    purple:
+      "border-purple-500/30 bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20",
+    teal:
+      "border-teal-500/30 bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/20",
+  };
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex min-h-9 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium hover:bg-muted ${danger ? "border-danger/40 text-danger" : ""}`}
+      className={`inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${variantStyles[resolved] || variantStyles.default} ${className}`}
     >
       {children}
     </button>
@@ -472,6 +502,39 @@ export function AdminWorkspace({
         ];
       case "user.reset2fa":
         return [input("reason", t("fields.reason"), "textarea", true)];
+      case "user.role":
+        return [
+          {
+            ...input(
+              "platformRole",
+              t("fields.platformRole", { fallback: "Platform role" }),
+              "select",
+              true,
+              selected.platformRole ?? "USER",
+            ),
+            options: [
+              {
+                value: "USER",
+                label: t("roles.USER", { fallback: "User" }),
+              },
+              {
+                value: "SUPPORT",
+                label: t("roles.SUPPORT", { fallback: "Support" }),
+              },
+              {
+                value: "SUPER_ADMIN",
+                label: t("roles.SUPER_ADMIN", { fallback: "Super admin" }),
+              },
+            ],
+          },
+          input(
+            "emailVerified",
+            t("fields.emailVerified", { fallback: "Email verified" }),
+            "boolean",
+            false,
+            Boolean(selected.emailVerified),
+          ),
+        ];
       case "payment.approve":
         return [input("note", t("fields.note"), "textarea")];
       case "payment.reject":
@@ -872,6 +935,20 @@ export function AdminWorkspace({
           () => adminApi.reset2fa(idValue, { reason: String(values.reason) }),
           "saved",
         );
+      case "user.role":
+        return notifyAction(
+          () =>
+            adminApi.updateUser(idValue, {
+              platformRole: values.platformRole
+                ? String(values.platformRole)
+                : undefined,
+              emailVerified:
+                values.emailVerified !== undefined
+                  ? Boolean(values.emailVerified)
+                  : undefined,
+            }),
+          "saved",
+        );
       case "payment.approve":
         return notifyAction(
           () => adminApi.approvePayment(idValue, values),
@@ -966,6 +1043,7 @@ export function AdminWorkspace({
       action === "user.block" ||
       action === "user.unblock" ||
       action === "user.reset2fa" ||
+      action === "user.role" ||
       action === "payment.approve" ||
       action === "payment.reject" ||
       action === "shop.status" ||
@@ -1449,53 +1527,70 @@ export function AdminWorkspace({
             }}
           />
           {table(result.items, columns, "empty.noUsers", (item) => (
-            <div className="flex flex-wrap gap-1">
+            <div className="grid grid-cols-2 gap-1.5 w-max">
               {item.status === "SUSPENDED" ? (
                 <ActionButton
+                  variant="success"
                   onClick={() =>
                     void perform("user.unblock", item as unknown as Row)
                   }
                 >
-                  <Check size={14} />
+                  <Check size={13} />
                   {t("actions.unblock")}
                 </ActionButton>
               ) : canWrite ? (
                 <ActionButton
-                  danger
+                  variant="danger"
                   onClick={() =>
                     void perform("user.block", item as unknown as Row)
                   }
                 >
-                  <UserRoundX size={14} />
+                  <UserRoundX size={13} />
                   {t("actions.block")}
-                </ActionButton>
-              ) : null}
-              {item.lockedUntil && canWrite ? (
-                <ActionButton
-                  onClick={() =>
-                    void perform("user.unlock", item as unknown as Row)
-                  }
-                >
-                  {t("actions.unlock")}
                 </ActionButton>
               ) : null}
               {canWrite ? (
                 <ActionButton
+                  variant="info"
+                  onClick={() =>
+                    void perform("user.role", item as unknown as Row)
+                  }
+                >
+                  <Shield size={13} />
+                  {t("actions.changeRole")}
+                </ActionButton>
+              ) : null}
+              {canWrite ? (
+                <ActionButton
+                  variant="warning"
                   onClick={() =>
                     void perform("user.revoke", item as unknown as Row)
                   }
                 >
+                  <LogOut size={13} />
                   {t("actions.revokeSessions")}
                 </ActionButton>
               ) : null}
               {item.twoFactorEnabled && canWrite ? (
                 <ActionButton
+                  variant="purple"
                   onClick={() =>
                     void perform("user.reset2fa", item as unknown as Row)
                   }
                 >
-                  <RotateCcw size={14} />
+                  <RotateCcw size={13} />
                   {t("actions.reset2fa")}
+                </ActionButton>
+              ) : null}
+              {item.lockedUntil && canWrite ? (
+                <ActionButton
+                  variant="teal"
+                  onClick={() =>
+                    void perform("user.unlock", item as unknown as Row)
+                  }
+                >
+                  <Unlock size={13} />
+                  {t("actions.unlock")}
                 </ActionButton>
               ) : null}
             </div>
@@ -3547,19 +3642,6 @@ export function AdminWorkspace({
           ) : undefined
         }
       />
-      {screen === "shops" ||
-      screen === "users" ||
-      screen === "orders" ||
-      screen === "auditLogs" ? (
-        <AdminSearch
-          value={search}
-          placeholder={t(`search.${screen}`)}
-          onChange={(value) => {
-            setSearch(value);
-            setPage(1);
-          }}
-        />
-      ) : null}
       {renderActionTabs()}
       {renderData()}
       {dialog ? (

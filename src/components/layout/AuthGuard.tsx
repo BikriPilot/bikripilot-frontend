@@ -11,6 +11,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const t = useTranslations("common");
   useEffect(() => {
     if (isBootstrapping || !user || pathname === "/dashboard/profile") return;
+    if (
+      (user.platformRole === "SUPER_ADMIN" || user.platformRole === "SUPPORT") &&
+      !user.impersonation
+    ) {
+      router.replace("/admin");
+      return;
+    }
     if (user.twoFactorSetupRequired)
       router.replace("/dashboard/profile?setup2fa=1");
     else if (user.memberships.length === 0) router.replace("/onboarding");

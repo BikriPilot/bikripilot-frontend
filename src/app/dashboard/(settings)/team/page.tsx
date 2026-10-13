@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -8,12 +9,14 @@ import { ErrorState, EmptyState } from "@/components/common/PageStates";
 import { TableSkeleton } from "@/components/common/skeletons";
 import { shopsApi } from "@/lib/api/shops.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
+import { useAuthStore } from "@/stores/authStore";
 import type { ShopRole } from "@/types/auth";
 import { toast } from "sonner";
 import { ASSIGNABLE_ROLES_BY } from "@/constants/permissions";
 import { Trash2, X } from "lucide-react";
 export default function TeamPage() {
   const t = useTranslations("step8");
+  const user = useAuthStore((state) => state.user);
   const { shopId, can, role: actorRole } = useCurrentShop();
   const roleText = useTranslations("admin.roles");
   const assignableRoles =
@@ -43,8 +46,8 @@ export default function TeamPage() {
       await shopsApi.updateMember(shopId!, memberId, nextRole);
       await members.refetch();
       toast.success(t("saved"));
-    } catch {
-      toast.error(t("genericError"));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t("genericError"));
     } finally {
       setBusy(false);
     }
@@ -57,8 +60,8 @@ export default function TeamPage() {
       setRemoval(null);
       await members.refetch();
       toast.success(t("saved"));
-    } catch {
-      toast.error(t("genericError"));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t("genericError"));
     } finally {
       setBusy(false);
     }
@@ -83,8 +86,8 @@ export default function TeamPage() {
       setOpen(false);
       toast.success(t("saved"));
       await invites.refetch();
-    } catch {
-      toast.error(t("genericError"));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t("genericError"));
     } finally {
       setBusy(false);
     }
@@ -111,6 +114,29 @@ export default function TeamPage() {
           onSubmit={invite}
           className="grid max-w-xl gap-4 rounded-2xl border bg-primary-soft p-5"
         >
+          {!user?.twoFactorEnabled ? (
+            <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3.5 text-xs text-amber-700 dark:text-amber-300">
+              <p className="font-semibold">
+                {t("twoFactorRequiredTitle", {
+                  fallback: "Two-factor authentication required",
+                })}
+              </p>
+              <p className="mt-1">
+                {t("twoFactorRequiredDesc", {
+                  fallback:
+                    "You must enable two-factor authentication (2FA) on your account before inviting team members.",
+                })}
+              </p>
+              <Link
+                href="/dashboard/profile"
+                className="mt-2 inline-flex font-semibold text-primary underline"
+              >
+                {t("enable2faNow", {
+                  fallback: "Enable 2FA in Profile Settings",
+                })}
+              </Link>
+            </div>
+          ) : null}
           <Field
             label={t("inviteEmail")}
             type="email"
@@ -134,8 +160,8 @@ export default function TeamPage() {
           </label>
           <div className="flex gap-2">
             <button
-              disabled={busy}
-              className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+              disabled={busy || !user?.twoFactorEnabled}
+              className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t("invite")}
             </button>
