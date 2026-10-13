@@ -22,12 +22,36 @@ const POPULAR_PRESETS: Array<{
   input: number;
   output: number;
 }> = [
-  { name: "Gemini 2.0 Flash", key: "gemini-2.0-flash", input: 0.1, output: 0.4 },
-  { name: "Gemini 1.5 Flash", key: "gemini-1.5-flash", input: 0.075, output: 0.3 },
-  { name: "Gemini 1.5 Pro", key: "gemini-1.5-pro", input: 1.25, output: 5.0 },
-  { name: "GPT-4o Mini", key: "gpt-4o-mini", input: 0.15, output: 0.6 },
-  { name: "GPT-4o", key: "gpt-4o", input: 2.5, output: 10.0 },
-  { name: "Claude 3.5 Sonnet", key: "claude-3-5-sonnet-20241022", input: 3.0, output: 15.0 },
+  {
+    name: "GPT-6 Luna",
+    key: "gpt-6-luna",
+    input: 0.10,
+    output: 0.50,
+  },
+  {
+    name: "Gemini 3.8 Flash",
+    key: "gemini-3.8-flash",
+    input: 0.75,
+    output: 3.75,
+  },
+  {
+    name: "Gemini 3.1 Flash-Lite",
+    key: "gemini-3.1-flash-lite",
+    input: 0.30,
+    output: 2.50,
+  },
+  {
+    name: "Gemini 3.5 Flash-Lite",
+    key: "gemini-3.5-flash-lite",
+    input: 0.30,
+    output: 2.50,
+  },
+  {
+    name: "Claude Haiku 5.5",
+    key: "claude-haiku-5-5",
+    input: 0.10,
+    output: 0.50,
+  },
 ];
 
 function normalizeValueToMap(val: unknown): AiPricingMap {

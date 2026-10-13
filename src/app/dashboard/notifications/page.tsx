@@ -1,27 +1,47 @@
 "use client";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/common/PageHeader";
 import { CardListSkeleton } from "@/components/common/skeletons";
 import { ErrorState, EmptyState } from "@/components/common/PageStates";
 import { notificationsApi } from "@/lib/api/notifications.api";
+import { queryKeys } from "@/lib/queryKeys";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
 import { dateFromNow } from "@/lib/date";
 import { toast } from "sonner";
+
 export default function NotificationsPage() {
   const t = useTranslations("step8");
   const { shopId } = useCurrentShop();
+  const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ["notifications", shopId],
     queryFn: () => notificationsApi.list(shopId!),
     enabled: Boolean(shopId),
   });
+
+  useEffect(() => {
+    if (!shopId || !query.data?.length) return;
+    const hasUnread = query.data.some((n) => !n.readAt);
+    if (hasUnread) {
+      void notificationsApi.markRead(shopId, { all: true }).then(() => {
+        void queryClient.invalidateQueries({
+          queryKey: [...queryKeys.notifications, shopId, "unread-count"],
+        });
+      });
+    }
+  }, [shopId, query.data, queryClient]);
+
   if (query.isPending) return <CardListSkeleton rows={5} />;
   if (query.isError) return <ErrorState onRetry={() => void query.refetch()} />;
   const notifications = query.data ?? [];
   const markAll = async () => {
     await notificationsApi.markRead(shopId!, { all: true });
+    await queryClient.invalidateQueries({
+      queryKey: [...queryKeys.notifications, shopId, "unread-count"],
+    });
     toast.success(t("saved"));
     await query.refetch();
   };
