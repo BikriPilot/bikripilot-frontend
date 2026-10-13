@@ -424,26 +424,26 @@ export default function ProfilePage() {
             )}
 
             {disableOpen && (
-              <form onSubmit={disable2fa} className="rounded-xl border bg-danger-soft/20 p-4 space-y-3">
-                <p className="text-xs font-medium text-foreground">
-                  Confirm your password and 6-digit authenticator code to disable 2FA:
-                </p>
-                <PasswordField
-                  label={t("password")}
-                  value={disablePassword}
-                  onChange={(e) => setDisablePassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-                <Field
-                  label={t("code")}
-                  value={disableCode}
-                  onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  inputMode="numeric"
-                  placeholder="123456"
-                  required
-                />
-                <div className="flex gap-2 justify-end pt-2">
+              <form onSubmit={disable2fa} className="rounded-xl border border-danger/30 bg-danger-soft/20 p-3.5 space-y-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <PasswordField
+                    label={t("password")}
+                    value={disablePassword}
+                    onChange={(e) => setDisablePassword(e.target.value)}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <Field
+                    label={t("code")}
+                    value={disableCode}
+                    onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    inputMode="numeric"
+                    placeholder="123456"
+                    required
+                  />
+                </div>
+                <div className="flex gap-2 justify-end pt-1">
                   <button
                     type="button"
                     onClick={() => setDisableOpen(false)}
