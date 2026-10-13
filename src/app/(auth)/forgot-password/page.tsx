@@ -6,7 +6,9 @@ import { AuthCard } from "@/components/auth/AuthCard";
 import { Field } from "@/components/common/Field";
 import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 import { authApi } from "@/lib/api/auth.api";
-export default function ForgotPasswordPage() {
+import { GuestGuard } from "@/components/layout/GuestGuard";
+
+function ForgotPasswordForm() {
   const t = useTranslations("step8");
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
@@ -47,5 +49,13 @@ export default function ForgotPasswordPage() {
         {t("backToLogin")}
       </Link>
     </AuthCard>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <GuestGuard>
+      <ForgotPasswordForm />
+    </GuestGuard>
   );
 }

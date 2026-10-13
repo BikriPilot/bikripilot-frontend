@@ -11,7 +11,9 @@ import { ApiClientError } from "@/lib/api/client";
 import { useAuthStore } from "@/stores/authStore";
 import { BD_DISTRICTS } from "@/constants/districts";
 import { BUSINESS_CATEGORIES } from "@/constants/enums";
-export default function RegisterPage() {
+import { GuestGuard } from "@/components/layout/GuestGuard";
+
+function RegisterForm() {
   const t = useTranslations("step8");
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -175,3 +177,12 @@ export default function RegisterPage() {
     </AuthCard>
   );
 }
+
+export default function RegisterPage() {
+  return (
+    <GuestGuard>
+      <RegisterForm />
+    </GuestGuard>
+  );
+}
+

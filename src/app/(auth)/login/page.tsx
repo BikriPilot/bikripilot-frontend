@@ -9,10 +9,11 @@ import { Field } from "@/components/common/Field";
 import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 import { ApiClientError } from "@/lib/api/client";
 import { authApi } from "@/lib/api/auth.api";
-import { safeRedirect } from "@/lib/safeRedirect";
+import { getAuthenticatedRedirect } from "@/lib/safeRedirect";
 import { useAuthStore } from "@/stores/authStore";
+import { GuestGuard } from "@/components/layout/GuestGuard";
 
-export default function LoginPage() {
+function LoginForm() {
   const t = useTranslations("step8");
   const router = useRouter();
   const params = useSearchParams();
@@ -46,7 +47,11 @@ export default function LoginPage() {
       if ("twoFactorRequired" in result) setChallenge(result.twoFactorToken);
       else {
         setAuth(result.accessToken, result.user);
-        router.replace(safeRedirect(params.get("next")));
+        const destination = getAuthenticatedRedirect(
+          params.get("next"),
+          result.user.platformRole,
+        );
+        router.replace(destination);
       }
     } catch (cause) {
       setError(messageFor(cause));
@@ -65,7 +70,11 @@ export default function LoginPage() {
         code,
       });
       setAuth(result.accessToken, result.user);
-      router.replace(safeRedirect(params.get("next")));
+      const destination = getAuthenticatedRedirect(
+        params.get("next"),
+        result.user.platformRole,
+      );
+      router.replace(destination);
     } catch (cause) {
       setError(messageFor(cause));
     } finally {
@@ -163,5 +172,13 @@ export default function LoginPage() {
         </p>
       ) : null}
     </AuthCard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <GuestGuard>
+      <LoginForm />
+    </GuestGuard>
   );
 }

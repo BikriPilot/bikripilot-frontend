@@ -6,3 +6,24 @@ export function safeRedirect(
     ? value
     : fallback;
 }
+
+export function getAuthenticatedRedirect(
+  value: string | null | undefined,
+  platformRole?: string,
+) {
+  const defaultTarget =
+    platformRole === "SUPER_ADMIN" || platformRole === "SUPPORT"
+      ? "/admin"
+      : "/dashboard";
+  const target = safeRedirect(value, defaultTarget);
+  if (
+    target.startsWith("/login") ||
+    target.startsWith("/register") ||
+    target.startsWith("/forgot-password") ||
+    target.startsWith("/reset-password")
+  ) {
+    return defaultTarget;
+  }
+  return target;
+}
+

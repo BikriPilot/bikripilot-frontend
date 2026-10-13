@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowRight,
   ChevronDown,
@@ -10,6 +10,8 @@ import {
   FileText,
   Headset,
   HelpCircle,
+  LayoutDashboard,
+  LogOut,
   Menu,
   Scale,
   Trash2,
@@ -18,6 +20,11 @@ import {
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { Logo } from "@/components/common/Logo";
+import { useAuth } from "@/hooks/useAuth";
+import { authApi } from "@/lib/api/auth.api";
+import { useAuthStore } from "@/stores/authStore";
+
+const emptySubscribe = () => () => {};
 
 interface NavTranslations {
   navFeatures: string;
@@ -33,14 +40,40 @@ interface NavTranslations {
   navTrackOrders: string;
   navContact: string;
   navDataDeletion: string;
+  navDashboard?: string;
+  navLogout?: string;
 }
 
 export function PublicNavbarClient({ t }: { t: NavTranslations }) {
+  const { user, isBootstrapping } = useAuth(false);
+  const clear = useAuthStore((state) => state.clear);
+  const router = useRouter();
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
+
+  const isAdmin =
+    user?.platformRole === "SUPPORT" || user?.platformRole === "SUPER_ADMIN";
+  const dashboardHref = isAdmin ? "/admin" : "/dashboard";
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      await authApi.logout();
+    } catch {
+      // ignore logout network errors
+    } finally {
+      clear();
+      setLoggingOut(false);
+      setMobileMenuOpen(false);
+      router.refresh();
+    }
+  };
 
   // Close menus when route changes
   useEffect(() => {
@@ -230,22 +263,47 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
           </div>
 
           {/* PC Action Buttons */}
-          <div className="hidden items-center gap-2 border-l border-border/70 pl-3 sm:flex lg:gap-3">
-            <Link
-              href="/login"
-              className="inline-flex min-h-10 items-center px-3.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t.navLogin}
-            </Link>
+          {!mounted || isBootstrapping ? (
+            <div className="hidden h-10 w-28 animate-pulse rounded-xl bg-muted/60 sm:block" />
+          ) : user ? (
+            <div className="hidden items-center gap-2 border-l border-border/70 pl-3 sm:flex lg:gap-2.5">
+              <Link
+                href={dashboardHref}
+                className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
+              >
+                <LayoutDashboard className="size-4" />
+                <span>{t.navDashboard || "Dashboard"}</span>
+              </Link>
 
-            <Link
-              href="/register"
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-primary px-4.5 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
-            >
-              <span>{t.startFree}</span>
-              <ArrowRight className="size-3.5" />
-            </Link>
-          </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                title={t.navLogout || "Log out"}
+                aria-label={t.navLogout || "Log out"}
+                className="grid size-10 place-items-center rounded-xl border border-border/70 bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+              >
+                <LogOut className="size-4.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="hidden items-center gap-2 border-l border-border/70 pl-3 sm:flex lg:gap-3">
+              <Link
+                href="/login"
+                className="inline-flex min-h-10 items-center px-3.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {t.navLogin}
+              </Link>
+
+              <Link
+                href="/register"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-primary px-4.5 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
+              >
+                <span>{t.startFree}</span>
+                <ArrowRight className="size-3.5" />
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -264,20 +322,43 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
         <div className="border-b bg-card/98 px-5 py-5 shadow-2xl backdrop-blur-xl lg:hidden max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-4 duration-200">
           <div className="space-y-4">
             {/* Quick Action Buttons for Mobile */}
-            <div className="grid grid-cols-2 gap-2 border-b pb-4">
-              <Link
-                href="/login"
-                className="rounded-xl border py-2.5 text-center text-sm font-semibold hover:bg-muted"
-              >
-                {t.navLogin}
-              </Link>
-              <Link
-                href="/register"
-                className="rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground shadow-xs"
-              >
-                {t.startFree}
-              </Link>
-            </div>
+            {user ? (
+              <div className="grid grid-cols-[1fr_auto] gap-2 border-b pb-4">
+                <Link
+                  href={dashboardHref}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground shadow-xs"
+                >
+                  <LayoutDashboard className="size-4" />
+                  <span>{t.navDashboard || "Dashboard"}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  title={t.navLogout || "Log out"}
+                  aria-label={t.navLogout || "Log out"}
+                  className="grid size-10 place-items-center rounded-xl border bg-card text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50"
+                >
+                  <LogOut className="size-4.5" />
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 border-b pb-4">
+                <Link
+                  href="/login"
+                  className="rounded-xl border py-2.5 text-center text-sm font-semibold hover:bg-muted"
+                >
+                  {t.navLogin}
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground shadow-xs"
+                >
+                  {t.startFree}
+                </Link>
+              </div>
+            )}
 
             {/* Direct Links */}
             <div className="space-y-1">

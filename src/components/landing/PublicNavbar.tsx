@@ -20,6 +20,8 @@ export async function PublicNavbar() {
         navTrackOrders: t("navTrackOrders"),
         navContact: t("navContact"),
         navDataDeletion: t("navDataDeletion"),
+        navDashboard: t("navDashboard"),
+        navLogout: t("navLogout"),
       }}
     />
   );

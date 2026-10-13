@@ -72,176 +72,197 @@ export default function ProfilePage() {
         title={t("securityTitle")}
         description={t("securityDescription")}
       />
-      <form
-        onSubmit={saveProfile}
-        className="grid max-w-2xl gap-4 rounded-2xl border bg-card p-5 sm:p-7"
-      >
-        <Field
-          label={t("name")}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-        <Field
-          label={t("phone")}
-          value={phone}
-          onChange={(event) => setPhone(event.target.value)}
-          inputMode="tel"
-        />
-        <Field label={t("email")} value={user.email} readOnly />
-        <button className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
-          {t("saveChanges")}
-        </button>
-      </form>
-      <section
-        className={`max-w-2xl rounded-2xl border bg-card p-5 sm:p-7 ${searchParams.get("setup2fa") === "1" ? "border-primary ring-2 ring-primary/20" : ""}`}
-      >
-        <h2 className="text-lg font-semibold">{t("twoFactor")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {user.twoFactorEnabled ? t("twoFactorOn") : t("twoFactorOff")}
-        </p>
-        {!user.twoFactorEnabled && !setup ? (
-          <button
-            type="button"
-            onClick={() =>
-              void authApi
-                .setupTwoFactor()
-                .then(setSetup)
-                .catch(() => toast.error(t("genericError")))
-            }
-            className="mt-5 min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+        {/* Left Column: Personal Information & Password */}
+        <div className="space-y-6">
+          <form
+            onSubmit={saveProfile}
+            className="grid gap-4 rounded-2xl border bg-card p-5 shadow-xs sm:p-7"
           >
-            {t("setupTwoFactor")}
-          </button>
-        ) : null}
-        {setup ? (
-          <div className="mt-5 grid gap-4 sm:grid-cols-[160px_1fr]">
-            <QRCodeSVG
-              value={setup.otpauthUrl}
-              size={160}
-              className="rounded-lg border p-2"
+            <h2 className="text-lg font-semibold">{t("securityTitle")}</h2>
+            <Field
+              label={t("name")}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
             />
-            <div className="grid gap-3">
-              <p className="break-all text-xs text-muted-foreground">
-                {setup.secretBase32}
-              </p>
-              <Field
-                label={t("code")}
-                value={code}
-                onChange={(event) =>
-                  setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
-                }
-                inputMode="numeric"
-              />
-              <button
-                type="button"
-                onClick={() => void enable()}
-                className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-              >
-                {t("enableTwoFactor")}
-              </button>
-            </div>
-          </div>
-        ) : null}
-        {user.twoFactorEnabled ? (
-          <div className="mt-5 grid gap-3 border-t pt-5">
+            <Field
+              label={t("phone")}
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              inputMode="tel"
+            />
+            <Field label={t("email")} value={user.email} readOnly />
+            <button className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90">
+              {t("saveChanges")}
+            </button>
+          </form>
+
+          <form
+            onSubmit={changePassword}
+            className="grid gap-4 rounded-2xl border bg-card p-5 shadow-xs sm:p-7"
+          >
+            <h2 className="text-lg font-semibold">{t("changePassword")}</h2>
             <Field
               label={t("currentPassword")}
               type="password"
-              value={disablePassword}
-              onChange={(event) => setDisablePassword(event.target.value)}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
             />
             <Field
-              label={t("code")}
-              value={disableCode}
-              onChange={(event) =>
-                setDisableCode(
-                  event.target.value.replace(/\D/g, "").slice(0, 6),
-                )
-              }
-              inputMode="numeric"
+              label={t("newPassword")}
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              required
             />
+            <button className="min-h-11 rounded-lg border px-4 text-sm font-semibold transition-colors hover:bg-muted">
+              {t("saveChanges")}
+            </button>
+          </form>
+        </div>
+
+        {/* Right Column: Two-Factor Authentication & Sessions */}
+        <div className="space-y-6">
+          <section
+            className={`rounded-2xl border bg-card p-5 shadow-xs sm:p-7 ${
+              searchParams.get("setup2fa") === "1"
+                ? "border-primary ring-2 ring-primary/20"
+                : ""
+            }`}
+          >
+            <h2 className="text-lg font-semibold">{t("twoFactor")}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {user.twoFactorEnabled ? t("twoFactorOn") : t("twoFactorOff")}
+            </p>
+            {!user.twoFactorEnabled && !setup ? (
+              <button
+                type="button"
+                onClick={() =>
+                  void authApi
+                    .setupTwoFactor()
+                    .then(setSetup)
+                    .catch(() => toast.error(t("genericError")))
+                }
+                className="mt-5 min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+              >
+                {t("setupTwoFactor")}
+              </button>
+            ) : null}
+            {setup ? (
+              <div className="mt-5 grid gap-4 sm:grid-cols-[160px_1fr]">
+                <QRCodeSVG
+                  value={setup.otpauthUrl}
+                  size={160}
+                  className="rounded-lg border p-2"
+                />
+                <div className="grid gap-3">
+                  <p className="break-all text-xs text-muted-foreground">
+                    {setup.secretBase32}
+                  </p>
+                  <Field
+                    label={t("code")}
+                    value={code}
+                    onChange={(event) =>
+                      setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
+                    }
+                    inputMode="numeric"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void enable()}
+                    className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+                  >
+                    {t("enableTwoFactor")}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {user.twoFactorEnabled ? (
+              <div className="mt-5 grid gap-3 border-t pt-5">
+                <Field
+                  label={t("currentPassword")}
+                  type="password"
+                  value={disablePassword}
+                  onChange={(event) => setDisablePassword(event.target.value)}
+                />
+                <Field
+                  label={t("code")}
+                  value={disableCode}
+                  onChange={(event) =>
+                    setDisableCode(
+                      event.target.value.replace(/\D/g, "").slice(0, 6),
+                    )
+                  }
+                  inputMode="numeric"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    void authApi
+                      .disableTwoFactor({
+                        password: disablePassword,
+                        code: disableCode,
+                      })
+                      .then(setUser)
+                      .then(() => toast.success(t("saved")))
+                      .catch(() => toast.error(t("genericError")))
+                  }
+                  className="min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
+                >
+                  {t("disableTwoFactor")}
+                </button>
+              </div>
+            ) : null}
+          </section>
+
+          <section className="rounded-2xl border bg-card p-5 shadow-xs sm:p-7">
+            <h2 className="text-lg font-semibold">{t("sessions")}</h2>
+            {sessions.isError ? (
+              <ErrorState onRetry={() => void sessions.refetch()} />
+            ) : (
+              <div className="mt-4 divide-y">
+                {sessions.data?.map((session) => (
+                  <div
+                    key={session.id}
+                    className="flex items-center justify-between py-3 text-sm"
+                  >
+                    <div>
+                      <p className="font-medium">
+                        {session.userAgent ?? "Browser"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {session.ipMasked ?? ""}
+                      </p>
+                    </div>
+                    {session.current ? (
+                      <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                        {t("currentSession")}
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
             <button
               type="button"
               onClick={() =>
                 void authApi
-                  .disableTwoFactor({
-                    password: disablePassword,
-                    code: disableCode,
+                  .logoutAll()
+                  .then(() => {
+                    clearAuth();
+                    router.replace("/login");
                   })
-                  .then(setUser)
-                  .then(() => toast.success(t("saved")))
                   .catch(() => toast.error(t("genericError")))
               }
-              className="min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger"
+              className="mt-4 min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
             >
-              {t("disableTwoFactor")}
+              {t("logoutAll")}
             </button>
-          </div>
-        ) : null}
-      </section>
-      <form
-        onSubmit={changePassword}
-        className="grid max-w-2xl gap-4 rounded-2xl border bg-card p-5 sm:p-7"
-      >
-        <h2 className="text-lg font-semibold">{t("changePassword")}</h2>
-        <Field
-          label={t("currentPassword")}
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
-        <Field
-          label={t("newPassword")}
-          type="password"
-          value={newPassword}
-          onChange={(event) => setNewPassword(event.target.value)}
-          required
-        />
-        <button className="min-h-11 rounded-lg border px-4 text-sm font-semibold">
-          {t("saveChanges")}
-        </button>
-      </form>
-      <section className="max-w-2xl rounded-2xl border bg-card p-5 sm:p-7">
-        <h2 className="text-lg font-semibold">{t("sessions")}</h2>
-        {sessions.isError ? (
-          <ErrorState onRetry={() => void sessions.refetch()} />
-        ) : (
-          <div className="mt-4 divide-y">
-            {sessions.data?.map((session) => (
-              <div
-                key={session.id}
-                className="flex items-center justify-between py-3 text-sm"
-              >
-                <div>
-                  <p>{session.userAgent ?? "Browser"}</p>
-                  <p className="text-muted-foreground">
-                    {session.ipMasked ?? ""}
-                  </p>
-                </div>
-                {session.current ? (
-                  <span className="text-primary">{t("currentSession")}</span>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        )}
-        <button
-          type="button"
-          onClick={() =>
-            void authApi
-              .logoutAll()
-              .then(() => {
-                clearAuth();
-                router.replace("/login");
-              })
-              .catch(() => toast.error(t("genericError")))
-          }
-          className="mt-4 min-h-11 rounded-lg border border-danger px-4 text-sm font-semibold text-danger"
-        >
-          {t("logoutAll")}
-        </button>
-      </section>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }

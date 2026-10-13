@@ -122,181 +122,248 @@ export default function DeliverySettingsPage() {
       />
       <form
         onSubmit={save}
-        className="grid max-w-2xl gap-4 rounded-2xl border bg-card p-5 sm:p-7"
+        className="max-w-4xl space-y-6 rounded-2xl border bg-card p-6 shadow-xs sm:p-8"
       >
-        <Field
-          label={t("insideDhaka")}
-          inputMode="decimal"
-          value={taka("deliveryChargeInsideDhakaPaisa")}
-          onChange={(event) =>
-            setForm({
-              ...form,
-              deliveryChargeInsideDhakaPaisa: event.target.value,
-            })
-          }
-        />
-        <label className="grid gap-2 text-sm">
-          {advanceText("policy")}
-          <select
-            className="min-h-11 rounded-lg border bg-background px-3 text-base"
-            value={form.advanceMode ?? settings.advanceMode ?? "NONE"}
-            onChange={(event) =>
-              setForm({
-                ...form,
-                advanceMode: event.target
-                  .value as ShopSettingsDTO["advanceMode"],
-              })
-            }
+        {/* Section 1: Standard Delivery Rates */}
+        <div>
+          <h2 className="text-base font-semibold text-foreground mb-3">
+            {t("deliveryTitle")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Field
+              label={t("insideDhaka")}
+              inputMode="decimal"
+              value={taka("deliveryChargeInsideDhakaPaisa")}
+              onChange={(event) =>
+                setForm({
+                  ...form,
+                  deliveryChargeInsideDhakaPaisa: event.target.value,
+                })
+              }
+            />
+            <Field
+              label={t("subDhaka")}
+              inputMode="decimal"
+              value={taka("deliveryChargeSubDhakaPaisa")}
+              onChange={(event) =>
+                setForm({
+                  ...form,
+                  deliveryChargeSubDhakaPaisa: event.target.value,
+                })
+              }
+            />
+            <Field
+              label={t("outsideDhaka")}
+              inputMode="decimal"
+              value={taka("deliveryChargeOutsideDhakaPaisa")}
+              onChange={(event) =>
+                setForm({
+                  ...form,
+                  deliveryChargeOutsideDhakaPaisa: event.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Section 2: Advance Payment & Checkout Policy */}
+        <div className="border-t pt-6">
+          <h2 className="text-base font-semibold text-foreground mb-3">
+            {advanceText("policy")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="grid gap-2 text-sm font-medium">
+              {advanceText("policy")}
+              <select
+                className="min-h-11 rounded-lg border bg-background px-3 text-base"
+                value={form.advanceMode ?? settings.advanceMode ?? "NONE"}
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    advanceMode: event.target
+                      .value as ShopSettingsDTO["advanceMode"],
+                  })
+                }
+              >
+                <option value="NONE">{advanceText("none")}</option>
+                <option value="DELIVERY_CHARGE">{advanceText("delivery")}</option>
+                <option value="PARTIAL">{advanceText("partial")}</option>
+              </select>
+            </label>
+            {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" ? (
+              <Field
+                label={advanceText("partialAmount")}
+                type="number"
+                min="0.01"
+                step="0.01"
+                required
+                value={
+                  (form.partialAdvancePaisa ??
+                    settings.partialAdvancePaisa ??
+                    0) / 100
+                }
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    partialAdvancePaisa: Math.round(
+                      Number(event.target.value) * 100,
+                    ),
+                  })
+                }
+              />
+            ) : (
+              <Field
+                label={t("freeDelivery")}
+                inputMode="decimal"
+                value={
+                  form.freeDeliveryMinPaisa !== undefined
+                    ? form.freeDeliveryMinPaisa
+                    : settings.freeDeliveryMinPaisa === null
+                      ? ""
+                      : String(settings.freeDeliveryMinPaisa / 100)
+                }
+                onChange={(event) =>
+                  setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
+                }
+              />
+            )}
+            {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" && (
+              <Field
+                label={t("freeDelivery")}
+                inputMode="decimal"
+                value={
+                  form.freeDeliveryMinPaisa !== undefined
+                    ? form.freeDeliveryMinPaisa
+                    : settings.freeDeliveryMinPaisa === null
+                      ? ""
+                      : String(settings.freeDeliveryMinPaisa / 100)
+                }
+                onChange={(event) =>
+                  setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
+                }
+              />
+            )}
+            <label className="grid gap-2 text-sm font-medium">
+              {t("defaultPaymentMethod")}
+              <select
+                value={
+                  form.defaultPaymentMethod ?? settings.defaultPaymentMethod
+                }
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    defaultPaymentMethod: event.target.value,
+                  })
+                }
+                className="h-11 rounded-lg border bg-background px-3 text-base"
+              >
+                {PAYMENT_METHODS.map((method) => (
+                  <option key={method} value={method}>
+                    {enumText(method)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+
+        {/* Section 3: Order Numbering & Fraud Prevention */}
+        <div className="border-t pt-6">
+          <h2 className="text-base font-semibold text-foreground mb-3">
+            {t("orderPrefix")} & {t("duplicateWindow")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Field
+              label={t("orderPrefix")}
+              value={form.orderPrefix ?? settings.orderPrefix}
+              onChange={(event) =>
+                setForm({ ...form, orderPrefix: event.target.value })
+              }
+            />
+            <Field
+              label={t("duplicateWindow")}
+              inputMode="numeric"
+              value={
+                form.duplicateWindowHours ??
+                String(settings.duplicateWindowHours)
+              }
+              onChange={(event) =>
+                setForm({
+                  ...form,
+                  duplicateWindowHours: Number(
+                    event.target.value.replace(/\D/g, ""),
+                  ),
+                })
+              }
+            />
+            <Field
+              label={t("lowStockThreshold")}
+              type="number"
+              min={0}
+              step={1}
+              value={form.lowStockThreshold ?? settings.lowStockThreshold}
+              onChange={(event) =>
+                setForm({
+                  ...form,
+                  lowStockThreshold: Number(event.target.value),
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Section 4: Invoice Note & Order Policies */}
+        <div className="border-t pt-6 space-y-4">
+          <label className="grid gap-2 text-sm font-medium">
+            {t("invoiceNote")}
+            <textarea
+              value={form.invoiceNote ?? settings.invoiceNote ?? ""}
+              onChange={(event) =>
+                setForm({ ...form, invoiceNote: event.target.value })
+              }
+              rows={3}
+              className="rounded-lg border bg-background p-3 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20"
+            />
+          </label>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 pt-1">
+            <label className="flex items-center gap-3 text-sm rounded-xl border p-3.5 bg-background/50 hover:bg-muted/50 cursor-pointer transition-colors">
+              <input
+                type="checkbox"
+                checked={
+                  form.publicTrackingEnabled ?? settings.publicTrackingEnabled
+                }
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    publicTrackingEnabled: event.target.checked,
+                  })
+                }
+                className="size-4 accent-primary"
+              />
+              <span className="font-medium">{t("publicTrackingEnabled")}</span>
+            </label>
+            <label className="flex items-center gap-3 text-sm rounded-xl border p-3.5 bg-background/50 hover:bg-muted/50 cursor-pointer transition-colors">
+              <input
+                type="checkbox"
+                checked={Boolean(form.allowOversell ?? settings.allowOversell)}
+                onChange={(event) =>
+                  setForm({ ...form, allowOversell: event.target.checked })
+                }
+                className="size-4 accent-primary"
+              />
+              <span className="font-medium">{t("allowOversell")}</span>
+            </label>
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-4 border-t">
+          <button
+            disabled={busy || !can("shop.manage")}
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:opacity-50"
           >
-            <option value="NONE">{advanceText("none")}</option>
-            <option value="DELIVERY_CHARGE">{advanceText("delivery")}</option>
-            <option value="PARTIAL">{advanceText("partial")}</option>
-          </select>
-        </label>
-        {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" && (
-          <Field
-            label={advanceText("partialAmount")}
-            type="number"
-            min="0.01"
-            step="0.01"
-            required
-            value={
-              (form.partialAdvancePaisa ?? settings.partialAdvancePaisa ?? 0) /
-              100
-            }
-            onChange={(event) =>
-              setForm({
-                ...form,
-                partialAdvancePaisa: Math.round(
-                  Number(event.target.value) * 100,
-                ),
-              })
-            }
-          />
-        )}
-        <Field
-          label={t("subDhaka")}
-          inputMode="decimal"
-          value={taka("deliveryChargeSubDhakaPaisa")}
-          onChange={(event) =>
-            setForm({
-              ...form,
-              deliveryChargeSubDhakaPaisa: event.target.value,
-            })
-          }
-        />
-        <Field
-          label={t("outsideDhaka")}
-          inputMode="decimal"
-          value={taka("deliveryChargeOutsideDhakaPaisa")}
-          onChange={(event) =>
-            setForm({
-              ...form,
-              deliveryChargeOutsideDhakaPaisa: event.target.value,
-            })
-          }
-        />
-        <Field
-          label={t("orderPrefix")}
-          value={form.orderPrefix ?? settings.orderPrefix}
-          onChange={(event) =>
-            setForm({ ...form, orderPrefix: event.target.value })
-          }
-        />
-        <Field
-          label={t("duplicateWindow")}
-          inputMode="numeric"
-          value={
-            form.duplicateWindowHours ?? String(settings.duplicateWindowHours)
-          }
-          onChange={(event) =>
-            setForm({
-              ...form,
-              duplicateWindowHours: Number(
-                event.target.value.replace(/\D/g, ""),
-              ),
-            })
-          }
-        />
-        <Field
-          label={t("freeDelivery")}
-          inputMode="decimal"
-          value={
-            form.freeDeliveryMinPaisa !== undefined
-              ? form.freeDeliveryMinPaisa
-              : settings.freeDeliveryMinPaisa === null
-                ? ""
-                : String(settings.freeDeliveryMinPaisa / 100)
-          }
-          onChange={(event) =>
-            setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
-          }
-        />
-        <label className="grid gap-2 text-sm">
-          {t("defaultPaymentMethod")}
-          <select
-            value={form.defaultPaymentMethod ?? settings.defaultPaymentMethod}
-            onChange={(event) =>
-              setForm({ ...form, defaultPaymentMethod: event.target.value })
-            }
-            className="h-11 rounded-lg border bg-background px-3 text-base"
-          >
-            {PAYMENT_METHODS.map((method) => (
-              <option key={method} value={method}>
-                {enumText(method)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <Field
-          label={t("lowStockThreshold")}
-          type="number"
-          min={0}
-          step={1}
-          value={form.lowStockThreshold ?? settings.lowStockThreshold}
-          onChange={(event) =>
-            setForm({ ...form, lowStockThreshold: Number(event.target.value) })
-          }
-        />
-        <label className="grid gap-2 text-sm">
-          {t("invoiceNote")}
-          <textarea
-            value={form.invoiceNote ?? settings.invoiceNote ?? ""}
-            onChange={(event) =>
-              setForm({ ...form, invoiceNote: event.target.value })
-            }
-            className="min-h-24 rounded-lg border bg-background p-3 text-base"
-          />
-        </label>
-        <label className="flex min-h-11 items-center gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={
-              form.publicTrackingEnabled ?? settings.publicTrackingEnabled
-            }
-            onChange={(event) =>
-              setForm({ ...form, publicTrackingEnabled: event.target.checked })
-            }
-          />
-          {t("publicTrackingEnabled")}
-        </label>
-        <label className="flex min-h-11 items-center gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={Boolean(form.allowOversell ?? settings.allowOversell)}
-            onChange={(event) =>
-              setForm({ ...form, allowOversell: event.target.checked })
-            }
-            className="size-4 accent-primary"
-          />
-          {t("allowOversell")}
-        </label>
-        <button
-          disabled={busy || !can("shop.manage")}
-          className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-        >
-          {busy ? t("loading") : t("saveChanges")}
-        </button>
+            {busy ? t("loading") : t("saveChanges")}
+          </button>
+        </div>
       </form>
     </div>
   );
