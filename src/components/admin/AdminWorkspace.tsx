@@ -10,7 +10,9 @@ import {
   Activity,
   ArrowDownToLine,
   ArrowLeft,
+  Ban,
   Check,
+  CheckCircle2,
   ExternalLink,
   Eye,
   LogOut,
@@ -510,7 +512,7 @@ export function AdminWorkspace({
               t("fields.platformRole", { fallback: "Platform role" }),
               "select",
               true,
-              selected.platformRole ?? "USER",
+              selected.platformRole === "SUPER_ADMIN" ? "SUPPORT" : (selected.platformRole ?? "USER"),
             ),
             options: [
               {
@@ -521,12 +523,16 @@ export function AdminWorkspace({
                 value: "SUPPORT",
                 label: t("roles.SUPPORT", { fallback: "Support" }),
               },
-              {
-                value: "SUPER_ADMIN",
-                label: t("roles.SUPER_ADMIN", { fallback: "Super admin" }),
-              },
             ],
           },
+          input(
+            "twoFactorCode",
+            t("fields.adminTwoFactorCode", {
+              fallback: "Admin 2FA code (required to promote to Support)",
+            }),
+            "text",
+            false,
+          ),
           input(
             "emailVerified",
             t("fields.emailVerified", { fallback: "Email verified" }),
@@ -946,6 +952,9 @@ export function AdminWorkspace({
                 values.emailVerified !== undefined
                   ? Boolean(values.emailVerified)
                   : undefined,
+              twoFactorCode: values.twoFactorCode
+                ? String(values.twoFactorCode).trim()
+                : undefined,
             }),
           "saved",
         );
@@ -1438,12 +1447,37 @@ export function AdminWorkspace({
             />
           </div>
           {table(result.items, columns, "empty.noShops", (item) => (
-            <ActionButton
-              onClick={() => void perform("shop.open", item as unknown as Row)}
-            >
-              <ExternalLink size={14} />
-              {t("actions.open")}
-            </ActionButton>
+            <>
+              <ActionButton
+                onClick={() => void perform("shop.open", item as unknown as Row)}
+              >
+                <ExternalLink size={14} />
+                {t("actions.open")}
+              </ActionButton>
+              {canWrite ? (
+                item.status === "ACTIVE" ? (
+                  <ActionButton
+                    variant="danger"
+                    onClick={() =>
+                      void perform("shop.status", item as unknown as Row)
+                    }
+                  >
+                    <Ban size={14} />
+                    {t("actions.suspend")}
+                  </ActionButton>
+                ) : (
+                  <ActionButton
+                    variant="success"
+                    onClick={() =>
+                      void perform("shop.status", item as unknown as Row)
+                    }
+                  >
+                    <CheckCircle2 size={14} />
+                    {t("actions.reactivate")}
+                  </ActionButton>
+                )
+              ) : null}
+            </>
           ))}
           {paging(result)}
         </div>
@@ -1538,7 +1572,7 @@ export function AdminWorkspace({
                   <Check size={13} />
                   {t("actions.unblock")}
                 </ActionButton>
-              ) : canWrite ? (
+              ) : canWrite && item.platformRole !== "SUPER_ADMIN" ? (
                 <ActionButton
                   variant="danger"
                   onClick={() =>
@@ -1549,7 +1583,7 @@ export function AdminWorkspace({
                   {t("actions.block")}
                 </ActionButton>
               ) : null}
-              {canWrite ? (
+              {canWrite && item.platformRole !== "SUPER_ADMIN" ? (
                 <ActionButton
                   variant="info"
                   onClick={() =>

@@ -139,7 +139,7 @@ export default function DeliverySettingsPage() {
     }
   };
   return (
-    <div className="w-full max-w-5xl space-y-6">
+    <div className="mx-auto w-full max-w-5xl space-y-6">
       <PageHeader
         title={t("deliveryTitle")}
         description={t("deliveryDescription")}
@@ -191,15 +191,17 @@ export default function DeliverySettingsPage() {
         </div>
 
         {/* Section 2: Advance Payment & Checkout Policy */}
-        <div className="border-t pt-6">
-          <h2 className="text-base font-semibold text-foreground mb-3">
+        <div className="border-t pt-6 space-y-4">
+          <h2 className="text-base font-semibold text-foreground">
             {advanceText("policy")}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+          {/* PC: Advance payment policy, Free delivery minimum, and Default order payment method in 1 line */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <label className="grid gap-2 text-sm font-medium">
               {advanceText("policy")}
               <select
-                className="min-h-11 rounded-lg border bg-background px-3 text-base"
+                className="h-11 rounded-lg border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 value={form.advanceMode ?? settings.advanceMode ?? "NONE"}
                 onChange={(event) =>
                   setForm({
@@ -214,7 +216,47 @@ export default function DeliverySettingsPage() {
                 <option value="PARTIAL">{advanceText("partial")}</option>
               </select>
             </label>
-            {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" ? (
+
+            <Field
+              label={t("freeDelivery")}
+              inputMode="decimal"
+              value={
+                form.freeDeliveryMinPaisa !== undefined
+                  ? form.freeDeliveryMinPaisa
+                  : settings.freeDeliveryMinPaisa === null
+                    ? ""
+                    : String(settings.freeDeliveryMinPaisa / 100)
+              }
+              onChange={(event) =>
+                setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
+              }
+            />
+
+            <label className="grid gap-2 text-sm font-medium">
+              {t("defaultPaymentMethod")}
+              <select
+                value={
+                  form.defaultPaymentMethod ?? settings.defaultPaymentMethod
+                }
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    defaultPaymentMethod: event.target.value,
+                  })
+                }
+                className="h-11 rounded-lg border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+              >
+                {PAYMENT_METHODS.map((method) => (
+                  <option key={method} value={method}>
+                    {enumText(method)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" && (
+            <div className="max-w-xs">
               <Field
                 label={advanceText("partialAmount")}
                 type="number"
@@ -235,60 +277,8 @@ export default function DeliverySettingsPage() {
                   })
                 }
               />
-            ) : (
-              <Field
-                label={t("freeDelivery")}
-                inputMode="decimal"
-                value={
-                  form.freeDeliveryMinPaisa !== undefined
-                    ? form.freeDeliveryMinPaisa
-                    : settings.freeDeliveryMinPaisa === null
-                      ? ""
-                      : String(settings.freeDeliveryMinPaisa / 100)
-                }
-                onChange={(event) =>
-                  setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
-                }
-              />
-            )}
-            {(form.advanceMode ?? settings.advanceMode) === "PARTIAL" && (
-              <Field
-                label={t("freeDelivery")}
-                inputMode="decimal"
-                value={
-                  form.freeDeliveryMinPaisa !== undefined
-                    ? form.freeDeliveryMinPaisa
-                    : settings.freeDeliveryMinPaisa === null
-                      ? ""
-                      : String(settings.freeDeliveryMinPaisa / 100)
-                }
-                onChange={(event) =>
-                  setForm({ ...form, freeDeliveryMinPaisa: event.target.value })
-                }
-              />
-            )}
-            <label className="grid gap-2 text-sm font-medium">
-              {t("defaultPaymentMethod")}
-              <select
-                value={
-                  form.defaultPaymentMethod ?? settings.defaultPaymentMethod
-                }
-                onChange={(event) =>
-                  setForm({
-                    ...form,
-                    defaultPaymentMethod: event.target.value,
-                  })
-                }
-                className="h-11 rounded-lg border bg-background px-3 text-base"
-              >
-                {PAYMENT_METHODS.map((method) => (
-                  <option key={method} value={method}>
-                    {enumText(method)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Section 2.5: MFS Advance Payment Accounts */}

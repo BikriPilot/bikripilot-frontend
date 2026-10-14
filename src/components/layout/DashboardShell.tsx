@@ -7,6 +7,7 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
+  ShieldAlert,
   ShieldCheck,
   Store,
   UserCircle,
@@ -199,7 +200,38 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               : "p-4 pb-24 md:p-6 md:pb-8"
           }`}
         >
-          {children}
+          {shop?.shopStatus === "SUSPENDED" && pathname !== "/dashboard/profile" ? (
+            <div className="mx-auto my-12 max-w-lg rounded-2xl border border-danger/30 bg-card p-8 text-center shadow-lg">
+              <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-danger/10 text-danger mb-4">
+                <ShieldAlert size={36} />
+              </div>
+              <h2 className="text-xl font-bold text-foreground">
+                {t("shopBlockedTitle", { fallback: "Your shop is blocked" })}
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                {t("shopBlockedDescription", {
+                  fallback:
+                    "Your shop has been blocked. Please contact support for assistance.",
+                })}
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <a
+                  href="mailto:support@bikripilot.com"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  {t("contactSupport", { fallback: "Contact Support" })}
+                </a>
+                <Link
+                  href="/dashboard/profile"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border px-5 text-sm font-semibold hover:bg-muted transition-colors"
+                >
+                  {t("profile", { fallback: "Profile" })}
+                </Link>
+              </div>
+            </div>
+          ) : (
+            children
+          )}
         </main>
       </div>
       <nav

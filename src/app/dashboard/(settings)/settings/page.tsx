@@ -72,7 +72,7 @@ export default function ShopSettingsPage() {
   const isShopComplete = Boolean(shop.name?.trim() && shop.logoUrl && shop.facebookPageUrl?.trim());
 
   return (
-    <div className="w-full max-w-5xl space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
       <PageHeader
         title={t("shopSettingsTitle")}
         description={t("shopSettingsDescription")}
@@ -93,7 +93,7 @@ export default function ShopSettingsPage() {
         )}
 
         {/* Section 1: Logo & Store Identity */}
-        <div className="space-y-5">
+        <div className="space-y-6">
           <div className="flex items-center gap-2 border-b pb-3">
             <Store size={18} className="text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
@@ -101,7 +101,7 @@ export default function ShopSettingsPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr] md:items-start">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr] md:items-start">
             <div className="grid gap-2 text-sm font-medium">
               <span className="flex items-center gap-1">
                 <span>{t("shopLogo")}</span>
@@ -125,33 +125,69 @@ export default function ShopSettingsPage() {
               />
             </div>
 
-            <div className="grid gap-4">
-              <Field
-                label={`${t("businessName")} *`}
-                value={value("name")}
-                onChange={(event) =>
-                  setForm({ ...form, name: event.target.value })
-                }
-                placeholder="My Awesome Shop"
-                required
-              />
-              <Field
-                label={`${t("facebookPage")} *`}
-                value={value("facebookPageUrl")}
-                onChange={(event) =>
-                  setForm({ ...form, facebookPageUrl: event.target.value })
-                }
-                placeholder="https://facebook.com/yourpage"
-                required
-              />
-              <Field
-                label={`${t("website")} (Optional)`}
-                value={value("websiteUrl")}
-                onChange={(event) =>
-                  setForm({ ...form, websiteUrl: event.target.value })
-                }
-                placeholder="https://yourshop.com"
-              />
+            <div className="space-y-4">
+              {/* Row 1: Business name and Facebook page link in 1 line */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  label={`${t("businessName")} *`}
+                  value={value("name")}
+                  onChange={(event) =>
+                    setForm({ ...form, name: event.target.value })
+                  }
+                  placeholder="My Awesome Shop"
+                  required
+                />
+                <Field
+                  label={`${t("facebookPage")} *`}
+                  value={value("facebookPageUrl")}
+                  onChange={(event) =>
+                    setForm({ ...form, facebookPageUrl: event.target.value })
+                  }
+                  placeholder="https://facebook.com/yourpage"
+                  required
+                />
+              </div>
+
+              {/* Row 2: Website or domain & Business category in 1 line */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  label={`${t("website")} (Optional)`}
+                  value={value("websiteUrl")}
+                  onChange={(event) =>
+                    setForm({ ...form, websiteUrl: event.target.value })
+                  }
+                  placeholder="https://yourshop.com"
+                />
+                <label className="grid gap-2 text-sm font-medium">
+                  <span className="flex items-center justify-between">
+                    <span>{t("businessCategory")}</span>
+                    <span className="text-xs text-muted-foreground font-normal">Optional</span>
+                  </span>
+                  <select
+                    className="min-h-11 rounded-lg border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    value={value("businessCategory")}
+                    onChange={(event) =>
+                      setForm({ ...form, businessCategory: event.target.value })
+                    }
+                  >
+                    <option value="">{t("selectCategory")}</option>
+                    <option value="fashion">Fashion & Clothing (পোশাক ও ফ্যাশন)</option>
+                    <option value="cosmetics">Cosmetics & Beauty (কসমেটিকস ও রূপচর্চা)</option>
+                    <option value="electronics">Electronics (ইলেকট্রনিক্স)</option>
+                    <option value="gadgets">Gadgets & Accessories (গ্যাজেট ও এক্সেসরিজ)</option>
+                    <option value="food">Food & Beverage (খাবার ও রেস্তোরাঁ)</option>
+                    <option value="grocery">Grocery & Essentials (মুদি ও নিত্যপ্রয়োজনীয়)</option>
+                    <option value="home_decor">Home & Living (ঘর সাজানো ও গৃহস্থালি)</option>
+                    <option value="kids">Kids & Baby (বাচ্চাদের পণ্য ও খেলনা)</option>
+                    <option value="books">Books & Stationery (বই ও স্টেশনারি)</option>
+                    <option value="health">Health & Wellness (স্বাস্থ্য ও সেবা)</option>
+                    <option value="jewellery">Jewellery & Watches (গহনা ও ঘড়ি)</option>
+                    <option value="handicrafts">Handicrafts (হস্তশিল্প)</option>
+                    <option value="pets">Pets & Animals (পোষা প্রাণী)</option>
+                    <option value="other">Other / General (অন্যান্য)</option>
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
         </div>
