@@ -11,6 +11,9 @@ export interface RiskCheckSummary {
   receivedOrders: number;
   cancelledOrReturnedOrders: number;
   successRate: number; // 0..1
+  received?: number;
+  cancelledOrReturned?: number;
+  successPercent?: number | null;
 }
 
 export interface RiskCheckNetwork {
@@ -26,15 +29,35 @@ export interface RiskCheckExternal {
   total: number;
   delivered: number;
   cancelled: number;
+  fraudReports?: number;
 }
 
 export interface RiskCheckInternal {
   total: number;
+  orders?: number;
   delivered: number;
   returned: number;
   cancelled: number;
   isBlocked: boolean;
-  fraudReportsCount: number;
+  fraudReportsCount?: number;
+}
+
+export interface FraudbdReportDTO {
+  total: number;
+  delivered: number;
+  cancelled: number;
+  fraudReports: number;
+  successPercent?: number | null;
+  checkedAt?: string;
+  error?: string;
+}
+
+export interface CourierStatsDTO {
+  provider: 'STEADFAST' | 'NONE';
+  total: number;
+  delivered: number;
+  cancelled: number;
+  fraudReports: number;
 }
 
 export interface RiskCheckDTO {
@@ -47,6 +70,9 @@ export interface RiskCheckDTO {
   summary: RiskCheckSummary;
   network: RiskCheckNetwork;
   external: RiskCheckExternal;
+  courier?: CourierStatsDTO;
+  fraudbd?: FraudbdReportDTO | null;
+  hasFraudbdKey?: boolean;
   internal: RiskCheckInternal;
   cached: boolean;
   checkedAt: string;
@@ -67,6 +93,8 @@ export interface CheckRiskInput {
   phone: string;
   orderId?: string;
   forceRefresh?: boolean;
+  force?: boolean;
+  checkFraudbd?: boolean;
 }
 
 export interface RiskHistoryQuery {

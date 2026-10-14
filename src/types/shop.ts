@@ -44,6 +44,9 @@ export interface ShopSettingsDTO {
   nagadType?: "PERSONAL" | "MERCHANT" | null;
   rocketNumber?: string | null;
   rocketType?: "PERSONAL" | "MERCHANT" | null;
+  hasFraudbdKey?: boolean;
+  fraudbdApiKeyMasked?: string | null;
+  fraudbdApiKey?: string | null;
 }
 export type OnboardingStepKey =
   | "business_info"

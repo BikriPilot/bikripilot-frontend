@@ -9,6 +9,7 @@ import {
   ShoppingCart,
   Bot,
   BarChart3,
+  ShieldAlert,
   type LucideIcon,
 } from "lucide-react";
 
@@ -192,6 +193,15 @@ export const NAV_SECTIONS: NavSection[] = [
         permission: "risk.check",
       },
     ],
+  },
+  {
+    key: "fraudCheck",
+    permission: "risk.check",
+    href: "/dashboard/risk",
+    icon: ShieldAlert,
+    labelKey: "fraudCheck",
+    mobile: "more",
+    subNav: [],
   },
   {
     key: "analytics",

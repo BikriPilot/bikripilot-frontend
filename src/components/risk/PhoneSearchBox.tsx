@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Search, Loader2, Phone } from 'lucide-react';
+import { Search, Loader2, Phone, Shield } from 'lucide-react';
 
 interface PhoneSearchBoxProps {
-  onSearch: (phone: string) => void;
+  onSearch: (phone: string, checkFraudbd?: boolean) => void;
   isLoading?: boolean;
   initialPhone?: string;
+  hasFraudbdKey?: boolean;
   className?: string;
 }
 
@@ -15,15 +16,17 @@ export function PhoneSearchBox({
   onSearch,
   isLoading = false,
   initialPhone = '',
+  hasFraudbdKey = false,
   className = '',
 }: PhoneSearchBoxProps) {
   const t = useTranslations('risk');
   const [phone, setPhone] = useState(initialPhone);
+  const [checkFraudbd, setCheckFraudbd] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = phone.replace(/[\s\-\(\)]/g, '');
+    const clean = phone.replace(/[\s\-()]/g, '');
     if (!clean) {
       setError(t('enterPhonePrompt'));
       return;
@@ -37,12 +40,16 @@ export function PhoneSearchBox({
     }
 
     setError(null);
-    onSearch(clean);
+    if (checkFraudbd) {
+      onSearch(clean, true);
+    } else {
+      onSearch(clean);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`w-full ${className}`}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+    <form onSubmit={handleSubmit} className={`w-full space-y-3 ${className}`}>
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-muted-foreground">
             <Phone size={16} />
@@ -76,7 +83,30 @@ export function PhoneSearchBox({
         </button>
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-rose-500">{error}</p>}
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-muted-foreground">
+        <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={checkFraudbd}
+            onChange={(e) => setCheckFraudbd(e.target.checked)}
+            className="size-4 rounded border-border text-primary focus:ring-primary/20"
+          />
+          <span className="flex items-center gap-1.5 font-medium text-foreground">
+            <Shield size={13} className="text-primary" />
+            <span>Include FraudBD check (Uses 1 API credit)</span>
+          </span>
+          {!hasFraudbdKey && (
+            <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+              Key not set
+            </span>
+          )}
+        </label>
+        <span className="text-[11px] text-muted-foreground/80">
+          Format: 01XXXXXXXXX or +8801XXXXXXXXX
+        </span>
+      </div>
+
+      {error && <p className="text-xs font-medium text-rose-500">{error}</p>}
     </form>
   );
 }

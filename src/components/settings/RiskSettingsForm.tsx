@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
-import { Shield, ShieldAlert, Sparkles } from 'lucide-react';
+import { Shield, ShieldAlert, Sparkles, KeyRound } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { useCurrentShop } from '@/hooks/useCurrentShop';
 import { shopsApi } from '@/lib/api/shops.api';
@@ -29,6 +29,7 @@ function RiskSettingsInner({
   const [autoCheckOnConfirm, setAutoCheckOnConfirm] = useState<boolean>(
     settings.riskAutoCheckOnConfirm ?? false
   );
+  const [fraudbdApiKey, setFraudbdApiKey] = useState<string>('');
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,12 +40,17 @@ function RiskSettingsInner({
     }
     setSaving(true);
     try {
-      await shopsApi.updateSettings(shopId!, {
+      const payload: Record<string, unknown> = {
         riskMediumThreshold: mediumThreshold,
         riskHighThreshold: highThreshold,
         riskAutoCheckOnConfirm: autoCheckOnConfirm,
-      });
+      };
+      if (fraudbdApiKey.trim()) {
+        payload.fraudbdApiKey = fraudbdApiKey.trim();
+      }
+      await shopsApi.updateSettings(shopId!, payload);
       toast.success(t('saved'));
+      setFraudbdApiKey('');
       onSaved();
     } catch {
       toast.error(t('saveError'));
@@ -150,6 +156,34 @@ function RiskSettingsInner({
               })}
             </p>
           </div>
+        </div>
+
+        {/* FraudBD API Key Config */}
+        <div className="space-y-3 rounded-xl border bg-muted/20 p-4">
+          <div className="flex items-center gap-2">
+            <KeyRound size={16} className="text-primary" />
+            <label
+              htmlFor="fraudbd-api-key"
+              className="text-sm font-semibold text-foreground"
+            >
+              FraudBD API Key (Isolated per Shop)
+            </label>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Configure your personal FraudBD API key to query external merchant fraud reports. Cost is strictly billed to your key and only consumed on manual searches.
+          </p>
+          <input
+            id="fraudbd-api-key"
+            type="password"
+            value={fraudbdApiKey}
+            onChange={(e) => setFraudbdApiKey(e.target.value)}
+            placeholder={
+              settings.hasFraudbdKey
+                ? settings.fraudbdApiKeyMasked ?? '•••••••• (Connected)'
+                : 'Enter FraudBD API key'
+            }
+            className="w-full rounded-xl border bg-background px-3 py-2 text-sm outline-hidden focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
+          />
         </div>
 
         <button
