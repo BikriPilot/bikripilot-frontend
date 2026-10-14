@@ -10,6 +10,7 @@ import {
   Bot,
   BarChart3,
   ShieldAlert,
+  Mail,
   type LucideIcon,
 } from "lucide-react";
 
@@ -200,6 +201,15 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/dashboard/risk",
     icon: ShieldAlert,
     labelKey: "fraudCheck",
+    mobile: "more",
+    subNav: [],
+  },
+  {
+    key: "smsEmail",
+    permission: "shop.manage",
+    href: "/dashboard/sms-email",
+    icon: Mail,
+    labelKey: "smsEmail",
     mobile: "more",
     subNav: [],
   },

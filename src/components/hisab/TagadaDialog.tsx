@@ -4,8 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { hisabApi } from "@/lib/api/hisab.api";
 import { shopsApi } from "@/lib/api/shops.api";
+import { notificationConfigApi } from "@/lib/api/notification-config.api";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
-import { useEntitlements } from "@/hooks/useEntitlements";
 import type { PartyDTO } from "@/types/hisab";
 import { HisabDialog } from "./PartyForm";
 import { formatDateTime } from "@/lib/date";
@@ -19,8 +19,14 @@ export function TagadaDialog({
   const t = useTranslations("hisab");
   const { shopId, shop } = useCurrentShop();
   const client = useQueryClient();
-  const entitlement = useEntitlements();
-  const quota = entitlement.useLimit("sms_per_month");
+  const notifConfig = useQuery({
+    queryKey: ["notificationConfig", shopId],
+    queryFn: () => notificationConfigApi.getConfig(shopId!),
+    enabled: Boolean(shopId),
+  });
+  const smsAvailable = Boolean(
+    notifConfig.data?.smsEnabled && notifConfig.data?.notifyLedgerTagadaSms,
+  );
   const [channel, setChannel] = useState<"SMS" | "WHATSAPP_LINK">(
     "WHATSAPP_LINK",
   );
@@ -106,21 +112,18 @@ export function TagadaDialog({
                 type="radio"
                 name="channel"
                 checked={channel === value}
-                disabled={
-                  value === "SMS" &&
-                  (!entitlement.useFeature("sms_per_month") ||
-                    quota.remaining === 0)
-                }
+                disabled={value === "SMS" && !smsAvailable}
                 onChange={() => setChannel(value)}
               />
-              {value === "SMS" ? t("sms") : t("whatsapp")}
+              <span>{value === "SMS" ? t("sms") : t("whatsapp")}</span>
+              {value === "SMS" && !smsAvailable && (
+                <span className="text-xs text-muted-foreground">
+                  (Disabled in SMS & Email settings)
+                </span>
+              )}
             </label>
           ))}
         </div>
-        <p className="text-sm">
-          {t("remainingSms")}:{" "}
-          {quota.unlimited ? t("unlimited") : (quota.remaining ?? 0)}
-        </p>
         {error && (
           <p role="alert" className="text-danger">
             {t("saveError")}
