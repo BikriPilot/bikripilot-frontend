@@ -51,6 +51,7 @@ function LoginForm() {
         const destination = getAuthenticatedRedirect(
           params.get("next"),
           result.user.platformRole,
+          Boolean(result.user.memberships?.length),
         );
         router.replace(destination);
       }
@@ -74,6 +75,7 @@ function LoginForm() {
       const destination = getAuthenticatedRedirect(
         params.get("next"),
         result.user.platformRole,
+        Boolean(result.user.memberships?.length),
       );
       router.replace(destination);
     } catch (cause) {

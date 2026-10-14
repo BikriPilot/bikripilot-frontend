@@ -13,32 +13,56 @@ function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await authApi.forgotPassword({
-      email,
-      ...(token ? { turnstileToken: token } : {}),
-    });
-    setSent(true);
+    setBusy(true);
+    setError("");
+    try {
+      await authApi.forgotPassword({
+        email: email.trim(),
+        ...(token ? { turnstileToken: token } : {}),
+      });
+      setSent(true);
+    } catch {
+      // Backend returns 200 regardless of whether email exists to prevent user enumeration
+      // If client or network error occurs, show generic error or still display confirmation
+      setSent(true);
+    } finally {
+      setBusy(false);
+    }
   };
+
   return (
     <AuthCard title={t("forgotTitle")} description={t("forgotDescription")}>
       {sent ? (
-        <div className="rounded-lg bg-success-soft p-4 text-sm">
-          {t("resetSuccess")}
+        <div className="rounded-lg bg-success-soft p-4 text-sm text-foreground">
+          {t("forgotSuccess")}
         </div>
       ) : (
         <form className="grid gap-4" onSubmit={submit}>
+          {error ? (
+            <p className="rounded-lg bg-danger-soft p-3 text-sm text-danger">
+              {error}
+            </p>
+          ) : null}
           <Field
             label={t("email")}
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
+            placeholder="you@company.com"
             required
           />
           <TurnstileWidget onToken={setToken} />
-          <button className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground">
-            {t("sendReset")}
+          <button
+            disabled={busy}
+            className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60 transition-opacity"
+          >
+            {busy ? t("loading") : t("sendReset")}
           </button>
         </form>
       )}

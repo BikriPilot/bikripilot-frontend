@@ -87,9 +87,14 @@ describe("getAuthenticatedRedirect", () => {
     expect(getAuthenticatedRedirect(null, "USER")).toBe("/dashboard");
   });
 
-  it("defaults to /admin for SUPER_ADMIN or SUPPORT", () => {
-    expect(getAuthenticatedRedirect(null, "SUPER_ADMIN")).toBe("/admin");
-    expect(getAuthenticatedRedirect(null, "SUPPORT")).toBe("/admin");
+  it("defaults to /admin for SUPER_ADMIN or SUPPORT without a shop", () => {
+    expect(getAuthenticatedRedirect(null, "SUPER_ADMIN", false)).toBe("/admin");
+    expect(getAuthenticatedRedirect(null, "SUPPORT", false)).toBe("/admin");
+  });
+
+  it("defaults to /dashboard for SUPER_ADMIN with a shop", () => {
+    expect(getAuthenticatedRedirect(null, "SUPER_ADMIN", true)).toBe("/dashboard");
+    expect(getAuthenticatedRedirect(null, "SUPPORT", true)).toBe("/dashboard");
   });
 
   it("prevents loops to auth paths", () => {

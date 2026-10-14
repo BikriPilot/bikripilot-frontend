@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, Store, X } from "lucide-react";
 import { AdminSidebar } from "./AdminSidebar";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { authApi } from "@/lib/api/auth.api";
@@ -21,6 +22,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const t = useTranslations("admin");
   const router = useRouter();
   const clear = useAuthStore((state) => state.clear);
+  const user = useAuthStore((state) => state.user);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const logout = async () => {
@@ -56,6 +58,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher compact />
+          {user?.memberships && user.memberships.length > 0 ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-medium hover:bg-muted"
+            >
+              <Store size={14} />
+              <span className="hidden sm:inline">{t("backToShop", { fallback: "Back to shop" })}</span>
+            </Link>
+          ) : null}
           <button
             type="button"
             onClick={logout}

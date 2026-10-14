@@ -10,17 +10,25 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const t = useTranslations("common");
   useEffect(() => {
-    if (isBootstrapping || !user || pathname === "/dashboard/profile") return;
-    if (
-      (user.platformRole === "SUPER_ADMIN" || user.platformRole === "SUPPORT") &&
-      !user.impersonation
-    ) {
-      router.replace("/admin");
+    if (isBootstrapping || !user) return;
+
+    // If user has no shop memberships
+    if (!user.memberships || user.memberships.length === 0) {
+      if (pathname === "/dashboard/profile" || pathname === "/onboarding") return;
+      if (user.twoFactorSetupRequired) {
+        router.replace("/dashboard/profile?setup2fa=1");
+      } else if (
+        (user.platformRole === "SUPER_ADMIN" || user.platformRole === "SUPPORT") &&
+        !user.impersonation
+      ) {
+        router.replace("/admin");
+      } else {
+        router.replace("/onboarding");
+      }
       return;
     }
-    if (user.twoFactorSetupRequired)
-      router.replace("/dashboard/profile?setup2fa=1");
-    else if (user.memberships.length === 0) router.replace("/onboarding");
+
+    // User has shop memberships: allow browsing all seller dashboard pages freely.
   }, [isBootstrapping, pathname, router, user]);
   if (isBootstrapping || !user)
     return (

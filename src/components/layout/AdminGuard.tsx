@@ -41,12 +41,22 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
           <p className="mt-2 text-sm text-muted-foreground">
             {t("twoFactorRequired.description")}
           </p>
-          <Link
-            className="mt-5 inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-            href="/dashboard/profile?setup2fa=1"
-          >
-            {t("twoFactorRequired.action")}
-          </Link>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <Link
+              className="inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+              href="/dashboard/profile?setup2fa=1"
+            >
+              {t("twoFactorRequired.action")}
+            </Link>
+            {user.memberships.length > 0 && (
+              <Link
+                className="inline-flex min-h-11 items-center rounded-md border border-border bg-card px-4 text-sm font-semibold text-foreground hover:bg-muted"
+                href="/dashboard"
+              >
+                {t("backToShop", { fallback: "Go to seller dashboard" })}
+              </Link>
+            )}
+          </div>
         </section>
       </main>
     );

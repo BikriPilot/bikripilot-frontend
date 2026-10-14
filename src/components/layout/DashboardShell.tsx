@@ -7,6 +7,7 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
+  ShieldCheck,
   Store,
   UserCircle,
   X,
@@ -160,6 +161,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </label>
         </div>
         <div className="flex shrink-0 items-center gap-1 md:gap-2">
+          {(user?.platformRole === "SUPER_ADMIN" ||
+            user?.platformRole === "SUPPORT") && (
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+            >
+              <ShieldCheck size={14} />
+              <span className="hidden sm:inline">Admin</span>
+            </Link>
+          )}
           <LanguageSwitcher compact />
           <NotificationBell />
           <Link
@@ -262,6 +273,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   {t(labelKey)}
                 </Link>
               ))}
+              {(user?.platformRole === "SUPER_ADMIN" ||
+                user?.platformRole === "SUPPORT") && (
+                <Link
+                  href="/admin"
+                  onClick={() => setMoreOpen(false)}
+                  className="flex min-h-12 items-center gap-3 rounded-lg px-3 text-primary font-medium hover:bg-muted"
+                >
+                  <ShieldCheck size={18} />
+                  <span>Admin Panel</span>
+                </Link>
+              )}
               <Link
                 href="/dashboard/profile"
                 onClick={() => setMoreOpen(false)}

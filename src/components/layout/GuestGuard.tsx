@@ -16,6 +16,7 @@ export function GuestGuard({ children }: { children: React.ReactNode }) {
       const target = getAuthenticatedRedirect(
         searchParams.get("next"),
         user.platformRole,
+        Boolean(user.memberships?.length),
       );
       router.replace(target);
     }

@@ -1,32 +1,75 @@
 "use client";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { PasswordField, isPasswordSecure } from "@/components/common/PasswordField";
 import { authApi } from "@/lib/api/auth.api";
-export default function ResetPasswordPage() {
+import { ApiClientError } from "@/lib/api/client";
+
+function ResetPasswordForm() {
   const t = useTranslations("step8");
+  const tErrors = useTranslations("errors");
   const token = useSearchParams().get("token") ?? "";
+
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!token) {
+      setError(t("invalidToken"));
+      return;
+    }
     if (!isPasswordSecure(password)) {
       setError(t("passwordRule"));
       return;
     }
+    if (password !== confirmPassword) {
+      setError(t("passwordMismatch"));
+      return;
+    }
+
     setError("");
-    await authApi.resetPassword({ token, password });
-    setDone(true);
+    setBusy(true);
+
+    try {
+      // Backend validates strictly against { token, password }
+      await authApi.resetPassword({ token, password });
+      setDone(true);
+    } catch (cause) {
+      if (cause instanceof ApiClientError) {
+        try {
+          setError(tErrors(cause.code as never));
+        } catch {
+          setError(cause.message || t("genericError"));
+        }
+      } else {
+        setError(t("genericError"));
+      }
+    } finally {
+      setBusy(false);
+    }
   };
+
   return (
     <AuthCard title={t("resetTitle")} description={t("resetDescription")}>
       {done ? (
-        <div className="rounded-lg bg-success-soft p-4 text-sm">
-          {t("resetSuccess")}
+        <div className="space-y-4">
+          <div className="rounded-lg bg-success-soft p-4 text-sm text-foreground">
+            {t("resetSuccess")}
+          </div>
+          <Link
+            href="/login"
+            className="flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            {t("signIn")}
+          </Link>
         </div>
       ) : (
         <form className="grid gap-4" onSubmit={submit}>
@@ -35,19 +78,42 @@ export default function ResetPasswordPage() {
               {error}
             </p>
           ) : null}
+
           <PasswordField
             label={t("password")}
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              if (error) setError("");
+            }}
             autoComplete="new-password"
             showStrengthIndicator={true}
+            placeholder="••••••••"
             required
           />
-          <button className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground">
-            {t("save")}
+
+          <PasswordField
+            label={t("confirmPassword")}
+            value={confirmPassword}
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+              if (error) setError("");
+            }}
+            autoComplete="new-password"
+            showStrengthIndicator={false}
+            placeholder="••••••••"
+            required
+          />
+
+          <button
+            disabled={busy}
+            className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60 transition-opacity"
+          >
+            {busy ? t("saving") : t("save")}
           </button>
         </form>
       )}
+
       <Link
         href="/login"
         className="mt-6 block text-center text-sm font-semibold text-primary hover:underline"
@@ -55,5 +121,13 @@ export default function ResetPasswordPage() {
         {t("backToLogin")}
       </Link>
     </AuthCard>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

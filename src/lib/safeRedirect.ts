@@ -10,9 +10,10 @@ export function safeRedirect(
 export function getAuthenticatedRedirect(
   value: string | null | undefined,
   platformRole?: string,
+  hasShop = false,
 ) {
   const defaultTarget =
-    platformRole === "SUPER_ADMIN" || platformRole === "SUPPORT"
+    (platformRole === "SUPER_ADMIN" || platformRole === "SUPPORT") && !hasShop
       ? "/admin"
       : "/dashboard";
   const target = safeRedirect(value, defaultTarget);

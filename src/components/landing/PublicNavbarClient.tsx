@@ -59,7 +59,10 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
 
   const isAdmin =
     user?.platformRole === "SUPPORT" || user?.platformRole === "SUPER_ADMIN";
-  const dashboardHref = isAdmin ? "/admin" : "/dashboard";
+  const dashboardHref =
+    isAdmin && (!user?.memberships || user.memberships.length === 0)
+      ? "/admin"
+      : "/dashboard";
 
   const handleLogout = async () => {
     if (loggingOut) return;
