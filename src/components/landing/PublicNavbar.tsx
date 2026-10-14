@@ -11,6 +11,7 @@ export async function PublicNavbar() {
         navWorkflows: t("navWorkflows"),
         navHow: t("navHow"),
         navPricing: t("navPricing"),
+        navDocs: t("navDocs"),
         navFaq: t("navFaq"),
         navLogin: t("navLogin"),
         startFree: t("startFree"),

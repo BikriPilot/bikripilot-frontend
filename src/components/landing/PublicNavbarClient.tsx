@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowRight,
+  BookOpen,
   ChevronDown,
   Compass,
   FileText,
@@ -31,6 +32,7 @@ interface NavTranslations {
   navWorkflows?: string;
   navHow: string;
   navPricing: string;
+  navDocs?: string;
   navFaq: string;
   navLogin: string;
   startFree: string;
@@ -135,6 +137,14 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
 
   // Resources Mega Menu Items (Image 2 style with Track Orders, Contact, Data Deletion, FAQ, Privacy, Terms)
   const resourcesItems = [
+    {
+      title: t.navDocs || "Docs",
+      desc: "Getting started, guides, integrations & team roles",
+      href: "/docs",
+      icon: BookOpen,
+      color: "text-indigo-500 bg-indigo-500/10",
+      featured: true,
+    },
     {
       title: t.navTrackOrders || "Track Orders",
       desc: "Live public order & parcel consignment tracking",
@@ -312,6 +322,14 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
           >
             {t.navPricing}
           </Link>
+
+          {/* 5. Docs Link (Right side of Pricing) */}
+          <Link
+            href="/docs"
+            className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {t.navDocs || "Docs"}
+          </Link>
         </nav>
 
         {/* Right Controls */}
@@ -439,6 +457,12 @@ export function PublicNavbarClient({ t }: { t: NavTranslations }) {
                 className="block rounded-lg px-2 py-2 text-sm font-semibold text-foreground hover:bg-muted"
               >
                 {t.navPricing}
+              </Link>
+              <Link
+                href="/docs"
+                className="block rounded-lg px-2 py-2 text-sm font-semibold text-foreground hover:bg-muted"
+              >
+                {t.navDocs || "Docs"}
               </Link>
             </div>
 

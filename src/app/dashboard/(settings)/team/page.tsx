@@ -13,7 +13,7 @@ import { useAuthStore } from "@/stores/authStore";
 import type { ShopRole } from "@/types/auth";
 import { toast } from "sonner";
 import { ASSIGNABLE_ROLES_BY } from "@/constants/permissions";
-import { Trash2, X } from "lucide-react";
+import { BookOpen, ExternalLink, Trash2, X } from "lucide-react";
 export default function TeamPage() {
   const t = useTranslations("step8");
   const user = useAuthStore((state) => state.user);
@@ -98,15 +98,28 @@ export default function TeamPage() {
         title={t("teamTitle")}
         description={t("teamDescription")}
         action={
-          can("team.manage") ? (
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              href="/docs?tab=seller-invitation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border/80 bg-card px-3.5 text-xs font-semibold text-muted-foreground transition-all hover:border-primary/50 hover:bg-muted hover:text-foreground shadow-2xs"
+              title="টিম মেম্বার অ্যাড করার আগে রোল ও পারমিশন গাইড পড়ুন"
             >
-              {t("inviteMember")}
-            </button>
-          ) : null
+              <BookOpen className="size-4 text-primary" />
+              <span>রোল ও পারমিশন গাইড (Docs)</span>
+              <ExternalLink className="size-3.5 opacity-70" />
+            </Link>
+            {can("team.manage") ? (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
+              >
+                {t("inviteMember")}
+              </button>
+            ) : null}
+          </div>
         }
       />
       {open ? (
@@ -114,6 +127,29 @@ export default function TeamPage() {
           onSubmit={invite}
           className="grid max-w-xl gap-4 rounded-2xl border bg-primary-soft p-5"
         >
+          {/* Docs Advisory Notice */}
+          <div className="rounded-xl border border-primary/25 bg-background/90 p-3.5 text-xs text-muted-foreground shadow-2xs">
+            <div className="flex items-start gap-2.5">
+              <BookOpen className="size-4 shrink-0 text-primary mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-semibold text-foreground">
+                  টিম মেম্বার যোগ করার পূর্বে তাদের রোল ও পারমিশন জেনে নিন
+                </p>
+                <p className="text-[11.5px] leading-relaxed">
+                  সঠিক দায়িত্ব বণ্টন ও শপের সুরক্ষার জন্য আমন্ত্রণ পাঠানোর আগে প্রতিটি রোলের এক্সেস লেভেল যাচাই করা জরুরি।
+                </p>
+                <Link
+                  href="/docs?tab=seller-invitation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                >
+                  <span>সম্পূর্ণ রোলস ও পারমিশন ডক পড়ুন (Team Roles & Permissions)</span>
+                  <ExternalLink className="size-3" />
+                </Link>
+              </div>
+            </div>
+          </div>
           {!user?.twoFactorEnabled ? (
             <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3.5 text-xs text-amber-700 dark:text-amber-300">
               <p className="font-semibold">

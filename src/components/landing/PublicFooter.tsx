@@ -1,6 +1,5 @@
 import {
   BadgeCheck,
-  ExternalLink,
   Mail,
   MapPin,
   MessageCircle,
@@ -156,12 +155,12 @@ export async function PublicFooter({
                 <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
                   <li>
                     <Link href="/terms" className="hover:text-foreground transition-colors">
-                      {t("footerTerms")}
+                      {t("footerTermsAndPrivacy") || "Terms & Privacy"}
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="hover:text-foreground transition-colors">
-                      {t("footerPrivacy")}
+                    <Link href="/docs" className="hover:text-foreground transition-colors">
+                      {t("footerDocs") || "Docs"}
                     </Link>
                   </li>
                   <li>
