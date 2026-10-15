@@ -2438,7 +2438,13 @@
     "checkFraudbdCheckboxDisabled": "FraudBD is disabled by admin",
     "checkFraudbdNoKey": "Check FraudBD (Save API key first)",
     "riskIndexLabel": "Risk Index",
-    "newCustomerNeutral": "Neutral (New Buyer)"
+    "newCustomerNeutral": "Neutral (New Buyer)",
+    "deleteKey": "Delete Key",
+    "deletingKey": "Deleting...",
+    "fraudbdKeyDeleted": "FraudBD API key removed successfully",
+    "fraudbdKeyDeleteFailed": "Failed to remove FraudBD API key",
+    "confirmDeleteKey": "Are you sure you want to remove your FraudBD API key?",
+    "overallSuccessScore": "Success Score"
   },
   "admin": {
     "adminLabel": "Admin",

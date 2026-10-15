@@ -2438,7 +2438,13 @@
     "checkFraudbdCheckboxDisabled": "অ্যাডমিন কর্তৃক FraudBD বন্ধ রয়েছে",
     "checkFraudbdNoKey": "FraudBD চেক করুন (আগে এপিআই কি দিন)",
     "riskIndexLabel": "ঝুঁকি ইনডেক্স",
-    "newCustomerNeutral": "নিউট্রাল (নতুন ক্রেতা)"
+    "newCustomerNeutral": "নিউট্রাল (নতুন ক্রেতা)",
+    "deleteKey": "কি মুছুন",
+    "deletingKey": "মুছে ফেলা হচ্ছে...",
+    "fraudbdKeyDeleted": "FraudBD API কি সফলভাবে মুছে ফেলা হয়েছে",
+    "fraudbdKeyDeleteFailed": "FraudBD কি মুছতে ব্যর্থ হয়েছে",
+    "confirmDeleteKey": "আপনি কি নিশ্চিত যে FraudBD API কি মুছে ফেলতে চান?",
+    "overallSuccessScore": "সফলতার স্কোর"
   },
   "admin": {
     "adminLabel": "অ্যাডমিন",
