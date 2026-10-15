@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import {
   ChevronRight,
   ChevronDown,
@@ -23,9 +24,10 @@ import {
   type DocContent,
 } from "./docsData";
 
-type LangMode = "both" | "bn" | "en";
-
 export function DocsClient() {
+  const locale = useLocale();
+  const isBn = locale === "bn";
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -60,7 +62,6 @@ export function DocsClient() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [langMode, setLangMode] = useState<LangMode>("both");
 
   // Current doc content
   const activeContent: DocContent = useMemo(() => {
@@ -134,8 +135,8 @@ export function DocsClient() {
       {/* Top Docs Sub-Header / Breadcrumb & Mobile Bar */}
       <div className="border-b border-border/60 bg-muted/20 backdrop-blur-sm sticky top-16 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
-          {/* Breadcrumb Path */}
-          <div className="flex items-center gap-2 text-xs text-muted-foreground overflow-x-auto py-1">
+          {/* Breadcrumb Path - Desktop only */}
+          <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground overflow-x-auto py-1">
             <Link
               href="/"
               className="hover:text-foreground transition-colors shrink-0"
@@ -146,57 +147,22 @@ export function DocsClient() {
             <span className="font-semibold text-foreground shrink-0">Docs</span>
             <ChevronRight className="size-3.5 shrink-0 opacity-50" />
             <span className="text-muted-foreground shrink-0">
-              {langMode === "bn" ? activeContent.categoryTitleBn : activeContent.categoryTitle}
+              {isBn ? activeContent.categoryTitleBn : activeContent.categoryTitle}
             </span>
             <ChevronRight className="size-3.5 shrink-0 opacity-50" />
-            <span className="text-primary font-medium shrink-0 truncate max-w-[200px] sm:max-w-none">
-              {langMode === "bn" ? activeContent.titleBn : activeContent.title}
+            <span className="text-primary font-medium shrink-0 truncate max-w-[200px] lg:max-w-none">
+              {isBn ? activeContent.titleBn : activeContent.title}
             </span>
           </div>
 
-          {/* Right Controls: Language Filter & Mobile Menu Trigger */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Language Mode Toggle (Both / বাংলা / English) */}
-            <div className="inline-flex items-center rounded-lg border border-border/80 bg-background p-0.5 text-xs font-medium">
-              <button
-                type="button"
-                onClick={() => setLangMode("both")}
-                className={`rounded-md px-2 py-1 transition-all ${
-                  langMode === "both"
-                    ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Bilingual / উভয় ভাষা"
-              >
-                All
-              </button>
-              <button
-                type="button"
-                onClick={() => setLangMode("bn")}
-                className={`rounded-md px-2 py-1 transition-all ${
-                  langMode === "bn"
-                    ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="শুধুমাত্র বাংলা"
-              >
-                বাংলা
-              </button>
-              <button
-                type="button"
-                onClick={() => setLangMode("en")}
-                className={`rounded-md px-2 py-1 transition-all ${
-                  langMode === "en"
-                    ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="English only"
-              >
-                EN
-              </button>
-            </div>
+          {/* Mobile Current Doc Title Indicator (replaces long breadcrumb on mobile) */}
+          <div className="flex md:hidden items-center gap-2 text-xs font-semibold text-foreground truncate max-w-[70%]">
+            <BookOpen className="size-4 text-primary shrink-0" />
+            <span className="truncate">{isBn ? activeContent.titleBn : activeContent.title}</span>
+          </div>
 
-            {/* Mobile Category Toggle */}
+          {/* Right Controls: Mobile Navigation Menu Trigger */}
+          <div className="flex items-center gap-2 shrink-0 ml-auto md:ml-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -204,7 +170,7 @@ export function DocsClient() {
               aria-label="Toggle Documentation Navigation"
             >
               {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-              <span>{mobileMenuOpen ? "Close" : "Menu"}</span>
+              <span>{mobileMenuOpen ? (isBn ? "বন্ধ করুন" : "Close") : (isBn ? "মেনু" : "Menu")}</span>
             </button>
           </div>
         </div>
@@ -214,7 +180,7 @@ export function DocsClient() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
           {/* ========================================================= */}
-          {/* LEFT SIDEBAR NAVIGATION (Pure minimal style, NO cards)     */}
+          {/* LEFT SIDEBAR NAVIGATION                                   */}
           {/* ========================================================= */}
           <aside
             className={`w-full lg:w-72 shrink-0 ${
@@ -228,7 +194,7 @@ export function DocsClient() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search docs (খুঁজুন)..."
+                placeholder={isBn ? "ডকুমেন্টেশন খুঁজুন..." : "Search docs..."}
                 className="w-full rounded-lg border border-border/70 bg-background/80 pl-9 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               />
               {searchQuery && (
@@ -265,7 +231,7 @@ export function DocsClient() {
                       <div className="flex items-center gap-2">
                         <Icon className={`size-4 ${isCurrentCategory ? "text-primary" : "text-muted-foreground"}`} />
                         <span className="text-xs uppercase tracking-wider font-bold">
-                          {category.title}
+                          {isBn ? category.titleBn : category.title}
                         </span>
                       </div>
                       <ChevronDown
@@ -292,9 +258,7 @@ export function DocsClient() {
                                 }`}
                               >
                                 <span className="leading-snug">
-                                  {langMode === "bn"
-                                    ? subTab.titleBn
-                                    : subTab.title}
+                                  {isBn ? subTab.titleBn : subTab.title}
                                 </span>
                                 {subTab.badge && (
                                   <span
@@ -322,7 +286,7 @@ export function DocsClient() {
             <div className="mt-8 pt-6 border-t border-border/60">
               <div className="space-y-2">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Quick Actions
+                  {isBn ? "কুইক অ্যাকশন" : "Quick Actions"}
                 </p>
                 <Link
                   href="/dashboard/team"
@@ -330,7 +294,7 @@ export function DocsClient() {
                 >
                   <span className="flex items-center gap-1.5">
                     <Users className="size-3.5" />
-                    <span>Manage Team Members</span>
+                    <span>{isBn ? "টিম মেম্বার পরিচালনা" : "Manage Team Members"}</span>
                   </span>
                   <ExternalLink className="size-3 text-muted-foreground group-hover:text-primary" />
                 </Link>
@@ -338,7 +302,7 @@ export function DocsClient() {
                   href="/contact"
                   className="flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground group py-1"
                 >
-                  <span>Need Custom Help? Contact Desk</span>
+                  <span>{isBn ? "সাহায্য প্রয়োজন? হেল্প ডেস্ক" : "Need Custom Help? Contact Desk"}</span>
                   <ArrowRight className="size-3" />
                 </Link>
               </div>
@@ -346,7 +310,7 @@ export function DocsClient() {
           </aside>
 
           {/* ========================================================= */}
-          {/* RIGHT READING CONTENT (Pure editorial style, NO cards)    */}
+          {/* RIGHT READING CONTENT                                     */}
           {/* ========================================================= */}
           <main className="min-w-0 flex-1 max-w-4xl pb-16">
             {/* Category Tag & Header */}
@@ -354,36 +318,20 @@ export function DocsClient() {
               <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
                 <BookOpen className="size-3.5" />
                 <span>
-                  {langMode === "bn"
-                    ? activeContent.categoryTitleBn
-                    : activeContent.categoryTitle}
+                  {isBn ? activeContent.categoryTitleBn : activeContent.categoryTitle}
                 </span>
               </div>
 
-              {/* Title with bilingual support */}
+              {/* Title */}
               <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
-                {langMode === "bn" ? activeContent.titleBn : activeContent.title}
+                {isBn ? activeContent.titleBn : activeContent.title}
               </h1>
-
-              {/* Secondary Language Title if in 'both' mode */}
-              {langMode === "both" && (
-                <p className="text-lg font-medium text-muted-foreground/90">
-                  {activeContent.titleBn}
-                </p>
-              )}
 
               {/* Lead Paragraph */}
               <div className="space-y-2 pt-2">
-                {(langMode === "both" || langMode === "en") && (
-                  <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
-                    {activeContent.lead}
-                  </p>
-                )}
-                {(langMode === "both" || langMode === "bn") && (
-                  <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
-                    {activeContent.leadBn}
-                  </p>
-                )}
+                <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
+                  {isBn ? (activeContent.leadBn || activeContent.lead) : activeContent.lead}
+                </p>
               </div>
 
               {/* Special Action Banner for Seller Invitation */}
@@ -394,11 +342,17 @@ export function DocsClient() {
                     className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
                   >
                     <Users className="size-3.5" />
-                    <span>Go to Team Management (/dashboard/team)</span>
+                    <span>
+                      {isBn
+                        ? "টিম ম্যানেজমেন্টে যান (/dashboard/team)"
+                        : "Go to Team Management (/dashboard/team)"}
+                    </span>
                     <ArrowRight className="size-3" />
                   </Link>
                   <span className="text-xs text-muted-foreground">
-                    টিম মেম্বার আমন্ত্রণ পাঠাতে সরাসরি আপনার ড্যাশবোর্ডের টিম পেজে যান।
+                    {isBn
+                      ? "টিম মেম্বার আমন্ত্রণ পাঠাতে সরাসরি আপনার ড্যাশবোর্ডের টিম পেজে যান।"
+                      : "Go to your dashboard's Team page to invite and assign roles to your staff."}
                   </span>
                 </div>
               )}
@@ -411,48 +365,24 @@ export function DocsClient() {
                   {/* Section Heading */}
                   {(section.heading || section.headingBn) && (
                     <div className="space-y-1">
-                      {(langMode === "both" || langMode === "en") && section.heading && (
-                        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                          {section.heading}
-                        </h2>
-                      )}
-                      {(langMode === "both" || langMode === "bn") && section.headingBn && (
-                        <p
-                          className={`${
-                            langMode === "both"
-                              ? "text-base font-semibold text-muted-foreground"
-                              : "text-xl sm:text-2xl font-bold tracking-tight text-foreground"
-                          }`}
-                        >
-                          {section.headingBn}
-                        </p>
-                      )}
+                      <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                        {isBn ? (section.headingBn || section.heading) : section.heading}
+                      </h2>
                     </div>
                   )}
 
                   {/* Section Paragraphs */}
-                  {section.paragraphs && (
-                    <div className="space-y-3">
-                      {(langMode === "both" || langMode === "en") &&
-                        section.paragraphs.map((para, pIdx) => (
-                          <p
-                            key={`en-${pIdx}`}
-                            className="text-sm sm:text-base leading-7 text-muted-foreground"
-                          >
-                            {para}
-                          </p>
-                        ))}
-                      {(langMode === "both" || langMode === "bn") &&
-                        section.paragraphsBn?.map((paraBn, pbIdx) => (
-                          <p
-                            key={`bn-${pbIdx}`}
-                            className="text-sm sm:text-base leading-7 text-muted-foreground"
-                          >
-                            {paraBn}
-                          </p>
-                        ))}
-                    </div>
-                  )}
+                  {((isBn && section.paragraphsBn && section.paragraphsBn.length > 0)
+                    ? section.paragraphsBn
+                    : section.paragraphs
+                  )?.map((para, pIdx) => (
+                    <p
+                      key={pIdx}
+                      className="text-sm sm:text-base leading-7 text-muted-foreground"
+                    >
+                      {para}
+                    </p>
+                  ))}
 
                   {/* Bullet Lists */}
                   {section.bullets && (
@@ -463,22 +393,12 @@ export function DocsClient() {
                           <div className="space-y-1 text-sm leading-6">
                             {(bullet.title || bullet.titleBn) && (
                               <p className="font-semibold text-foreground">
-                                {langMode === "bn"
-                                  ? bullet.titleBn || bullet.title
-                                  : bullet.title}
-                                {langMode === "both" && bullet.titleBn && (
-                                  <span className="ml-1 text-muted-foreground font-normal">
-                                    ({bullet.titleBn})
-                                  </span>
-                                )}
+                                {isBn ? (bullet.titleBn || bullet.title) : bullet.title}
                               </p>
                             )}
-                            {(langMode === "both" || langMode === "en") && (
-                              <p className="text-muted-foreground">{bullet.text}</p>
-                            )}
-                            {(langMode === "both" || langMode === "bn") && (
-                              <p className="text-muted-foreground">{bullet.textBn}</p>
-                            )}
+                            <p className="text-muted-foreground">
+                              {isBn ? (bullet.textBn || bullet.text) : bullet.text}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -498,30 +418,18 @@ export function DocsClient() {
                           </div>
                           <div className="space-y-1.5 flex-1">
                             <p className="text-sm font-semibold text-foreground">
-                              {langMode === "bn" ? step.titleBn : step.title}
-                              {langMode === "both" && (
-                                <span className="ml-2 font-normal text-muted-foreground text-xs">
-                                  · {step.titleBn}
-                                </span>
-                              )}
+                              {isBn ? (step.titleBn || step.title) : step.title}
                             </p>
-                            {(langMode === "both" || langMode === "en") && (
-                              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                                {step.text}
-                              </p>
-                            )}
-                            {(langMode === "both" || langMode === "bn") && (
-                              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                                {step.textBn}
-                              </p>
-                            )}
+                            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                              {isBn ? (step.textBn || step.text) : step.text}
+                            </p>
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Informational Callout (Soft background, NO card outline) */}
+                  {/* Informational Callout */}
                   {section.callout && (
                     <div
                       className={`rounded-lg p-4 text-xs sm:text-sm leading-relaxed ${
@@ -531,25 +439,15 @@ export function DocsClient() {
                       }`}
                     >
                       <p className="font-semibold mb-1">
-                        {langMode === "bn"
-                          ? section.callout.titleBn
-                          : section.callout.title}
-                        {langMode === "both" && (
-                          <span className="ml-1 opacity-75 font-normal">
-                            ({section.callout.titleBn})
-                          </span>
-                        )}
+                        {isBn ? (section.callout.titleBn || section.callout.title) : section.callout.title}
                       </p>
-                      {(langMode === "both" || langMode === "en") && (
-                        <p>{section.callout.text}</p>
-                      )}
-                      {(langMode === "both" || langMode === "bn") && (
-                        <p className="mt-1">{section.callout.textBn}</p>
-                      )}
+                      <p>
+                        {isBn ? (section.callout.textBn || section.callout.text) : section.callout.text}
+                      </p>
                     </div>
                   )}
 
-                  {/* ⭐️ ROLES & PERMISSIONS TABLE (Clean, borderless, easy-to-read) */}
+                  {/* ⭐️ ROLES & PERMISSIONS TABLE (Clean, crisp, clear contrast) */}
                   {section.table && (
                     <div className="space-y-4 pt-2">
                       <div className="overflow-x-auto rounded-xl border border-border/80 bg-background/50">
@@ -561,12 +459,7 @@ export function DocsClient() {
                                   key={hIdx}
                                   className="px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-[11px]"
                                 >
-                                  {langMode === "bn" ? h.bn : h.en}
-                                  {langMode === "both" && (
-                                    <span className="block text-[10px] font-normal text-muted-foreground capitalize">
-                                      {h.bn}
-                                    </span>
-                                  )}
+                                  {isBn ? h.bn : h.en}
                                 </th>
                               ))}
                             </tr>
@@ -582,89 +475,54 @@ export function DocsClient() {
                                   <div className="space-y-1">
                                     <div className="flex items-center gap-1.5">
                                       <span className="font-bold text-foreground">
-                                        {row.role}
+                                        {isBn ? row.roleBn : row.role}
                                       </span>
                                       <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
                                         {row.badge}
                                       </span>
                                     </div>
                                     <p className="text-[11px] text-muted-foreground font-normal">
-                                      {row.roleBn}
+                                      {isBn ? row.role : row.roleBn}
                                     </p>
                                   </div>
                                 </td>
 
-                                {/* Purpose column */}
-                                <td className="px-4 py-4 align-top text-muted-foreground min-w-[180px] max-w-[240px]">
-                                  {(langMode === "both" || langMode === "en") && (
-                                    <p className="text-[11.5px] leading-relaxed">
-                                      {row.purpose}
-                                    </p>
-                                  )}
-                                  {(langMode === "both" || langMode === "bn") && (
-                                    <p className="text-[11.5px] leading-relaxed mt-1 text-foreground/80">
-                                      {row.purposeBn}
-                                    </p>
-                                  )}
+                                {/* Purpose column - crisp readable text, not muted gray */}
+                                <td className="px-4 py-4 align-top min-w-[180px] max-w-[240px]">
+                                  <p className="text-[12px] leading-relaxed text-foreground/90 font-normal">
+                                    {isBn ? (row.purposeBn || row.purpose) : row.purpose}
+                                  </p>
                                 </td>
 
-                                {/* Granted Permissions */}
+                                {/* Granted Permissions - crisp text with emerald check */}
                                 <td className="px-4 py-4 align-top min-w-[240px]">
                                   <ul className="space-y-1.5">
-                                    {(langMode === "both" || langMode === "en") &&
-                                      row.permissions.map((p, pIdx) => (
-                                        <li
-                                          key={`p-en-${pIdx}`}
-                                          className="flex items-start gap-1.5 text-[11.5px] text-foreground/90"
-                                        >
-                                          <span className="text-emerald-500 font-bold shrink-0">
-                                            ✓
-                                          </span>
-                                          <span>{p}</span>
-                                        </li>
-                                      ))}
-                                    {(langMode === "both" || langMode === "bn") &&
-                                      row.permissionsBn.map((pBn, pIdx) => (
-                                        <li
-                                          key={`p-bn-${pIdx}`}
-                                          className={`flex items-start gap-1.5 text-[11.5px] text-muted-foreground ${
-                                            langMode === "both" ? "opacity-85" : "text-foreground/90"
-                                          }`}
-                                        >
-                                          <span className="text-emerald-500 font-bold shrink-0">
-                                            ✓
-                                          </span>
-                                          <span>{pBn}</span>
-                                        </li>
-                                      ))}
+                                    {(isBn ? (row.permissionsBn || row.permissions) : row.permissions).map((p, pIdx) => (
+                                      <li
+                                        key={pIdx}
+                                        className="flex items-start gap-1.5 text-[12px] text-foreground/90"
+                                      >
+                                        <span className="text-emerald-500 font-bold shrink-0">
+                                          ✓
+                                        </span>
+                                        <span>{p}</span>
+                                      </li>
+                                    ))}
                                   </ul>
                                 </td>
 
-                                {/* Restrictions */}
+                                {/* Restrictions - crisp rose warning text */}
                                 <td className="px-4 py-4 align-top min-w-[200px]">
                                   <ul className="space-y-1.5">
-                                    {(langMode === "both" || langMode === "en") &&
-                                      row.restrictions.map((r, rIdx) => (
-                                        <li
-                                          key={`r-en-${rIdx}`}
-                                          className="flex items-start gap-1.5 text-[11.5px] text-rose-600 dark:text-rose-400"
-                                        >
-                                          <span className="font-bold shrink-0">✕</span>
-                                          <span>{r}</span>
-                                        </li>
-                                      ))}
-                                    {(langMode === "both" || langMode === "bn") &&
-                                      row.restrictionsBn.map((rBn, rIdx) => (
-                                        <li
-                                          key={`r-bn-${rIdx}`}
-                                          className={`flex items-start gap-1.5 text-[11.5px] text-rose-600/80 dark:text-rose-400/80 ${
-                                            langMode === "both" ? "opacity-85" : ""
-                                          }`}
-                                        >
-                                          <span className="font-bold shrink-0">✕</span>
-                                          <span>{rBn}</span>
-                                        </li>
-                                      ))}
+                                    {(isBn ? (row.restrictionsBn || row.restrictions) : row.restrictions).map((r, rIdx) => (
+                                      <li
+                                        key={rIdx}
+                                        className="flex items-start gap-1.5 text-[12px] text-rose-600 dark:text-rose-400 font-medium"
+                                      >
+                                        <span className="font-bold shrink-0">✕</span>
+                                        <span>{r}</span>
+                                      </li>
+                                    ))}
                                   </ul>
                                 </td>
                               </tr>
@@ -678,7 +536,7 @@ export function DocsClient() {
               ))}
             </div>
 
-            {/* Bottom Next/Previous Topic Navigation (Dyno style) */}
+            {/* Bottom Next/Previous Topic Navigation */}
             <div className="mt-16 pt-8 border-t border-border/60">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 {/* Previous Doc */}
@@ -690,12 +548,10 @@ export function DocsClient() {
                   >
                     <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
                       <ArrowLeft className="size-3 transition-transform group-hover:-translate-x-0.5" />
-                      <span>Previous</span>
+                      <span>{isBn ? "পূর্ববর্তী" : "Previous"}</span>
                     </span>
                     <span className="mt-1 text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {langMode === "bn"
-                        ? prevDoc.subTab.titleBn
-                        : prevDoc.subTab.title}
+                      {isBn ? prevDoc.subTab.titleBn : prevDoc.subTab.title}
                     </span>
                   </button>
                 ) : (
@@ -710,13 +566,11 @@ export function DocsClient() {
                     className="flex flex-col items-end p-3 text-right rounded-lg transition-colors hover:bg-muted/40 group max-w-sm ml-auto"
                   >
                     <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      <span>Next</span>
+                      <span>{isBn ? "পরবর্তী" : "Next"}</span>
                       <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                     </span>
                     <span className="mt-1 text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {langMode === "bn"
-                        ? nextDoc.subTab.titleBn
-                        : nextDoc.subTab.title}
+                      {isBn ? nextDoc.subTab.titleBn : nextDoc.subTab.title}
                     </span>
                   </button>
                 ) : (
