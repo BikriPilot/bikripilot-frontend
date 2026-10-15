@@ -25,7 +25,7 @@ function RiskCheckContent() {
   const [activePhone, setActivePhone] = useState<string>(phoneParam);
   const [includeFraudbd, setIncludeFraudbd] = useState(false);
 
-  const historyQuery = useRiskHistory({ limit: 15 });
+  const historyQuery = useRiskHistory({ limit: 10 });
   const checkMutation = useCheckRiskMutation();
   const couriersQuery = useCouriers();
 
