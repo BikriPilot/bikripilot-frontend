@@ -2433,7 +2433,12 @@
     "searchBtn": "যাচাই করুন",
     "awaitingSearch": "যাচাইয়ের অপেক্ষায়",
     "searchingTarget": "পার্সেল ও ফ্রড হিস্টোরি খোঁজা হচ্ছে...",
-    "customerPhoneLabel": "যাচাইকৃত নম্বর"
+    "customerPhoneLabel": "যাচাইকৃত নম্বর",
+    "checkFraudbdCheckbox": "FraudBD ডেটাবেস চেক করুন (১টি ক্রেডিট খরচ হবে)",
+    "checkFraudbdCheckboxDisabled": "অ্যাডমিন কর্তৃক FraudBD বন্ধ রয়েছে",
+    "checkFraudbdNoKey": "FraudBD চেক করুন (আগে এপিআই কি দিন)",
+    "riskIndexLabel": "ঝুঁকি ইনডেক্স",
+    "newCustomerNeutral": "নিউট্রাল (নতুন ক্রেতা)"
   },
   "admin": {
     "adminLabel": "অ্যাডমিন",

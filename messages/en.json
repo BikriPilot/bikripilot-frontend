@@ -2433,7 +2433,12 @@
     "searchBtn": "Search",
     "awaitingSearch": "Awaiting Search",
     "searchingTarget": "Searching parcel & fraud history...",
-    "customerPhoneLabel": "Target Phone"
+    "customerPhoneLabel": "Target Phone",
+    "checkFraudbdCheckbox": "Check FraudBD database (uses 1 credit)",
+    "checkFraudbdCheckboxDisabled": "FraudBD is disabled by admin",
+    "checkFraudbdNoKey": "Check FraudBD (Save API key first)",
+    "riskIndexLabel": "Risk Index",
+    "newCustomerNeutral": "Neutral (New Buyer)"
   },
   "admin": {
     "adminLabel": "Admin",
