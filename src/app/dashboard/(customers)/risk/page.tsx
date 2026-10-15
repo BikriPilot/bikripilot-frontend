@@ -7,7 +7,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ShieldAlert, History, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/common/PageHeader';
-import { PhoneSearchBox } from '@/components/risk/PhoneSearchBox';
 import { RiskDetails } from '@/components/risk/RiskDetails';
 import { RecentChecksTable } from '@/components/risk/RecentChecksTable';
 import { useRiskHistory, useCheckRiskMutation } from '@/hooks/queries/useRisk';
@@ -123,7 +122,7 @@ function RiskCheckContent() {
         </div>
       )}
 
-      {/* 1. Main Risk Assessment Dashboard (Always visible on page entry) */}
+      {/* 1. Main Risk Assessment Dashboard (with integrated Top Search & Verification) */}
       <RiskDetails
         data={checkMutation.data}
         hasSearched={hasSearched}
@@ -135,21 +134,11 @@ function RiskCheckContent() {
         onKeySaved={handleKeySaved}
         isCourierConnected={isCourierConnected}
         activeCourierProvider={activeCourierProvider}
+        hasFraudbdKey={hasFraudbdKey}
+        fraudbdEnabled={settingsQuery.data?.fraudbdEnabled ?? true}
+        onSearch={handleSearch}
+        isSearching={checkMutation.isPending}
       />
-
-      {/* 2. Customer Phone Search Box (Positioned directly underneath the overview cards) */}
-      <div className="rounded-2xl border bg-card p-5 sm:p-6 shadow-xs">
-        <h3 className="mb-3 text-sm font-semibold flex items-center gap-2">
-          <ShieldAlert size={18} className="text-primary" />
-          <span>{t('checkPhoneTitle')}</span>
-        </h3>
-        <PhoneSearchBox
-          onSearch={handleSearch}
-          isLoading={checkMutation.isPending}
-          initialPhone={activePhone}
-          hasFraudbdKey={hasFraudbdKey}
-        />
-      </div>
 
       {/* 3. Recent Checks Section */}
       <div className="space-y-4">

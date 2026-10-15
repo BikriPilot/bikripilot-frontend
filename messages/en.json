@@ -2425,7 +2425,15 @@
     "noCustomerChecked": "No customer checked yet",
     "searchPromptDesc": "Enter customer phone number below to inspect network delivery history and fraud risk.",
     "verifiedProfile": "Verified Profile",
-    "verifiedSafeNotice": "Verified: Clean profile with no return or fraud reports"
+    "verifiedSafeNotice": "Verified: Clean profile with no return or fraud reports",
+    "fraudbdDisabledByAdmin": "Disabled by Admin",
+    "fraudbdDisabledNotice": "FraudBD integration has been disabled by platform administrator. Adding API keys or sending external queries is currently paused.",
+    "fraudbdActive": "FraudBD: Active",
+    "fraudbdNotConfiguredBadge": "FraudBD: Not Configured",
+    "searchBtn": "Search",
+    "awaitingSearch": "Awaiting Search",
+    "searchingTarget": "Searching parcel & fraud history...",
+    "customerPhoneLabel": "Target Phone"
   },
   "admin": {
     "adminLabel": "Admin",

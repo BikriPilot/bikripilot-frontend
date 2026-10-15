@@ -47,6 +47,7 @@ export interface ShopSettingsDTO {
   hasFraudbdKey?: boolean;
   fraudbdApiKeyMasked?: string | null;
   fraudbdApiKey?: string | null;
+  fraudbdEnabled?: boolean;
 }
 export type OnboardingStepKey =
   | "business_info"
