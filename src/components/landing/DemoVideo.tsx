@@ -32,7 +32,7 @@ export function DemoVideo({ url, label }: { url: string; label: string }) {
           setOpen(true);
           dialog.current?.showModal();
         }}
-        className="inline-flex min-h-12 items-center rounded-lg border bg-card px-5 font-semibold"
+        className="inline-flex min-h-12 items-center rounded-lg border bg-card dark:bg-slate-900/80 dark:border-white/15 dark:text-slate-100 dark:hover:bg-slate-800 px-5 font-semibold shadow-xs backdrop-blur-md transition-colors hover:bg-muted"
       >
         {label}
       </button>

@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Search,
   Lock,
-  MessageCircle,
   ClipboardList,
   UserCheck,
   Play,
@@ -15,7 +14,6 @@ import {
   XCircle,
   FileCheck,
   Mail,
-  Smartphone,
   BellRing,
 } from "lucide-react";
 import {
@@ -155,7 +153,7 @@ export function InteractiveShowcase() {
             ref={tabsContainerRef}
             className="overflow-x-auto pb-1 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth touch-pan-x"
           >
-            <div className="flex min-w-max border-b border-border/80 dark:border-border">
+            <div className="flex min-w-max border-b border-border/80 dark:border-white/10">
               {TABS.map((tab, idx) => {
                 const isActive = activeTab === idx;
                 const hue1 = (215 + progress * 1.6) % 360;
@@ -172,7 +170,7 @@ export function InteractiveShowcase() {
                     className={`group relative flex-1 shrink-0 whitespace-nowrap rounded-none px-3.5 py-3 sm:px-4 sm:py-3.5 text-center text-xs font-semibold sm:text-sm border-t-2 border-r first:border-l transition-[background-color,border-color,color,box-shadow] duration-200 ${
                       isActive
                         ? "bg-card border-t-primary border-r-border/80 dark:border-r-border first:border-l-border/80 dark:first:border-l-border font-bold shadow-xs text-foreground z-10"
-                        : "border-t-border/40 dark:border-t-border/30 border-r-border/50 dark:border-r-border/30 first:border-l-border/50 dark:first:border-l-border/30 bg-muted/20 dark:bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/40 dark:hover:bg-muted/25 font-medium"
+                        : "border-t-border/40 dark:border-t-white/10 border-r-border/50 dark:border-r-white/10 first:border-l-border/50 dark:first:border-l-white/10 bg-muted/20 dark:bg-slate-950/80 text-muted-foreground dark:text-slate-400 hover:text-foreground hover:bg-muted/40 dark:hover:bg-slate-900/90 dark:hover:text-white font-medium"
                     }`}
                     style={
                       isActive

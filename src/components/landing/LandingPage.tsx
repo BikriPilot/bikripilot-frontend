@@ -7,7 +7,6 @@ import {
   ChevronDown,
   ClipboardList,
   Layers,
-  MessageCircle,
   MessageSquareText,
   PackageCheck,
   ShieldCheck,
@@ -18,12 +17,12 @@ import {
   Zap,
   Headset,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { publicServerApi } from "@/lib/api/public.api";
 import type { SiteContent } from "@/types/content";
 import type { PublicPlan } from "@/types/plan";
-import { formatMoney } from "@/lib/money";
 import { PricingComparison } from "./PricingComparison";
 import { DemoVideo } from "./DemoVideo";
 import { PARTNERS, MessengerLogo, WhatsAppLogo } from "./IntegrationLogos";
@@ -202,18 +201,35 @@ export async function LandingPage() {
 
   return (
     <main className="overflow-hidden">
-      <section className="relative border-b bg-[radial-gradient(circle_at_75%_20%,var(--primary-soft),transparent_38%),linear-gradient(135deg,var(--background),var(--muted))]">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
+      <section className="relative border-b overflow-hidden bg-[radial-gradient(circle_at_75%_20%,var(--primary-soft),transparent_38%),linear-gradient(135deg,var(--background),var(--muted))] dark:bg-slate-950">
+        {/* Dark Mode Ambient Background Image with Crisp Visibility & Balanced Overlays */}
+        <div className="absolute inset-0 z-0 hidden dark:block overflow-hidden pointer-events-none select-none">
+          <Image
+            src="/images/auth-bg.webp"
+            alt="BikriPilot AI Hero Background"
+            fill
+            priority
+            sizes="100vw"
+            quality={95}
+            className="object-cover object-center opacity-90"
+          />
+          {/* Lightweight overlays: gentle subtle blur + guaranteed text contrast */}
+          <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent" />
+        </div>
+
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
           <div className="relative z-10">
             {config?.freeLaunchMode ? (
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card/80 px-3.5 py-1.5 text-sm font-semibold text-primary shadow-2xs">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 dark:border-indigo-400/30 bg-card/80 dark:bg-indigo-950/50 px-3.5 py-1.5 text-sm font-semibold text-primary dark:text-indigo-300 shadow-2xs backdrop-blur-md">
                 {t("launchBadge")}
               </div>
             ) : null}
-            <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-6xl">
+            <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-6xl dark:text-white">
               {t("heroTitle")}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground dark:text-slate-300">
               {t("heroDescription")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -226,7 +242,7 @@ export async function LandingPage() {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex min-h-12 items-center gap-2 rounded-lg border bg-card px-5 font-semibold text-foreground shadow-xs transition-colors hover:bg-muted"
+                className="inline-flex min-h-12 items-center gap-2 rounded-lg border bg-card dark:bg-slate-900/80 dark:border-white/15 dark:text-slate-100 dark:hover:bg-slate-800 px-5 font-semibold text-foreground shadow-xs backdrop-blur-md transition-colors hover:bg-muted"
               >
                 <Headset className="size-4 text-primary" />
                 {t("supportBtn")}
@@ -235,14 +251,14 @@ export async function LandingPage() {
                 <DemoVideo url={config.heroVideoUrl} label={t("watchDemo")} />
               ) : null}
             </div>
-            <p className="mt-5 text-sm text-muted-foreground">
+            <p className="mt-5 text-sm text-muted-foreground dark:text-slate-400">
               {t("trustLine")}
             </p>
           </div>
           <div className="relative mx-auto w-full max-w-lg">
-            <div className="absolute -inset-8 -z-10 rounded-full bg-primary/10 blur-3xl" />
-            <div className="rounded-[2rem] border bg-card p-4 shadow-xl sm:p-6">
-              <div className="flex items-center justify-between border-b pb-4">
+            <div className="absolute -inset-8 -z-10 rounded-full bg-primary/20 blur-3xl dark:bg-primary/25" />
+            <div className="rounded-[2rem] border bg-card/95 dark:bg-slate-900/85 dark:border-white/15 p-4 shadow-xl sm:p-6 backdrop-blur-xl">
+              <div className="flex items-center justify-between border-b dark:border-white/10 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-1">
                     <MessengerLogo className="size-6 rounded-full border border-background shadow-xs" />
@@ -250,49 +266,49 @@ export async function LandingPage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="font-bold text-sm text-foreground">FB Page &amp; WhatsApp Inbox</p>
-                      <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[9px] font-bold text-blue-600">Meta API</span>
+                      <p className="font-bold text-sm text-foreground dark:text-white">FB Page &amp; WhatsApp Inbox</p>
+                      <span className="rounded-full bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 text-[9px] font-bold text-blue-600 dark:text-blue-400">Meta API</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground dark:text-slate-400">
                       Connected to your Facebook Page 24/7
                     </p>
                   </div>
                 </div>
-                <div className="grid size-9 place-items-center rounded-full bg-emerald-500/10 text-emerald-600">
+                <div className="grid size-9 place-items-center rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
                   <Bot className="size-4.5" />
                 </div>
               </div>
               <div className="space-y-3 py-5 text-sm">
-                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-muted p-3">
-                  <div className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold text-blue-600">
+                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-muted dark:bg-slate-800/90 dark:border dark:border-white/5 p-3">
+                  <div className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
                     <MessengerLogo className="size-3" />
                     <span>Customer on FB Page</span>
                   </div>
-                  {t("mockQuestion")}
+                  <span className="text-foreground dark:text-slate-100">{t("mockQuestion")}</span>
                 </div>
-                <div className="max-w-[88%] rounded-2xl rounded-bl-sm bg-primary-soft p-3 text-foreground">
-                  <span className="mb-1 flex items-center gap-1.5 text-xs font-bold text-primary">
+                <div className="max-w-[88%] rounded-2xl rounded-bl-sm bg-primary-soft dark:bg-primary/20 dark:border dark:border-primary/30 p-3 text-foreground dark:text-slate-100">
+                  <span className="mb-1 flex items-center gap-1.5 text-xs font-bold text-primary dark:text-indigo-300">
                     <Bot className="size-3.5" />
                     BikriPilot AI (Page Auto-Reply)
                   </span>
-                  {t("mockReply")}
+                  <span>{t("mockReply")}</span>
                 </div>
               </div>
-              <div className="rounded-xl border bg-background p-4">
+              <div className="rounded-xl border bg-background/90 dark:bg-slate-950/70 dark:border-white/10 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-muted-foreground">
+                  <span className="text-xs font-semibold text-muted-foreground dark:text-slate-400">
                     {t("mockOrder")}
                   </span>
-                  <span className="rounded-full bg-success-soft px-2 py-1 text-xs font-semibold text-success">
+                  <span className="rounded-full bg-success-soft dark:bg-emerald-500/15 px-2 py-1 text-xs font-semibold text-success dark:text-emerald-400">
                     {t("mockReady")}
                   </span>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="font-semibold">{t("mockProduct")}</span>
-                  <span className="font-semibold">৳1,250</span>
+                  <span className="font-semibold text-foreground dark:text-slate-100">{t("mockProduct")}</span>
+                  <span className="font-semibold text-foreground dark:text-slate-100">৳1,250</span>
                 </div>
-                <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-                  <PackageCheck className="size-4 text-success" />
+                <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground dark:text-slate-400">
+                  <PackageCheck className="size-4 text-success dark:text-emerald-400" />
                   {t("mockBooked")}
                 </div>
               </div>
@@ -300,13 +316,13 @@ export async function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="border-y bg-card/60 backdrop-blur-xs">
+      <section className="border-y bg-card/60 dark:bg-slate-950/80 dark:border-white/10 backdrop-blur-xs">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-2 px-4 py-3 text-xs sm:px-8">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-slate-400">
             <Layers className="size-3.5 text-primary" />
             <span>{t("worksWith")}</span>
           </div>
-          <div className="hidden h-3.5 w-px bg-border sm:block" />
+          <div className="hidden h-3.5 w-px bg-border dark:bg-white/10 sm:block" />
           <div className="flex flex-wrap items-center justify-center gap-2">
             {PARTNERS.map((partner) => {
               const PartnerIcon = partner.Icon;
@@ -317,7 +333,7 @@ export async function LandingPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`Visit ${partner.name}`}
-                  className="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card hover:shadow-2xs"
+                  className="group inline-flex items-center gap-2 rounded-full border border-border/70 dark:border-white/10 bg-background/80 dark:bg-slate-900/60 px-2.5 py-1 text-[11px] font-medium text-foreground dark:text-slate-200 transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card dark:hover:bg-slate-800 hover:shadow-2xs"
                 >
                   <PartnerIcon className="size-3.5 shrink-0 transition-transform duration-150 group-hover:scale-110" />
                   <span className="font-semibold">{partner.name}</span>
