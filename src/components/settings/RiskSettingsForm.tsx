@@ -169,21 +169,29 @@ function RiskSettingsInner({
               FraudBD API Key (Isolated per Shop)
             </label>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Configure your personal FraudBD API key to query external merchant fraud reports. Cost is strictly billed to your key and only consumed on manual searches.
-          </p>
-          <input
-            id="fraudbd-api-key"
-            type="password"
-            value={fraudbdApiKey}
-            onChange={(e) => setFraudbdApiKey(e.target.value)}
-            placeholder={
-              settings.hasFraudbdKey
-                ? settings.fraudbdApiKeyMasked ?? '•••••••• (Connected)'
-                : 'Enter FraudBD API key'
-            }
-            className="w-full rounded-xl border bg-background px-3 py-2 text-sm outline-hidden focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
-          />
+          {settings.fraudbdEnabled === false ? (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400">
+              FraudBD integration is currently disabled platform-wide by platform administrator. Adding API keys is paused.
+            </div>
+          ) : (
+            <>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Configure your personal FraudBD API key to query external merchant fraud reports. Cost is strictly billed to your key and only consumed on manual searches.
+              </p>
+              <input
+                id="fraudbd-api-key"
+                type="password"
+                value={fraudbdApiKey}
+                onChange={(e) => setFraudbdApiKey(e.target.value)}
+                placeholder={
+                  settings.hasFraudbdKey
+                    ? settings.fraudbdApiKeyMasked ?? '•••••••• (Connected)'
+                    : 'Enter FraudBD API key'
+                }
+                className="w-full rounded-xl border bg-background px-3 py-2 text-sm outline-hidden focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
+              />
+            </>
+          )}
         </div>
 
         <button
