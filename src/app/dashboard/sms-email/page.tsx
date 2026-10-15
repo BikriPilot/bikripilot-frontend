@@ -224,7 +224,7 @@ function ConfigForm({
       const hasSenderId = Boolean(bulksmsSenderId.trim() || config.bulksmsSenderId);
 
       if (!hasApiKey || !hasSenderId) {
-        toast.error("BulkSMSBD API Key and Sender ID are both required before enabling SMS notifications.");
+        toast.error(t("errSmsRequired"));
         setSmsEnabled(false);
         return;
       }
@@ -238,7 +238,7 @@ function ConfigForm({
         ...(bulksmsApiKey.trim() ? { bulksmsApiKey: bulksmsApiKey.trim() } : {}),
       });
       setSmsEnabled(nextVal);
-      toast.success(nextVal ? "SMS notifications enabled" : "SMS notifications disabled");
+      toast.success(nextVal ? t("smsEnabledSuccess") : t("smsDisabledSuccess"));
     } catch {
       setSmsEnabled(!nextVal);
       toast.error(nextVal ? "Failed to enable SMS notifications" : "Failed to disable SMS notifications");
@@ -255,7 +255,7 @@ function ConfigForm({
       const hasFrom = Boolean(emailFrom.trim() || config.emailFrom);
 
       if (!hasHost || !hasUser || !hasPass || !hasFrom) {
-        toast.error("SMTP Host, User, Password, and Sender Email are all required before enabling Email notifications.");
+        toast.error(t("errSmtpRequired"));
         setEmailEnabled(false);
         return;
       }
@@ -273,7 +273,7 @@ function ConfigForm({
         ...(smtpPass.trim() ? { smtpPass: smtpPass.trim() } : {}),
       });
       setEmailEnabled(nextVal);
-      toast.success(nextVal ? "Email notifications enabled" : "Email notifications disabled");
+      toast.success(nextVal ? t("emailEnabledSuccess") : t("emailDisabledSuccess"));
     } catch {
       setEmailEnabled(!nextVal);
       toast.error(nextVal ? "Failed to enable Email notifications" : "Failed to disable Email notifications");
@@ -362,7 +362,7 @@ function ConfigForm({
                       : "bg-muted text-muted-foreground border-transparent"
                   }`}
                 >
-                  {smsEnabled ? "Connected" : "Disabled"}
+                  {smsEnabled ? t("connected") : t("disabled")}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -454,7 +454,7 @@ function ConfigForm({
                       : "bg-muted text-muted-foreground border-transparent"
                   }`}
                 >
-                  {emailEnabled ? "Connected" : "Disabled"}
+                  {emailEnabled ? t("connected") : t("disabled")}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">{t("emailGatewayDesc")}</p>
@@ -736,7 +736,7 @@ function ConfigForm({
         <button
           type="submit"
           disabled={updateMutation.isPending}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
         >
           {updateMutation.isPending ? t("saving") : t("saveChanges")}
         </button>
@@ -745,7 +745,7 @@ function ConfigForm({
       {/* Test SMS Modal */}
       {testSmsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in">
-          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl space-y-4">
+          <div className="w-full max-w-md mx-auto rounded-2xl border bg-card p-5 sm:p-6 shadow-xl space-y-4">
             <h4 className="text-base font-semibold">{t("testSmsModalTitle")}</h4>
             <div>
               <label className="block text-xs font-semibold mb-1">{t("testPhoneLabel")}</label>
@@ -757,11 +757,11 @@ function ConfigForm({
                 className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2 border-t border-border/40">
               <button
                 type="button"
                 onClick={() => setTestSmsOpen(false)}
-                className="rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted"
+                className="w-full sm:w-auto rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted text-center"
               >
                 {t("close")}
               </button>
@@ -769,7 +769,7 @@ function ConfigForm({
                 type="button"
                 disabled={testSmsMutation.isPending || !testPhone.trim()}
                 onClick={() => testSmsMutation.mutate(testPhone.trim())}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
               >
                 {testSmsMutation.isPending ? t("sending") : t("testSms")}
               </button>
@@ -781,7 +781,7 @@ function ConfigForm({
       {/* Test Email Modal */}
       {testEmailOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in">
-          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl space-y-4">
+          <div className="w-full max-w-md mx-auto rounded-2xl border bg-card p-5 sm:p-6 shadow-xl space-y-4">
             <h4 className="text-base font-semibold">{t("testEmailModalTitle")}</h4>
             <div>
               <label className="block text-xs font-semibold mb-1">{t("testEmailLabel")}</label>
@@ -793,11 +793,11 @@ function ConfigForm({
                 className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2 border-t border-border/40">
               <button
                 type="button"
                 onClick={() => setTestEmailOpen(false)}
-                className="rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted"
+                className="w-full sm:w-auto rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted text-center"
               >
                 {t("close")}
               </button>
@@ -805,7 +805,7 @@ function ConfigForm({
                 type="button"
                 disabled={testEmailMutation.isPending || !testEmailAddress.trim()}
                 onClick={() => testEmailMutation.mutate(testEmailAddress.trim())}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
               >
                 {testEmailMutation.isPending ? t("sending") : t("testEmail")}
               </button>
@@ -817,37 +817,37 @@ function ConfigForm({
       {/* Confirmation Modal before turning ON Gateway */}
       {confirmToggleModal?.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in">
-          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl space-y-4">
+          <div className="w-full max-w-md mx-auto rounded-2xl border bg-card p-5 sm:p-6 shadow-xl space-y-4">
             <div className="flex items-start gap-3">
               <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
-                <ShieldAlert className="size-6" />
+                <ShieldAlert className="size-5 sm:size-6" />
               </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-semibold">
+              <div className="space-y-1 min-w-0">
+                <h4 className="text-sm sm:text-base font-semibold">
                   {confirmToggleModal.type === "SMS"
-                    ? "Verify BulkSMSBD Gateway"
-                    : "Verify Custom SMTP Gateway"}
+                    ? t("confirmTitleSms")
+                    : t("confirmTitleEmail")}
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  সতর্কতা: অনুগ্রহ করে নিশ্চিত করুন যে আপনার প্রবেশকৃত গেটওয়ে ক্রেডেনশিয়াল বিশ্বস্ত ও বৈধ। ভুল এপিআই কি অথবা এসএমটিপি হোস্ট বা পাসওয়ার্ড দিলে গ্রাহকের অর্ডার নোটিফিকেশন ডেলিভারি ব্যর্থ হবে। আপনি কি গেটওয়েটি এখনই সক্রিয় করতে চান?
+                  {t("confirmWarning")}
                 </p>
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-2 border-t border-border/40">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2 border-t border-border/40">
               <button
                 type="button"
                 onClick={() => setConfirmToggleModal(null)}
-                className="rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted transition-colors"
+                className="w-full sm:w-auto rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted transition-colors text-center"
               >
-                বাতিল করুন (Cancel)
+                {t("confirmCancel")}
               </button>
               <button
                 type="button"
                 onClick={handleConfirmToggleOn}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs"
               >
                 <CheckCircle2 className="size-3.5" />
-                <span>যাচাই করেছি, চালু করুন</span>
+                <span>{t("confirmAction")}</span>
               </button>
             </div>
           </div>
@@ -1033,7 +1033,7 @@ function ManualDispatchCard({
               !message.trim() ||
               !isConfigured
             }
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
           >
             <Send className="size-3.5" />
             <span>{manualSendMutation.isPending ? t("manualSending") : t("manualSendBtn")}</span>
@@ -1076,9 +1076,9 @@ function LogsTab({ shopId }: { shopId: string }) {
             }}
             className="rounded-lg border bg-background px-2.5 py-1.5 text-xs font-medium focus:outline-none"
           >
-            <option value="ALL">All Channels</option>
-            <option value="SMS">SMS Only</option>
-            <option value="EMAIL">Email Only</option>
+            <option value="ALL">{t("allChannels")}</option>
+            <option value="SMS">{t("smsOnly")}</option>
+            <option value="EMAIL">{t("emailOnly")}</option>
           </select>
           <button
             type="button"
@@ -1099,11 +1099,11 @@ function LogsTab({ shopId }: { shopId: string }) {
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="border-b uppercase text-muted-foreground bg-muted/30">
-                <th className="py-2.5 px-3 font-semibold">Channel</th>
+                <th className="py-2.5 px-3 font-semibold">{t("channel")}</th>
                 <th className="py-2.5 px-3 font-semibold">{t("event")}</th>
                 <th className="py-2.5 px-3 font-semibold">{t("recipient")}</th>
-                <th className="py-2.5 px-3 font-semibold">Status</th>
-                <th className="py-2.5 px-3 font-semibold">Details / Error</th>
+                <th className="py-2.5 px-3 font-semibold">{t("status")}</th>
+                <th className="py-2.5 px-3 font-semibold">{t("detailsOrError")}</th>
                 <th className="py-2.5 px-3 font-semibold">{t("time")}</th>
               </tr>
             </thead>

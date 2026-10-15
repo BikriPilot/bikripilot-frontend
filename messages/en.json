@@ -3053,7 +3053,26 @@
     "manualSuccess": "Message dispatched successfully!",
     "smsChars": "{chars} characters ({segments} SMS)",
     "smsBrandingNote": "Will automatically append: Powered By bikriopilot.com",
-    "emailBrandingNote": "Will include shop header and bikriopilot.com footer"
+    "emailBrandingNote": "Will include shop header and bikriopilot.com footer",
+    "connected": "Connected",
+    "disabled": "Disabled",
+    "confirmTitleSms": "Verify BulkSMSBD Gateway",
+    "confirmTitleEmail": "Verify Custom SMTP Gateway",
+    "confirmWarning": "Warning: Please make sure your entered gateway credentials are valid and trusted. Incorrect API keys or SMTP passwords will cause customer notification deliveries to fail. Do you want to activate this gateway now?",
+    "confirmCancel": "Cancel",
+    "confirmAction": "Verified, Turn On",
+    "errSmsRequired": "BulkSMSBD API Key and Sender ID are both required before enabling SMS notifications.",
+    "errSmtpRequired": "SMTP Host, User, Password, and Sender Email are all required before enabling Email notifications.",
+    "smsEnabledSuccess": "SMS notifications enabled",
+    "smsDisabledSuccess": "SMS notifications disabled",
+    "emailEnabledSuccess": "Email notifications enabled",
+    "emailDisabledSuccess": "Email notifications disabled",
+    "allChannels": "All Channels",
+    "smsOnly": "SMS Only",
+    "emailOnly": "Email Only",
+    "channel": "Channel",
+    "status": "Status",
+    "detailsOrError": "Details / Error"
   }
 }
 
