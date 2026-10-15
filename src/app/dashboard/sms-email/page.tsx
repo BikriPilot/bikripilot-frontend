@@ -8,13 +8,15 @@ import {
   MessageSquare,
   Mail,
   Send,
+  SendHorizontal,
   CheckCircle2,
   XCircle,
   Clock,
   RefreshCw,
   BellRing,
-  Zap,
   Info,
+  ExternalLink,
+  ShieldAlert,
 } from "lucide-react";
 import { CardListSkeleton } from "@/components/common/skeletons";
 import { ErrorState, EmptyState } from "@/components/common/PageStates";
@@ -163,6 +165,12 @@ function ConfigForm({
   const [testEmailOpen, setTestEmailOpen] = useState(false);
   const [testEmailAddress, setTestEmailAddress] = useState("");
 
+  // Confirmation modal before turning on Gateway
+  const [confirmToggleModal, setConfirmToggleModal] = useState<{
+    type: "SMS" | "EMAIL";
+    isOpen: boolean;
+  } | null>(null);
+
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateShopNotificationConfigInput) =>
       notificationConfigApi.updateConfig(shopId, payload),
@@ -274,6 +282,27 @@ function ConfigForm({
     }
   };
 
+  const onToggleAttempt = (type: "SMS" | "EMAIL", nextVal: boolean) => {
+    if (!nextVal) {
+      if (type === "SMS") void handleToggleSms(false);
+      else void handleToggleEmail(false);
+      return;
+    }
+    // Turning ON requires confirmation
+    setConfirmToggleModal({ type, isOpen: true });
+  };
+
+  const handleConfirmToggleOn = () => {
+    if (!confirmToggleModal) return;
+    const { type } = confirmToggleModal;
+    setConfirmToggleModal(null);
+    if (type === "SMS") {
+      void handleToggleSms(true);
+    } else {
+      void handleToggleEmail(true);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -316,71 +345,6 @@ function ConfigForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Overview Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* BulkSMSBD Summary */}
-        <div className="rounded-xl border bg-card/60 p-4 shadow-2xs backdrop-blur-xs flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
-              <MessageSquare className="size-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold">BulkSMSBD Gateway</span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    config.smsEnabled
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {config.smsEnabled ? "Active" : "Disabled"}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {config.hasBulksmsKey
-                  ? `Key: ${config.bulksmsApiKeyMasked} · Sender: ${config.bulksmsSenderId || "N/A"}`
-                  : "No credentials saved yet"}
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 px-2 py-1 rounded-md">
-            Direct Merchant Gateway
-          </span>
-        </div>
-
-        {/* SMTP Summary */}
-        <div className="rounded-xl border bg-card/60 p-4 shadow-2xs backdrop-blur-xs flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-              <Mail className="size-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold">Custom SMTP Gateway</span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    config.emailEnabled
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {config.emailEnabled ? "Active" : "Disabled"}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {config.hasSmtpPass
-                  ? `Host: ${config.smtpHost || "N/A"}:${config.smtpPort}`
-                  : "No credentials saved yet"}
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-medium text-blue-600 dark:text-blue-400 bg-blue-500/5 px-2 py-1 rounded-md">
-            Personal Mail Server
-          </span>
-        </div>
-      </div>
-
       {/* 1. SMS Gateway Card */}
       <div className="rounded-2xl border bg-card p-6 shadow-xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b">
@@ -389,8 +353,31 @@ function ConfigForm({
               <MessageSquare className="size-6" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">{t("smsGateway")}</h3>
-              <p className="text-xs text-muted-foreground">{t("smsGatewayDesc")}</p>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">{t("smsGateway")}</h3>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    smsEnabled
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-muted text-muted-foreground border-transparent"
+                  }`}
+                >
+                  {smsEnabled ? "Connected" : "Disabled"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <p className="text-xs text-muted-foreground">{t("smsGatewayDesc")}</p>
+                <span className="text-muted-foreground/40 hidden sm:inline">•</span>
+                <a
+                  href="https://bulksmsbd.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-medium"
+                >
+                  <span>bulksmsbd.com</span>
+                  <ExternalLink className="size-3" />
+                </a>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -409,7 +396,7 @@ function ConfigForm({
                 type="checkbox"
                 checked={smsEnabled}
                 disabled={isSavingSmsToggle || updateMutation.isPending}
-                onChange={(e) => void handleToggleSms(e.target.checked)}
+                onChange={(e) => onToggleAttempt("SMS", e.target.checked)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50"></div>
@@ -458,8 +445,19 @@ function ConfigForm({
               <Mail className="size-6" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">{t("emailGateway")}</h3>
-              <p className="text-xs text-muted-foreground">{t("emailGatewayDesc")}</p>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">{t("emailGateway")}</h3>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    emailEnabled
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-muted text-muted-foreground border-transparent"
+                  }`}
+                >
+                  {emailEnabled ? "Connected" : "Disabled"}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">{t("emailGatewayDesc")}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -478,7 +476,7 @@ function ConfigForm({
                 type="checkbox"
                 checked={emailEnabled}
                 disabled={isSavingEmailToggle || updateMutation.isPending}
-                onChange={(e) => void handleToggleEmail(e.target.checked)}
+                onChange={(e) => onToggleAttempt("EMAIL", e.target.checked)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50"></div>
@@ -815,6 +813,46 @@ function ConfigForm({
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal before turning ON Gateway */}
+      {confirmToggleModal?.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in">
+          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                <ShieldAlert className="size-6" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-base font-semibold">
+                  {confirmToggleModal.type === "SMS"
+                    ? "Verify BulkSMSBD Gateway"
+                    : "Verify Custom SMTP Gateway"}
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  সতর্কতা: অনুগ্রহ করে নিশ্চিত করুন যে আপনার প্রবেশকৃত গেটওয়ে ক্রেডেনশিয়াল বিশ্বস্ত ও বৈধ। ভুল এপিআই কি অথবা এসএমটিপি হোস্ট বা পাসওয়ার্ড দিলে গ্রাহকের অর্ডার নোটিফিকেশন ডেলিভারি ব্যর্থ হবে। আপনি কি গেটওয়েটি এখনই সক্রিয় করতে চান?
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-2 border-t border-border/40">
+              <button
+                type="button"
+                onClick={() => setConfirmToggleModal(null)}
+                className="rounded-lg border px-4 py-2 text-xs font-medium hover:bg-muted transition-colors"
+              >
+                বাতিল করুন (Cancel)
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmToggleOn}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs"
+              >
+                <CheckCircle2 className="size-3.5" />
+                <span>যাচাই করেছি, চালু করুন</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
@@ -881,7 +919,7 @@ function ManualDispatchCard({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b">
         <div className="flex items-center gap-3">
           <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Zap className="size-6" />
+            <SendHorizontal className="size-6" />
           </div>
           <div>
             <h3 className="text-lg font-semibold">{t("manualTitle")}</h3>
