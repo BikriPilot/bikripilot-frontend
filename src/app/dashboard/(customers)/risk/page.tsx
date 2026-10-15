@@ -11,6 +11,7 @@ import { PhoneSearchBox } from '@/components/risk/PhoneSearchBox';
 import { RiskDetails } from '@/components/risk/RiskDetails';
 import { RecentChecksTable } from '@/components/risk/RecentChecksTable';
 import { useRiskHistory, useCheckRiskMutation } from '@/hooks/queries/useRisk';
+import { useCouriers } from '@/hooks/queries/useCouriers';
 import { useCurrentShop } from '@/hooks/useCurrentShop';
 import { shopsApi } from '@/lib/api/shops.api';
 
@@ -26,12 +27,26 @@ function RiskCheckContent() {
 
   const historyQuery = useRiskHistory({ limit: 15 });
   const checkMutation = useCheckRiskMutation();
+  const couriersQuery = useCouriers();
 
   const settingsQuery = useQuery({
     queryKey: ['settings', shopId],
     queryFn: () => shopsApi.settings(shopId!),
     enabled: Boolean(shopId),
   });
+
+  const isCourierConnected = Boolean(
+    couriersQuery.data?.some(
+      (c) =>
+        c.isActive &&
+        (c.provider === 'STEADFAST' ||
+          c.provider === 'PATHAO' ||
+          c.provider === 'REDX'),
+    ) || checkMutation.data?.courier?.provider === 'STEADFAST',
+  );
+
+  const activeCourierProvider =
+    couriersQuery.data?.find((c) => c.isActive)?.provider || 'STEADFAST';
 
   const handleSearch = (phone: string, checkFraudbd = false) => {
     setActivePhone(phone);
@@ -46,7 +61,8 @@ function RiskCheckContent() {
       {
         onError: (err: unknown) => {
           const msg =
-            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            (err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message ||
             (err as { message?: string })?.message ||
             t('checkFailed');
           toast.error(msg);
@@ -82,6 +98,7 @@ function RiskCheckContent() {
 
   const historyItems = historyQuery.data?.data || [];
   const hasFraudbdKey = Boolean(settingsQuery.data?.hasFraudbdKey);
+  const hasSearched = Boolean(checkMutation.data);
 
   return (
     <div className="space-y-8">
@@ -90,7 +107,37 @@ function RiskCheckContent() {
         description={t('fraudCheckSubtitle')}
       />
 
-      {/* Search Input Box */}
+      {/* Error Banner */}
+      {checkMutation.isError && (
+        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-5 text-sm text-rose-600 dark:text-rose-400">
+          <div className="flex items-center gap-2 font-semibold">
+            <AlertTriangle size={18} />
+            <span>{t('checkFailed')}</span>
+          </div>
+          <p className="mt-1 text-xs opacity-90">
+            {(checkMutation.error as { response?: { data?: { message?: string } } })
+              ?.response?.data?.message ||
+              (checkMutation.error as { message?: string })?.message ||
+              t('checkFailed')}
+          </p>
+        </div>
+      )}
+
+      {/* 1. Main Risk Assessment Dashboard (Always visible on page entry) */}
+      <RiskDetails
+        data={checkMutation.data}
+        hasSearched={hasSearched}
+        searchedPhone={activePhone}
+        onRefresh={handleRefresh}
+        isRefreshing={checkMutation.isPending && !includeFraudbd}
+        onCheckFraudbd={handleCheckFraudbd}
+        isCheckingFraudbd={checkMutation.isPending && includeFraudbd}
+        onKeySaved={handleKeySaved}
+        isCourierConnected={isCourierConnected}
+        activeCourierProvider={activeCourierProvider}
+      />
+
+      {/* 2. Customer Phone Search Box (Positioned directly underneath the overview cards) */}
       <div className="rounded-2xl border bg-card p-5 sm:p-6 shadow-xs">
         <h3 className="mb-3 text-sm font-semibold flex items-center gap-2">
           <ShieldAlert size={18} className="text-primary" />
@@ -104,34 +151,7 @@ function RiskCheckContent() {
         />
       </div>
 
-      {/* Error Banner */}
-      {checkMutation.isError && (
-        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-5 text-sm text-rose-600 dark:text-rose-400">
-          <div className="flex items-center gap-2 font-semibold">
-            <AlertTriangle size={18} />
-            <span>{t('checkFailed')}</span>
-          </div>
-          <p className="mt-1 text-xs opacity-90">
-            {(checkMutation.error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-              (checkMutation.error as { message?: string })?.message ||
-              t('checkFailed')}
-          </p>
-        </div>
-      )}
-
-      {/* Result Display: Left (Platform+Courier) & Right (FraudBD) */}
-      {checkMutation.data && (
-        <RiskDetails
-          data={checkMutation.data}
-          onRefresh={handleRefresh}
-          isRefreshing={checkMutation.isPending}
-          onCheckFraudbd={handleCheckFraudbd}
-          isCheckingFraudbd={checkMutation.isPending && includeFraudbd}
-          onKeySaved={handleKeySaved}
-        />
-      )}
-
-      {/* Recent Checks Section */}
+      {/* 3. Recent Checks Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-semibold flex items-center gap-2">

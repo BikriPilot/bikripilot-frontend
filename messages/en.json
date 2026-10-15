@@ -2417,7 +2417,15 @@
     "fraudbdSuccess": "Delivered",
     "fraudbdCancelled": "Cancelled",
     "fraudbdSuccessScore": "FraudBD Success Rate",
-    "fraudbdSkippedNotice": "FraudBD check was skipped to save your API credits. Click below to verify against FraudBD."
+    "fraudbdSkippedNotice": "FraudBD check was skipped to save your API credits. Click below to verify against FraudBD.",
+    "connectCourierApi": "Connect Courier API",
+    "courierDisconnected": "Disconnected",
+    "courierConnected": "Live Courier API Synced",
+    "readyToVerify": "Ready to Verify",
+    "noCustomerChecked": "No customer checked yet",
+    "searchPromptDesc": "Enter customer phone number below to inspect network delivery history and fraud risk.",
+    "verifiedProfile": "Verified Profile",
+    "verifiedSafeNotice": "Verified: Clean profile with no return or fraud reports"
   },
   "admin": {
     "adminLabel": "Admin",

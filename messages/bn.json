@@ -2417,7 +2417,15 @@
     "fraudbdSuccess": "সফল ডেলিভারি",
     "fraudbdCancelled": "ক্যান্সেল",
     "fraudbdSuccessScore": "FraudBD সফলতার হার",
-    "fraudbdSkippedNotice": "আপনার ক্রেডিট সাশ্রয়ের জন্য FraudBD চেক বাদ রাখা হয়েছে। FraudBD তে যাচাই করতে নিচের বাটনে চাপ দিন।"
+    "fraudbdSkippedNotice": "আপনার ক্রেডিট সাশ্রয়ের জন্য FraudBD চেক বাদ রাখা হয়েছে। FraudBD তে যাচাই করতে নিচের বাটনে চাপ দিন।",
+    "connectCourierApi": "কুরিয়ার API কানেক্ট করুন",
+    "courierDisconnected": "কানেক্ট করা নেই",
+    "courierConnected": "লাইভ কুরিয়ার API সিঙ্কড",
+    "readyToVerify": "যাচাইয়ের জন্য প্রস্তুত",
+    "noCustomerChecked": "এখনও কোনো নম্বর যাচাই করা হয়নি",
+    "searchPromptDesc": "ক্রেতার ডেলিভারি ইতিহাস ও ফ্রড ঝুঁকি দেখতে নিচে মোবাইল নম্বর লিখে সার্চ করুন।",
+    "verifiedProfile": "যাচাই সম্পন্ন",
+    "verifiedSafeNotice": "যাচাইকৃত: নেটওয়ার্কে কোনো নেগেটিভ বা রিটার্ন রেকর্ড নেই"
   },
   "admin": {
     "adminLabel": "অ্যাডমিন",
