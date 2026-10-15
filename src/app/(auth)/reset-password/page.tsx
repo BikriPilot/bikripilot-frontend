@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { PasswordField, isPasswordSecure } from "@/components/common/PasswordField";
 import { authApi } from "@/lib/api/auth.api";
@@ -106,10 +107,18 @@ function ResetPasswordForm() {
           />
 
           <button
+            type="submit"
             disabled={busy}
-            className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60 transition-opacity"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60"
           >
-            {busy ? t("saving") : t("save")}
+            {busy ? (
+              <>
+                <Loader2 className="size-4 animate-spin text-primary-foreground" />
+                <span>{t("saving")}</span>
+              </>
+            ) : (
+              t("save")
+            )}
           </button>
         </form>
       )}

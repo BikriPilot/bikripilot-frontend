@@ -47,7 +47,7 @@ interface RiskDetailsProps {
 
 export function RiskDetails({
   data,
-  hasSearched = false,
+  hasSearched: hasSearchedProp = false,
   searchedPhone = '',
   onRefresh,
   isRefreshing = false,
@@ -87,6 +87,7 @@ export function RiskDetails({
 
   // Active verified data or defaults
   const activePhone = data?.phone || searchedPhone;
+  const hasSearched = hasSearchedProp || Boolean(searchedPhone || data);
   const score = data?.score ?? 0;
   const reasons = data?.reasons ?? [];
 

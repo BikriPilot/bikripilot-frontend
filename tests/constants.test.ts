@@ -44,9 +44,7 @@ describe("shared business registries", () => {
         .sort(),
     ).toEqual(["hisab", "home", "inbox", "orders"]);
     expect(
-      NAV_SECTIONS.find((section) => section.key === "customers")?.subNav.find(
-        (item) => item.key === "risk",
-      )?.permission,
+      NAV_SECTIONS.find((section) => section.key === "fraudCheck")?.permission,
     ).toBe("risk.check");
     expect(
       NAV_SECTIONS.find((section) => section.key === "analytics")?.permission,

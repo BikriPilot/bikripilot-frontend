@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { Field } from "@/components/common/Field";
 import { TurnstileWidget } from "@/components/common/TurnstileWidget";
@@ -59,10 +60,18 @@ function ForgotPasswordForm() {
           />
           <TurnstileWidget onToken={setToken} />
           <button
+            type="submit"
             disabled={busy}
-            className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60 transition-opacity"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60"
           >
-            {busy ? t("loading") : t("sendReset")}
+            {busy ? (
+              <>
+                <Loader2 className="size-4 animate-spin text-primary-foreground" />
+                <span>{t("loading")}...</span>
+              </>
+            ) : (
+              t("sendReset")
+            )}
           </button>
         </form>
       )}
