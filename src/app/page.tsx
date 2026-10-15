@@ -1,4 +1,3 @@
-import { FloatingSupportButton } from "@/components/landing/FloatingSupportButton";
 import { LandingPage } from "@/components/landing/LandingPage";
 import { PublicFooter } from "@/components/landing/PublicFooter";
 import { PublicNavbar } from "@/components/landing/PublicNavbar";
@@ -11,7 +10,6 @@ export default async function Home() {
       <PublicNavbar />
       <LandingPage />
       <PublicFooter config={config} />
-      <FloatingSupportButton config={config} />
     </>
   );
 }
