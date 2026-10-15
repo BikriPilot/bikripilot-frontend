@@ -2402,7 +2402,7 @@
     "noCourierConnected": "No active courier API connected. Connect Steadfast under Couriers to auto-sync parcel history.",
     "platformStatsTitle": "Platform Network Orders",
     "fraudbdNotConfigured": "FraudBD API Not Configured",
-    "fraudbdNotConfiguredDesc": "To check community fraud reports across Bangladesh, enter your personal FraudBD API key. Your key is stored securely with AES-256-GCM encryption and isolated to your shop.",
+    "fraudbdNotConfiguredDesc": "Your key is stored securely with AES-256-GCM encryption and isolated to your shop.",
     "fraudbdKeyPlaceholder": "Enter your FraudBD API key...",
     "saveFraudbdKey": "Save & Connect Key",
     "savingFraudbdKey": "Saving...",
