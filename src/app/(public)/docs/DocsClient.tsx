@@ -133,7 +133,7 @@ export function DocsClient() {
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
       {/* Top Docs Sub-Header / Breadcrumb & Mobile Bar */}
-      <div className="border-b border-border/60 bg-muted/20 backdrop-blur-sm sticky top-16 z-30">
+      <div className="border-b md:border-b-0 border-border/60 bg-muted/20 md:bg-transparent backdrop-blur-sm sticky top-16 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
           {/* Breadcrumb Path - Desktop only */}
           <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground overflow-x-auto py-1">
