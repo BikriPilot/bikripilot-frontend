@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Search, Loader2, Phone, Shield } from 'lucide-react';
 
@@ -23,6 +23,10 @@ export function PhoneSearchBox({
   const [phone, setPhone] = useState(initialPhone);
   const [checkFraudbd, setCheckFraudbd] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialPhone) setPhone(initialPhone);
+  }, [initialPhone]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

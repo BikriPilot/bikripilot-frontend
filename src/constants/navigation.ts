@@ -179,21 +179,7 @@ export const NAV_SECTIONS: NavSection[] = [
     icon: Users,
     labelKey: "customers",
     mobile: "more",
-    subNav: [
-      {
-        key: "customers",
-        href: "/dashboard/customers",
-        labelKey: "customers",
-        permission: "customer.read",
-        exact: true,
-      },
-      {
-        key: "risk",
-        href: "/dashboard/risk",
-        labelKey: "riskCheck",
-        permission: "risk.check",
-      },
-    ],
+    subNav: [],
   },
   {
     key: "fraudCheck",

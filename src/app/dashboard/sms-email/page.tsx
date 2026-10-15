@@ -16,7 +16,6 @@ import {
   Zap,
   Info,
 } from "lucide-react";
-import { PageHeader } from "@/components/common/PageHeader";
 import { CardListSkeleton } from "@/components/common/skeletons";
 import { ErrorState, EmptyState } from "@/components/common/PageStates";
 import { useCurrentShop } from "@/hooks/useCurrentShop";
@@ -51,11 +50,6 @@ export default function SmsEmailSettingsPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      <PageHeader
-        title={t("title")}
-        description={t("description")}
-      />
-
       {/* Tabs */}
       <div className="flex border-b border-border/60">
         <button
@@ -140,6 +134,10 @@ function ConfigForm({
   const [smtpPass, setSmtpPass] = useState("");
   const [emailFrom, setEmailFrom] = useState(config.emailFrom ?? "");
 
+  // Toggle saving states
+  const [isSavingSmsToggle, setIsSavingSmsToggle] = useState(false);
+  const [isSavingEmailToggle, setIsSavingEmailToggle] = useState(false);
+
   // Order SMS Triggers
   const [notifyOrderCreatedSms, setNotifyOrderCreatedSms] = useState(config.notifyOrderCreatedSms);
   const [notifyOrderConfirmedSms, setNotifyOrderConfirmedSms] = useState(config.notifyOrderConfirmedSms);
@@ -211,6 +209,70 @@ function ConfigForm({
       toast.error(msg);
     },
   });
+
+  const handleToggleSms = async (nextVal: boolean) => {
+    if (nextVal) {
+      const hasApiKey = Boolean(config.hasBulksmsKey || bulksmsApiKey.trim());
+      const hasSenderId = Boolean(bulksmsSenderId.trim() || config.bulksmsSenderId);
+
+      if (!hasApiKey || !hasSenderId) {
+        toast.error("BulkSMSBD API Key and Sender ID are both required before enabling SMS notifications.");
+        setSmsEnabled(false);
+        return;
+      }
+    }
+
+    setIsSavingSmsToggle(true);
+    try {
+      await updateMutation.mutateAsync({
+        smsEnabled: nextVal,
+        bulksmsSenderId: bulksmsSenderId.trim() || config.bulksmsSenderId || null,
+        ...(bulksmsApiKey.trim() ? { bulksmsApiKey: bulksmsApiKey.trim() } : {}),
+      });
+      setSmsEnabled(nextVal);
+      toast.success(nextVal ? "SMS notifications enabled" : "SMS notifications disabled");
+    } catch {
+      setSmsEnabled(!nextVal);
+      toast.error(nextVal ? "Failed to enable SMS notifications" : "Failed to disable SMS notifications");
+    } finally {
+      setIsSavingSmsToggle(false);
+    }
+  };
+
+  const handleToggleEmail = async (nextVal: boolean) => {
+    if (nextVal) {
+      const hasHost = Boolean(smtpHost.trim() || config.smtpHost);
+      const hasUser = Boolean(smtpUser.trim() || config.smtpUser);
+      const hasPass = Boolean(config.hasSmtpPass || smtpPass.trim());
+      const hasFrom = Boolean(emailFrom.trim() || config.emailFrom);
+
+      if (!hasHost || !hasUser || !hasPass || !hasFrom) {
+        toast.error("SMTP Host, User, Password, and Sender Email are all required before enabling Email notifications.");
+        setEmailEnabled(false);
+        return;
+      }
+    }
+
+    setIsSavingEmailToggle(true);
+    try {
+      await updateMutation.mutateAsync({
+        emailEnabled: nextVal,
+        smtpHost: smtpHost.trim() || config.smtpHost || null,
+        smtpPort: Number(smtpPort) || config.smtpPort || 587,
+        smtpSecure,
+        smtpUser: smtpUser.trim() || config.smtpUser || null,
+        emailFrom: emailFrom.trim() || config.emailFrom || null,
+        ...(smtpPass.trim() ? { smtpPass: smtpPass.trim() } : {}),
+      });
+      setEmailEnabled(nextVal);
+      toast.success(nextVal ? "Email notifications enabled" : "Email notifications disabled");
+    } catch {
+      setEmailEnabled(!nextVal);
+      toast.error(nextVal ? "Failed to enable Email notifications" : "Failed to disable Email notifications");
+    } finally {
+      setIsSavingEmailToggle(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -346,10 +408,11 @@ function ConfigForm({
               <input
                 type="checkbox"
                 checked={smsEnabled}
-                onChange={(e) => setSmsEnabled(e.target.checked)}
+                disabled={isSavingSmsToggle || updateMutation.isPending}
+                onChange={(e) => void handleToggleSms(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50"></div>
             </label>
           </div>
         </div>
@@ -414,10 +477,11 @@ function ConfigForm({
               <input
                 type="checkbox"
                 checked={emailEnabled}
-                onChange={(e) => setEmailEnabled(e.target.checked)}
+                disabled={isSavingEmailToggle || updateMutation.isPending}
+                onChange={(e) => void handleToggleEmail(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50"></div>
             </label>
           </div>
         </div>
@@ -920,14 +984,6 @@ function ManualDispatchCard({
             className="w-full rounded-lg border bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             required
           />
-        </div>
-
-        {/* Branding Preview Badge */}
-        <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/20 border border-border/50 text-[11px] text-muted-foreground">
-          <span>
-            {channel === "SMS" ? t("smsBrandingNote") : t("emailBrandingNote")}
-          </span>
-          <span className="font-semibold text-primary">bikriopilot.com</span>
         </div>
 
         <div className="flex justify-end">
