@@ -20,7 +20,17 @@
     "notFoundDescription": "The page you are looking for does not exist.",
     "backHome": "Back to home",
     "whatsappSupport": "WhatsApp support",
-    "callSupport": "Call support"
+    "callSupport": "Call support",
+    "maintenanceTitle": "System Maintenance in Progress",
+    "maintenanceMessage": "We are currently performing scheduled maintenance. We apologize for any temporary inconvenience.",
+    "passwordReqMin": "At least 8 characters",
+    "passwordReqLetter": "Contains a letter",
+    "passwordReqNumber": "Contains a number",
+    "passwordReqSpecial": "Contains a special character (@, #, $, %, !, &)",
+    "passwordReqStrength": "Password strength",
+    "passwordWeak": "Weak",
+    "passwordMedium": "Medium",
+    "passwordStrong": "Strong"
   },
   "billing": {
     "title": "Billing",
@@ -177,6 +187,12 @@
       "status": "Status",
       "actions": "Actions",
       "print": "Print invoice",
+      "plan": "Plan",
+      "billingCycle": "Billing cycle",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "credit": "Plan credit",
+      "footerNote": "BikriPilot subscription invoice",
       "statuses": {
         "PENDING": "Pending",
         "PAID": "Paid",
@@ -850,7 +866,17 @@
     "deliveryCharge": "Delivery charge",
     "freeDelivery": "Free delivery",
     "total": "Total",
-    "status": "Status",
+    "status": {
+      "DRAFT": "Draft",
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "PACKED": "Packed",
+      "SHIPPED": "Shipped",
+      "DELIVERED": "Delivered",
+      "PARTIALLY_DELIVERED": "Partially delivered",
+      "RETURNED": "Returned",
+      "CANCELLED": "Cancelled"
+    },
     "date": "Date",
     "customerName": "Customer name",
     "phone": "Phone number",
@@ -871,17 +897,6 @@
     "updated": "Order updated",
     "saveError": "The order could not be saved.",
     "empty": "No orders yet.",
-    "status": {
-      "DRAFT": "Draft",
-      "PENDING": "Pending",
-      "CONFIRMED": "Confirmed",
-      "PACKED": "Packed",
-      "SHIPPED": "Shipped",
-      "DELIVERED": "Delivered",
-      "PARTIALLY_DELIVERED": "Partially delivered",
-      "RETURNED": "Returned",
-      "CANCELLED": "Cancelled"
-    },
     "riskAssessment": "Risk assessment",
     "checkRisk": "Check risk",
     "recheckRisk": "Recheck",
@@ -1127,7 +1142,6 @@
     "notificationsDescription": "Updates from your shop and BikriPilot.",
     "markAllRead": "Mark all as read",
     "noNotifications": "You are all caught up.",
-    "save": "Save",
     "saved": "Saved",
     "onboardingBusiness": "Tell us about your business",
     "onboardingBusinessDescription": "Add a few details so your shop is easier to recognize.",
@@ -1169,7 +1183,6 @@
     "lowStockThreshold": "Low-stock threshold",
     "invoiceNote": "Invoice note",
     "publicTrackingEnabled": "Allow public order tracking",
-    "businessCategory": "Business category",
     "removeMember": "Remove member",
     "revokeInvite": "Revoke invitation",
     "confirmRemoveMember": "Remove {name} from this shop? They will lose access.",
@@ -1188,7 +1201,14 @@
       "handicrafts": "Handicrafts",
       "pets": "Pet supplies",
       "other": "Other"
-    }
+    },
+    "admin": "Admin",
+    "adminPanel": "Admin Panel",
+    "teamNoticeTitle": "Review team roles & permissions before inviting",
+    "teamNoticeDesc": "To ensure proper delegation and shop security, verify each role access level before sending invitations.",
+    "teamRolesDocsLink": "Read complete Roles & Permissions Docs",
+    "teamRolesDocsTitle": "Read roles & permissions guide before inviting team members",
+    "teamRolesDocsGuide": "Roles & Permissions Guide (Docs)"
   },
   "landing": {
     "closeDemo": "Close video",
@@ -2479,7 +2499,33 @@
     "fraudbdKeyDeleted": "FraudBD API key removed successfully",
     "fraudbdKeyDeleteFailed": "Failed to remove FraudBD API key",
     "confirmDeleteKey": "Are you sure you want to remove your FraudBD API key?",
-    "overallSuccessScore": "Success Score"
+    "overallSuccessScore": "Success Score",
+    "verified": "Verified",
+    "autoReady": "Auto Ready",
+    "deliveryConfidence": "Delivery Success Confidence",
+    "confidenceExcellent": "Excellent",
+    "confidenceModerate": "Moderate",
+    "confidenceRisky": "High Risk",
+    "shopApiKeyActive": "Shop API Key: Active",
+    "fraudbdApiError": "FraudBD API Error",
+    "fraudReportAlertNotice": "Caution: Other merchants in Bangladesh have registered fraud reports against this customer.",
+    "recheckFraudbdBtn": "Re-check FraudBD (1 Credit)",
+    "creditProtectionActive": "Credit Protection Active",
+    "networkSuccessRate": "Network Success Rate",
+    "connectedStatus": "Connected",
+    "courierSuccessRate": "Courier Success Rate",
+    "getKeyFraudbd": "Get key at fraudbd.com",
+    "cancelBtn": "Cancel",
+    "keyConnected": "Key Connected",
+    "externalCourierHistoryTitle": "External Courier History (via FraudBD)",
+    "shopOrders": "Shop Orders",
+    "delivered": "Delivered",
+    "returnedCount": "Returned",
+    "shopSuccessRate": "Shop Success Rate",
+    "deliveredSummary": "{delivered} delivered / {total} total parcels",
+    "noParcelHistory": "0 orders / No history",
+    "enterValidFraudbdKey": "Please enter a valid FraudBD API key",
+    "courierConnection": "{provider} Connection"
   },
   "admin": {
     "adminLabel": "Admin",
@@ -2705,13 +2751,22 @@
         "delete": "Delete shop",
         "override": "Feature override"
       },
-      "plan": { "create": "Create plan", "edit": "Edit plan" },
-      "coupon": { "create": "Create coupon", "edit": "Edit coupon" },
+      "plan": {
+        "create": "Create plan",
+        "edit": "Edit plan"
+      },
+      "coupon": {
+        "create": "Create coupon",
+        "edit": "Edit coupon"
+      },
       "announcement": {
         "create": "Create announcement",
         "edit": "Edit announcement"
       },
-      "content": { "create": "Add content", "edit": "Edit content" }
+      "content": {
+        "create": "Add content",
+        "edit": "Edit content"
+      }
     },
     "fields": {
       "platformRole": "Platform role",
@@ -2912,7 +2967,11 @@
     },
     "visitors": {
       "range": "Date range",
-      "days": { "1": "Today", "7": "Last 7 days", "30": "Last 30 days" },
+      "days": {
+        "1": "Today",
+        "7": "Last 7 days",
+        "30": "Last 30 days"
+      },
       "pageViews": "Page views",
       "uniqueVisitors": "Unique visitors",
       "uniqueIps": "Unique IPs",
@@ -2927,7 +2986,10 @@
       "devices": "Devices",
       "countries": "Countries"
     },
-    "orderDetail": { "items": "Order items", "timeline": "Order timeline" },
+    "orderDetail": {
+      "items": "Order items",
+      "timeline": "Order timeline"
+    },
     "tabs": {
       "pending": "Pending review",
       "refunds": "Needs refund",
@@ -2990,8 +3052,15 @@
       "WARNING": "Warning",
       "SUCCESS": "Success"
     },
-    "audiences": { "ALL": "All shops", "PLAN": "Plan", "SHOP": "Shop" },
-    "contentTypes": { "FAQ": "FAQ", "TESTIMONIAL": "Testimonial" },
+    "audiences": {
+      "ALL": "All shops",
+      "PLAN": "Plan",
+      "SHOP": "Shop"
+    },
+    "contentTypes": {
+      "FAQ": "FAQ",
+      "TESTIMONIAL": "Testimonial"
+    },
     "search": {
       "shops": "Search shops, owners, or email",
       "users": "Search name, email, or phone",
@@ -3027,7 +3096,10 @@
       "jobs": "Job queues",
       "healthPath": "Health check"
     },
-    "billing": { "month": "month", "year": "year" }
+    "billing": {
+      "month": "month",
+      "year": "year"
+    }
   },
   "smsEmail": {
     "title": "SMS & Email Notifications",
@@ -3129,4 +3201,3 @@
     "detailsOrError": "Details / Error"
   }
 }
-

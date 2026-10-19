@@ -20,7 +20,17 @@
     "notFoundDescription": "আপনি যে পেজটি খুঁজছেন সেটি নেই।",
     "backHome": "হোমে ফিরুন",
     "whatsappSupport": "হোয়াটসঅ্যাপে সহায়তা",
-    "callSupport": "সহায়তায় কল করুন"
+    "callSupport": "সহায়তায় কল করুন",
+    "maintenanceTitle": "সিস্টেম রক্ষণাবেক্ষণ চলছে",
+    "maintenanceMessage": "সিস্টেম আপগ্রেড ও রক্ষণাবেক্ষণের কাজ চলছে। সাময়িক অসুবিধার জন্য আমরা আন্তরিকভাবে দুঃখিত।",
+    "passwordReqMin": "কমপক্ষে ৮টি অক্ষর",
+    "passwordReqLetter": "কমপক্ষে ১টি ইংরেজি বর্ণ (Letter)",
+    "passwordReqNumber": "কমপক্ষে ১টি সংখ্যা (0-9)",
+    "passwordReqSpecial": "কমপক্ষে ১টি স্পেশাল ক্যারেক্টার (@, #, $, %, ইত্যাদি)",
+    "passwordReqStrength": "পাসওয়ার্ডের নিরাপত্তা",
+    "passwordWeak": "দুর্বল ও অনিরাপদ",
+    "passwordMedium": "মাঝারি",
+    "passwordStrong": "দৃঢ় ও নিরাপদ"
   },
   "billing": {
     "title": "বিলিং",
@@ -177,6 +187,12 @@
       "status": "অবস্থা",
       "actions": "কাজ",
       "print": "ইনভয়েস প্রিন্ট করুন",
+      "plan": "প্ল্যান",
+      "billingCycle": "বিলিং চক্র",
+      "subtotal": "সাবটোটাল",
+      "discount": "ছাড়",
+      "credit": "প্ল্যান ক্রেডিট",
+      "footerNote": "বিক্রিপাইলট সাবস্ক্রিপশন ইনভয়েস",
       "statuses": {
         "PENDING": "অপেক্ষমাণ",
         "PAID": "পরিশোধিত",
@@ -850,7 +866,17 @@
     "deliveryCharge": "ডেলিভারি চার্জ",
     "freeDelivery": "ফ্রি ডেলিভারি",
     "total": "মোট",
-    "status": "স্ট্যাটাস",
+    "status": {
+      "DRAFT": "খসড়া",
+      "PENDING": "অপেক্ষমাণ",
+      "CONFIRMED": "নিশ্চিত",
+      "PACKED": "প্যাক করা",
+      "SHIPPED": "পাঠানো হয়েছে",
+      "DELIVERED": "ডেলিভারি হয়েছে",
+      "PARTIALLY_DELIVERED": "আংশিক ডেলিভারি",
+      "RETURNED": "ফেরত",
+      "CANCELLED": "বাতিল"
+    },
     "date": "তারিখ",
     "customerName": "কাস্টমারের নাম",
     "phone": "ফোন নম্বর",
@@ -871,17 +897,6 @@
     "updated": "অর্ডার আপডেট হয়েছে",
     "saveError": "অর্ডার সেভ করা যায়নি।",
     "empty": "এখনও কোনো অর্ডার নেই।",
-    "status": {
-      "DRAFT": "খসড়া",
-      "PENDING": "অপেক্ষমাণ",
-      "CONFIRMED": "নিশ্চিত",
-      "PACKED": "প্যাক করা",
-      "SHIPPED": "পাঠানো হয়েছে",
-      "DELIVERED": "ডেলিভারি হয়েছে",
-      "PARTIALLY_DELIVERED": "আংশিক ডেলিভারি",
-      "RETURNED": "ফেরত",
-      "CANCELLED": "বাতিল"
-    },
     "riskAssessment": "ঝুঁকি যাচাই",
     "checkRisk": "ঝুঁকি যাচাই",
     "recheckRisk": "পুনরায় যাচাই",
@@ -1070,7 +1085,7 @@
     "shopSettingsTitle": "শপ সেটিংস",
     "shopSettingsDescription": "আপনার শপের তথ্য হালনাগাদ রাখুন।",
     "saveChanges": "পরিবর্তন সংরক্ষণ করুন",
-    "businessCategory": "ব্যবসার ক্যাটাগরি",
+    "businessCategory": "ব্যবসার ধরন",
     "selectCategory": "ক্যাটাগরি নির্বাচন করুন (ঐচ্ছিক)",
     "shopBlockedTitle": "আপনার শপটি সাময়িকভাবে স্থগিত বা ব্লক করা হয়েছে",
     "shopBlockedDescription": "আপনার শপটি এডমিন দ্বারা ব্লক করা হয়েছে। সহায়তার জন্য অনুগ্রহ করে সাপোর্টে যোগাযোগ করুন।",
@@ -1127,7 +1142,6 @@
     "notificationsDescription": "আপনার শপ ও BikriPilot-এর আপডেট।",
     "markAllRead": "সব পড়া হয়েছে করুন",
     "noNotifications": "নতুন কোনো নোটিফিকেশন নেই।",
-    "save": "সংরক্ষণ করুন",
     "saved": "সংরক্ষিত",
     "onboardingBusiness": "আপনার ব্যবসা সম্পর্কে জানান",
     "onboardingBusinessDescription": "আপনার শপ সহজে চিনতে কয়েকটি তথ্য যোগ করুন।",
@@ -1169,7 +1183,6 @@
     "lowStockThreshold": "কম স্টকের সীমা",
     "invoiceNote": "ইনভয়েসের নোট",
     "publicTrackingEnabled": "অর্ডার ট্র্যাকিং লিংক চালু রাখুন",
-    "businessCategory": "ব্যবসার ধরন",
     "removeMember": "সদস্য সরান",
     "revokeInvite": "আমন্ত্রণ বাতিল করুন",
     "confirmRemoveMember": "এই শপ থেকে {name}-কে সরাবেন? তিনি আর শপে ঢুকতে পারবেন না।",
@@ -1188,7 +1201,14 @@
       "handicrafts": "হস্তশিল্প",
       "pets": "পোষা প্রাণীর পণ্য",
       "other": "অন্যান্য"
-    }
+    },
+    "admin": "অ্যাডমিন",
+    "adminPanel": "অ্যাডমিন প্যানেল",
+    "teamNoticeTitle": "টিম মেম্বার যোগ করার পূর্বে তাদের রোল ও পারমিশন জেনে নিন",
+    "teamNoticeDesc": "সঠিক দায়িত্ব বণ্টন ও শপের সুরক্ষার জন্য আমন্ত্রণ পাঠানোর আগে প্রতিটি রোলের এক্সেস লেভেল যাচাই করা জরুরি।",
+    "teamRolesDocsLink": "সম্পূর্ণ রোলস ও পারমিশন ডক পড়ুন",
+    "teamRolesDocsTitle": "টিম মেম্বার যুক্ত করার আগে রোল ও পারমিশন গাইড পড়ুন",
+    "teamRolesDocsGuide": "রোল ও পারমিশন গাইড (Docs)"
   },
   "landing": {
     "closeDemo": "ভিডিও বন্ধ করুন",
@@ -2479,7 +2499,33 @@
     "fraudbdKeyDeleted": "FraudBD API কি সফলভাবে মুছে ফেলা হয়েছে",
     "fraudbdKeyDeleteFailed": "FraudBD কি মুছতে ব্যর্থ হয়েছে",
     "confirmDeleteKey": "আপনি কি নিশ্চিত যে FraudBD API কি মুছে ফেলতে চান?",
-    "overallSuccessScore": "সফলতার স্কোর"
+    "overallSuccessScore": "সফলতার স্কোর",
+    "verified": "যাচাইকৃত",
+    "autoReady": "স্বয়ংক্রিয় প্রস্তুত",
+    "deliveryConfidence": "ডেলিভারি সফলতার সম্ভাবনা",
+    "confidenceExcellent": "চমৎকার (ঝুঁকিমুক্ত)",
+    "confidenceModerate": "মাঝারি ঝুঁকি",
+    "confidenceRisky": "উচ্চ ঝুঁকি",
+    "shopApiKeyActive": "শপ API কি: সক্রিয়",
+    "fraudbdApiError": "FraudBD এপিআই ত্রুটি",
+    "fraudReportAlertNotice": "সতর্কতা: বাংলাদেশের অন্যান্য অনলাইন বিক্রেতারা এই কাস্টমারের বিরুদ্ধে ফ্রড বা রিটার্ন রিপোর্ট করেছেন।",
+    "recheckFraudbdBtn": "পুনরায় ফ্রড চেক করুন (১ ক্রেডিট)",
+    "creditProtectionActive": "ক্রেডিট সুরক্ষা সক্রিয়",
+    "networkSuccessRate": "প্ল্যাটফর্ম নেটওয়ার্ক রেট",
+    "connectedStatus": "সংযুক্ত",
+    "courierSuccessRate": "কুরিয়ার সফলতার হার",
+    "getKeyFraudbd": "fraudbd.com থেকে কী সংগ্রহ করুন",
+    "cancelBtn": "বাতিল",
+    "keyConnected": "কী সংযুক্ত আছে",
+    "externalCourierHistoryTitle": "অন্যান্য কুরিয়ার হিস্ট্রি (FraudBD নেটওয়ার্ক)",
+    "shopOrders": "আপনার শপের অর্ডার",
+    "delivered": "সফল ডেলিভারি",
+    "returnedCount": "রিটার্ন এসেছে",
+    "shopSuccessRate": "শপের ডেলিভারি রেট",
+    "deliveredSummary": "{delivered}টি সফল ডেলিভারি / সর্বমোট {total}টি পার্সেল",
+    "noParcelHistory": "কোনো পার্সেলের হিস্ট্রি নেই",
+    "enterValidFraudbdKey": "সঠিক FraudBD API কী লিখুন",
+    "courierConnection": "{provider} সংযোগ"
   },
   "admin": {
     "adminLabel": "অ্যাডমিন",
@@ -2705,10 +2751,22 @@
         "delete": "শপ মুছুন",
         "override": "ফিচার ওভাররাইড"
       },
-      "plan": { "create": "প্ল্যান তৈরি", "edit": "প্ল্যান সম্পাদনা" },
-      "coupon": { "create": "কুপন তৈরি", "edit": "কুপন সম্পাদনা" },
-      "announcement": { "create": "ঘোষণা তৈরি", "edit": "ঘোষণা সম্পাদনা" },
-      "content": { "create": "কনটেন্ট যোগ", "edit": "কনটেন্ট সম্পাদনা" }
+      "plan": {
+        "create": "প্ল্যান তৈরি",
+        "edit": "প্ল্যান সম্পাদনা"
+      },
+      "coupon": {
+        "create": "কুপন তৈরি",
+        "edit": "কুপন সম্পাদনা"
+      },
+      "announcement": {
+        "create": "ঘোষণা তৈরি",
+        "edit": "ঘোষণা সম্পাদনা"
+      },
+      "content": {
+        "create": "কনটেন্ট যোগ",
+        "edit": "কনটেন্ট সম্পাদনা"
+      }
     },
     "fields": {
       "platformRole": "প্ল্যাটফর্ম রোল",
@@ -2829,7 +2887,6 @@
       "event": "ইভেন্ট",
       "received": "পেয়েছে",
       "queue": "কিউ",
-      "created": "তৈরি",
       "completed": "সম্পন্ন",
       "failed": "ব্যর্থ",
       "retry": "পুনরায় চেষ্টা",
@@ -2910,7 +2967,11 @@
     },
     "visitors": {
       "range": "তারিখের পরিসর",
-      "days": { "1": "আজ", "7": "গত 7 দিন", "30": "গত 30 দিন" },
+      "days": {
+        "1": "আজ",
+        "7": "গত 7 দিন",
+        "30": "গত 30 দিন"
+      },
       "pageViews": "পেজ ভিউ",
       "uniqueVisitors": "ভিন্ন ভিজিটর",
       "uniqueIps": "ভিন্ন IP",
@@ -2925,7 +2986,10 @@
       "devices": "ডিভাইস",
       "countries": "দেশ"
     },
-    "orderDetail": { "items": "অর্ডার আইটেম", "timeline": "অর্ডার টাইমলাইন" },
+    "orderDetail": {
+      "items": "অর্ডার আইটেম",
+      "timeline": "অর্ডার টাইমলাইন"
+    },
     "tabs": {
       "pending": "পর্যালোচনাধীন",
       "refunds": "রিফান্ড প্রয়োজন",
@@ -2979,14 +3043,24 @@
       "RETURNED": "ফেরত",
       "CLOSED": "বন্ধ"
     },
-    "couponTypes": { "PERCENT": "শতকরা ছাড়", "FIXED": "নির্দিষ্ট ছাড়" },
-    "variants": { "INFO": "তথ্য", "WARNING": "সতর্কতা", "SUCCESS": "সফলতা" },
+    "couponTypes": {
+      "PERCENT": "শতকরা ছাড়",
+      "FIXED": "নির্দিষ্ট ছাড়"
+    },
+    "variants": {
+      "INFO": "তথ্য",
+      "WARNING": "সতর্কতা",
+      "SUCCESS": "সফলতা"
+    },
     "audiences": {
       "ALL": "সব শপ",
       "PLAN": "নির্দিষ্ট প্ল্যান",
       "SHOP": "নির্দিষ্ট শপ"
     },
-    "contentTypes": { "FAQ": "FAQ", "TESTIMONIAL": "টেস্টিমোনিয়াল" },
+    "contentTypes": {
+      "FAQ": "FAQ",
+      "TESTIMONIAL": "টেস্টিমোনিয়াল"
+    },
     "search": {
       "shops": "শপ, মালিক বা ইমেইল খুঁজুন",
       "users": "নাম, ইমেইল বা ফোন খুঁজুন",
@@ -3022,7 +3096,10 @@
       "jobs": "জব কিউ",
       "healthPath": "স্বাস্থ্য পরীক্ষা"
     },
-    "billing": { "month": "মাস", "year": "বছর" }
+    "billing": {
+      "month": "মাস",
+      "year": "বছর"
+    }
   },
   "smsEmail": {
     "title": "এসএমএস ও ইমেইল নোটিফিকেশন",

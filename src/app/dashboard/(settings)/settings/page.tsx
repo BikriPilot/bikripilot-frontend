@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/common/PageHeader";
 import { Field } from "@/components/common/Field";
 import { ErrorState } from "@/components/common/PageStates";
@@ -14,6 +14,8 @@ import { ImageUploader } from "@/components/common/ImageUploader";
 import { Store, Headphones, AlertTriangle } from "lucide-react";
 
 export default function ShopSettingsPage() {
+  const locale = useLocale();
+  const isBn = locale === "bn";
   const t = useTranslations("step8");
   const { shopId } = useCurrentShop();
   const query = useQuery({
@@ -39,15 +41,15 @@ export default function ShopSettingsPage() {
     const fbUrl = value("facebookPageUrl").trim();
 
     if (!shopName) {
-      toast.error("Shop name is required.");
+      toast.error(isBn ? "শপের নাম প্রদান করা আবশ্যক।" : "Shop name is required.");
       return;
     }
     if (!shop.logoUrl && !form.logoUrl) {
-      toast.error("Shop logo/image is required.");
+      toast.error(isBn ? "শপের লোগো বা ছবি আপলোড করা আবশ্যক।" : "Shop logo/image is required.");
       return;
     }
     if (!fbUrl) {
-      toast.error("Facebook page link is required.");
+      toast.error(isBn ? "ফেসবুক পেজের লিংক প্রদান করা আবশ্যক।" : "Facebook page link is required.");
       return;
     }
 
@@ -87,7 +89,9 @@ export default function ShopSettingsPage() {
           <div className="flex items-center gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-800 dark:text-amber-300">
             <AlertTriangle size={16} className="shrink-0 text-amber-600 dark:text-amber-400" />
             <span>
-              Shop Name, Logo Image, and Facebook Page link are required before connecting sales channels.
+              {isBn
+                ? "সেলস চ্যানেল কানেক্ট করার আগে শপের নাম, লোগো এবং ফেসবুক পেজ লিংক যোগ করা আবশ্যক।"
+                : "Shop Name, Logo Image, and Facebook Page link are required before connecting sales channels."}
             </span>
           </div>
         )}
@@ -97,7 +101,7 @@ export default function ShopSettingsPage() {
           <div className="flex items-center gap-2 border-b pb-3">
             <Store size={18} className="text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Store Identity (শপের পরিচিতি)
+              {isBn ? "শপ ও ব্র্যান্ড পরিচিতি" : "Store Identity"}
             </h2>
           </div>
 
@@ -134,7 +138,7 @@ export default function ShopSettingsPage() {
                   onChange={(event) =>
                     setForm({ ...form, name: event.target.value })
                   }
-                  placeholder="My Awesome Shop"
+                  placeholder={isBn ? "আপনার শপের নাম" : "My Awesome Shop"}
                   required
                 />
                 <Field
@@ -151,7 +155,7 @@ export default function ShopSettingsPage() {
               {/* Row 2: Website or domain & Business category in 1 line */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
-                  label={`${t("website")} (Optional)`}
+                  label={`${t("website")} (${isBn ? "ঐচ্ছিক" : "Optional"})`}
                   value={value("websiteUrl")}
                   onChange={(event) =>
                     setForm({ ...form, websiteUrl: event.target.value })
@@ -161,7 +165,9 @@ export default function ShopSettingsPage() {
                 <label className="grid gap-2 text-sm font-medium">
                   <span className="flex items-center justify-between">
                     <span>{t("businessCategory")}</span>
-                    <span className="text-xs text-muted-foreground font-normal">Optional</span>
+                    <span className="text-xs text-muted-foreground font-normal">
+                      {isBn ? "ঐচ্ছিক" : "Optional"}
+                    </span>
                   </span>
                   <select
                     className="min-h-11 rounded-lg border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
@@ -171,20 +177,20 @@ export default function ShopSettingsPage() {
                     }
                   >
                     <option value="">{t("selectCategory")}</option>
-                    <option value="fashion">Fashion & Clothing (পোশাক ও ফ্যাশন)</option>
-                    <option value="cosmetics">Cosmetics & Beauty (কসমেটিকস ও রূপচর্চা)</option>
-                    <option value="electronics">Electronics (ইলেকট্রনিক্স)</option>
-                    <option value="gadgets">Gadgets & Accessories (গ্যাজেট ও এক্সেসরিজ)</option>
-                    <option value="food">Food & Beverage (খাবার ও রেস্তোরাঁ)</option>
-                    <option value="grocery">Grocery & Essentials (মুদি ও নিত্যপ্রয়োজনীয়)</option>
-                    <option value="home_decor">Home & Living (ঘর সাজানো ও গৃহস্থালি)</option>
-                    <option value="kids">Kids & Baby (বাচ্চাদের পণ্য ও খেলনা)</option>
-                    <option value="books">Books & Stationery (বই ও স্টেশনারি)</option>
-                    <option value="health">Health & Wellness (স্বাস্থ্য ও সেবা)</option>
-                    <option value="jewellery">Jewellery & Watches (গহনা ও ঘড়ি)</option>
-                    <option value="handicrafts">Handicrafts (হস্তশিল্প)</option>
-                    <option value="pets">Pets & Animals (পোষা প্রাণী)</option>
-                    <option value="other">Other / General (অন্যান্য)</option>
+                    <option value="fashion">{isBn ? "পোশাক ও ফ্যাশন (Fashion & Clothing)" : "Fashion & Clothing"}</option>
+                    <option value="cosmetics">{isBn ? "কসমেটিকস ও রূপচর্চা (Cosmetics & Beauty)" : "Cosmetics & Beauty"}</option>
+                    <option value="electronics">{isBn ? "ইলেকট্রনিক্স (Electronics)" : "Electronics"}</option>
+                    <option value="gadgets">{isBn ? "গ্যাজেট ও এক্সেসরিজ (Gadgets & Accessories)" : "Gadgets & Accessories"}</option>
+                    <option value="food">{isBn ? "খাবার ও রেস্তোরাঁ (Food & Beverage)" : "Food & Beverage"}</option>
+                    <option value="grocery">{isBn ? "মুদি ও নিত্যপ্রয়োজনীয় (Grocery & Essentials)" : "Grocery & Essentials"}</option>
+                    <option value="home_decor">{isBn ? "ঘর সাজানো ও গৃহস্থালি (Home & Living)" : "Home & Living"}</option>
+                    <option value="kids">{isBn ? "বাচ্চাদের পণ্য ও খেলনা (Kids & Baby)" : "Kids & Baby"}</option>
+                    <option value="books">{isBn ? "বই ও স্টেশনারি (Books & Stationery)" : "Books & Stationery"}</option>
+                    <option value="health">{isBn ? "স্বাস্থ্য ও সেবা (Health & Wellness)" : "Health & Wellness"}</option>
+                    <option value="jewellery">{isBn ? "গহনা ও ঘড়ি (Jewellery & Watches)" : "Jewellery & Watches"}</option>
+                    <option value="handicrafts">{isBn ? "হস্তশিল্প (Handicrafts)" : "Handicrafts"}</option>
+                    <option value="pets">{isBn ? "পোষা প্রাণী (Pets & Animals)" : "Pets & Animals"}</option>
+                    <option value="other">{isBn ? "অন্যান্য (Other / General)" : "Other / General"}</option>
                   </select>
                 </label>
               </div>
@@ -198,21 +204,23 @@ export default function ShopSettingsPage() {
             <div className="flex items-center gap-2">
               <Headphones size={18} className="text-primary" />
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                Customer Support Contacts (গ্রাহকদের সাথে যোগাযোগের তথ্য)
+                {isBn ? "গ্রাহক সহায়তা ও যোগাযোগের তথ্য" : "Customer Support Contacts"}
               </h2>
             </div>
             <span className="text-[11px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-              Optional (ঐচ্ছিক)
+              {isBn ? "ঐচ্ছিক" : "Optional"}
             </span>
           </div>
 
           <p className="text-xs text-muted-foreground leading-relaxed">
-            এই ইমেইল ও ফোন নম্বরটি কাস্টমারদের ইনভয়েস ও সাপোর্ট প্রশ্নের জন্য প্রদর্শিত হবে। এটি আপনার মূল অ্যাকাউন্ট বা লগইন তথ্য থেকে আলাদা।
+            {isBn
+              ? "এই ইমেইল ও ফোন নম্বরটি কাস্টমারদের ইনভয়েস ও সাপোর্ট প্রশ্নের জন্য প্রদর্শিত হবে। এটি আপনার মূল অ্যাকাউন্ট বা লগইন তথ্য থেকে আলাদা।"
+              : "This support email and phone number will be displayed on customer invoices and support inquiries. It is independent of your account login credentials."}
           </p>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field
-              label="Support Email (ঐচ্ছিক ইমেইল)"
+              label={isBn ? "সাপোর্ট ইমেইল (ঐচ্ছিক)" : "Support Email (Optional)"}
               type="email"
               value={value("email")}
               onChange={(event) =>
@@ -221,7 +229,7 @@ export default function ShopSettingsPage() {
               placeholder="support@yourshop.com"
             />
             <Field
-              label="Support Phone (ঐচ্ছিক মোবাইল নম্বর)"
+              label={isBn ? "সাপোর্ট ফোন নম্বর (ঐচ্ছিক)" : "Support Phone (Optional)"}
               value={value("phone")}
               onChange={(event) =>
                 setForm({ ...form, phone: event.target.value })

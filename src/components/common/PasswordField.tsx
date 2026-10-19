@@ -2,6 +2,7 @@
 
 import { useState, useId, type InputHTMLAttributes } from "react";
 import { Eye, EyeOff, Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function isPasswordSecure(password: string): boolean {
   if (!password || password.length < 8) return false;
@@ -30,6 +31,7 @@ export function PasswordField({
 }: PasswordFieldProps) {
   const [visible, setVisible] = useState(false);
   const id = useId();
+  const t = useTranslations("common");
 
   const passwordVal = typeof value === "string" ? value : "";
 
@@ -78,13 +80,13 @@ export function PasswordField({
           {/* Strength Bar */}
           <div className="space-y-1">
             <div className="flex justify-between text-[11px] font-semibold text-muted-foreground">
-              <span>Password strength</span>
+              <span>{t("passwordReqStrength")}</span>
               <span>
                 {criteriaCount === 4
-                  ? "Strong"
+                  ? t("passwordStrong")
                   : criteriaCount >= 2
-                    ? "Medium"
-                    : "Weak"}
+                    ? t("passwordMedium")
+                    : t("passwordWeak")}
               </span>
             </div>
             <div className="grid grid-cols-4 gap-1.5 h-1.5">
@@ -125,7 +127,7 @@ export function PasswordField({
               ) : (
                 <X size={13} className="shrink-0 text-muted-foreground/50" />
               )}
-              <span>At least 8 characters (কমপক্ষে ৮টি অক্ষর)</span>
+              <span>{t("passwordReqMin")}</span>
             </li>
             <li
               className={`flex items-center gap-1.5 ${
@@ -139,7 +141,7 @@ export function PasswordField({
               ) : (
                 <X size={13} className="shrink-0 text-muted-foreground/50" />
               )}
-              <span>Contains a letter (কমপক্ষে ১টি অক্ষর)</span>
+              <span>{t("passwordReqLetter")}</span>
             </li>
             <li
               className={`flex items-center gap-1.5 ${
@@ -153,7 +155,7 @@ export function PasswordField({
               ) : (
                 <X size={13} className="shrink-0 text-muted-foreground/50" />
               )}
-              <span>Contains a number (কমপক্ষে ১টি সংখ্যা)</span>
+              <span>{t("passwordReqNumber")}</span>
             </li>
             <li
               className={`flex items-center gap-1.5 ${
@@ -167,9 +169,7 @@ export function PasswordField({
               ) : (
                 <X size={13} className="shrink-0 text-muted-foreground/50" />
               )}
-              <span>
-                Contains a special character (@, #, $, %, !, &)
-              </span>
+              <span>{t("passwordReqSpecial")}</span>
             </li>
           </ul>
         </div>

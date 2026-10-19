@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useLocale } from "next-intl";
 import {
   Bot,
   Check,
@@ -29,6 +30,7 @@ interface TabItem {
   id: string;
   slug: string;
   title: string;
+  titleBn: string;
 }
 
 const TABS: TabItem[] = [
@@ -36,40 +38,49 @@ const TABS: TabItem[] = [
     id: "auto-reply",
     slug: "ai-auto-reply",
     title: "AI Auto Reply",
+    titleBn: "AI অটো-রিপ্লাই",
   },
   {
     id: "chat-to-order",
     slug: "chat-to-order",
     title: "Chat to Order",
+    titleBn: "চ্যাট থেকে অর্ডার",
   },
   {
     id: "manual-approved",
     slug: "manual-approved",
     title: "Manual Approved",
+    titleBn: "ম্যানুয়াল অনুমোদন",
   },
   {
     id: "fraud-risk",
     slug: "fraud-risk-radar",
     title: "Fraud & Risk Radar",
+    titleBn: "ফ্রড ও রিস্ক রাডার",
   },
   {
     id: "courier-dispatch",
     slug: "courier-dispatch",
     title: "Courier Dispatch",
+    titleBn: "কুরিয়ার বুকিং",
   },
   {
     id: "hisab-khata",
     slug: "hisab-khata",
     title: "Hisab Khata",
+    titleBn: "হিসাব খাতা",
   },
   {
     id: "sms-email",
     slug: "sms-and-email",
     title: "SMS & Email",
+    titleBn: "SMS ও ইমেইল",
   },
 ];
 
 export function InteractiveShowcase() {
+  const locale = useLocale();
+  const isBn = locale === "bn";
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -137,13 +148,26 @@ export function InteractiveShowcase() {
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl text-foreground">
-            Everything your Facebook, WhatsApp Business shop needs,{" "}
-            <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
-              in one cockpit.
-            </span>
+            {isBn ? (
+              <>
+                আপনার ফেসবুক ও হোয়াটসঅ্যাপ বিজনেসের যা কিছু প্রয়োজন,{" "}
+                <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
+                  এক প্ল্যাটফর্মেই।
+                </span>
+              </>
+            ) : (
+              <>
+                Everything your Facebook, WhatsApp Business shop needs,{" "}
+                <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
+                  in one cockpit.
+                </span>
+              </>
+            )}
           </h2>
           <p className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-base">
-            From 24/7 AI conversation replies to manual order approval, courier booking.
+            {isBn
+              ? "২৪/৭ AI চ্যাট রিপ্লাই থেকে শুরু করে অর্ডার কনফার্মেশন, কুরিয়ার বুকিং ও হিসাব খাতা।"
+              : "From 24/7 AI conversation replies to manual order approval, courier booking."}
           </p>
         </div>
 
@@ -190,7 +214,7 @@ export function InteractiveShowcase() {
                               : "group-hover:text-foreground transition-colors"
                           }
                         >
-                          {tab.title}
+                          {isBn ? tab.titleBn : tab.title}
                         </span>
                         {isActive && (
                           <span
@@ -237,10 +261,10 @@ export function InteractiveShowcase() {
           <button
             onClick={() => setIsPaused(!isPaused)}
             className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 dark:border-border bg-card px-3 py-1.5 font-medium text-foreground shadow-2xs transition-colors hover:bg-muted"
-            title={isPaused ? "Resume auto-play" : "Pause auto-play"}
+            title={isPaused ? (isBn ? "চালান" : "Resume auto-play") : (isBn ? "থামান" : "Pause auto-play")}
           >
             {isPaused ? <Play className="size-3 text-primary fill-primary" /> : <Pause className="size-3 text-muted-foreground" />}
-            <span>{isPaused ? "Play" : "Pause"}</span>
+            <span>{isPaused ? (isBn ? "চালান" : "Play") : (isBn ? "থামান" : "Pause")}</span>
           </button>
 
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground sm:hidden">
@@ -276,7 +300,7 @@ export function InteractiveShowcase() {
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-foreground">
-                24/7 Active
+                {isBn ? "২৪/৭ সক্রিয়" : "24/7 Active"}
               </span>
             </div>
           </div>
@@ -284,13 +308,13 @@ export function InteractiveShowcase() {
           {/* Window Content Body */}
           <div className="min-h-[440px] p-3 sm:p-5 lg:p-7">
             <div className="transition-all duration-300">
-              {activeTab === 0 && <InboxPreview />}
-              {activeTab === 1 && <OrderExtractionPreview />}
-              {activeTab === 2 && <ManualApprovalPreview />}
-              {activeTab === 3 && <RiskRadarPreview />}
-              {activeTab === 4 && <CourierPreview />}
-              {activeTab === 5 && <HisabKhataPreview />}
-              {activeTab === 6 && <SmsEmailPreview />}
+              {activeTab === 0 && <InboxPreview isBn={isBn} />}
+              {activeTab === 1 && <OrderExtractionPreview isBn={isBn} />}
+              {activeTab === 2 && <ManualApprovalPreview isBn={isBn} />}
+              {activeTab === 3 && <RiskRadarPreview isBn={isBn} />}
+              {activeTab === 4 && <CourierPreview isBn={isBn} />}
+              {activeTab === 5 && <HisabKhataPreview isBn={isBn} />}
+              {activeTab === 6 && <SmsEmailPreview isBn={isBn} />}
             </div>
           </div>
         </div>
@@ -302,7 +326,7 @@ export function InteractiveShowcase() {
 /* =========================================================================
    1. AI AUTO REPLY PREVIEW
    ========================================================================= */
-function InboxPreview() {
+function InboxPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="grid gap-4 lg:grid-cols-12">
       {/* Conversations Column (4 cols) */}
@@ -318,7 +342,7 @@ function InboxPreview() {
             <span>WhatsApp</span>
           </span>
           <span className="ml-auto rounded-full bg-primary-soft dark:bg-primary-soft/30 px-1.5 py-0.2 text-[10px] font-bold text-primary dark:text-primary-light">
-            3 New
+            {isBn ? "৩টি নতুন" : "3 New"}
           </span>
         </div>
 
@@ -336,14 +360,18 @@ function InboxPreview() {
                 <div>
                   <h4 className="text-xs font-bold text-foreground">Tanvir Ahmed</h4>
                   <div className="flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-400 font-semibold">
-                    <span>Facebook Page Inbox</span>
+                    <span>{isBn ? "ফেসবুক পেজ ইনবক্স" : "Facebook Page Inbox"}</span>
                   </div>
                 </div>
               </div>
-              <span className="text-[10px] font-medium text-primary">Just now</span>
+              <span className="text-[10px] font-medium text-primary">
+                {isBn ? "এইমাত্র" : "Just now"}
+              </span>
             </div>
             <p className="mt-2 line-clamp-1 text-[11px] font-medium text-foreground">
-              Bhai, black color ta ki available ase? Price koto?
+              {isBn
+                ? "ভাই, ব্ল্যাক কালারটা কি এভেইলেবল আছে? প্রাইস কত?"
+                : "Bhai, black color ta ki available ase? Price koto?"}
             </p>
           </div>
 
@@ -362,10 +390,14 @@ function InboxPreview() {
                   <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">WhatsApp Business</span>
                 </div>
               </div>
-              <span className="text-[10px] text-muted-foreground dark:text-zinc-400">4m ago</span>
+              <span className="text-[10px] text-muted-foreground dark:text-zinc-400">
+                {isBn ? "৪ মিনিট আগে" : "4m ago"}
+              </span>
             </div>
             <p className="mt-2 line-clamp-1 text-[11px] text-muted-foreground dark:text-zinc-300">
-              Amar order consignment ID ta den please.
+              {isBn
+                ? "আমার অর্ডার কনসাইনমেন্ট আইডি টা দিবেন প্লিজ।"
+                : "Amar order consignment ID ta den please."}
             </p>
           </div>
 
@@ -381,13 +413,17 @@ function InboxPreview() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-foreground">Rahat Chowdhury</h4>
-                  <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">Page Post Comment</span>
+                  <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
+                    {isBn ? "পেজ পোস্ট কমেন্ট" : "Page Post Comment"}
+                  </span>
                 </div>
               </div>
-              <span className="text-[10px] text-muted-foreground dark:text-zinc-400">12m ago</span>
+              <span className="text-[10px] text-muted-foreground dark:text-zinc-400">
+                {isBn ? "১২ মিনিট আগে" : "12m ago"}
+              </span>
             </div>
             <p className="mt-2 line-clamp-1 text-[11px] font-medium text-foreground/90 dark:text-zinc-100">
-              ডেলিভারি চার্জসহ মোট দাম কত পড়বে?
+              {isBn ? "ডেলিভারি চার্জসহ মোট দাম কত পড়বে?" : "What is the total price including delivery charge?"}
             </p>
           </div>
         </div>
@@ -413,13 +449,13 @@ function InboxPreview() {
                   </span>
                 </div>
                 <p className="text-[10px] text-muted-foreground">
-                  Connected Page: <strong className="text-foreground">BikriPilot Store</strong> · Meta Graph API Verified
+                  {isBn ? "সংযুক্ত পেজ:" : "Connected Page:"} <strong className="text-foreground">BikriPilot Store</strong> · {isBn ? "মেটা গ্রাফ API ভেরিফাইড" : "Meta Graph API Verified"}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-                ● Page AI Auto-Pilot ON
+                {isBn ? "● পেজ AI অটো-পাইলট চালু" : "● Page AI Auto-Pilot ON"}
               </span>
             </div>
           </div>
@@ -431,9 +467,13 @@ function InboxPreview() {
               <div className="max-w-[85%] rounded-2xl rounded-tr-xs bg-muted/90 px-4 py-2.5 text-xs text-foreground shadow-2xs">
                 <div className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
                   <MessengerLogo className="size-3" />
-                  <span>Customer on Facebook Page</span>
+                  <span>{isBn ? "ফেসবুক পেজের কাস্টমার" : "Customer on Facebook Page"}</span>
                 </div>
-                <p>Assalamu Alaikum bhai, Black color L size-er Panjabi ta ki stock-e ase? Cash on delivery-te deya jabe?</p>
+                <p>
+                  {isBn
+                    ? "আসসালামু আলাইকুম ভাই, ব্ল্যাক কালার L সাইজের পাঞ্জাবিটা কি স্টকে আছে? ক্যাশ অন ডেলিভারিতে দেওয়া যাবে?"
+                    : "Assalamu Alaikum bhai, Black color L size-er Panjabi ta ki stock-e ase? Cash on delivery-te deya jabe?"}
+                </p>
               </div>
             </div>
 
@@ -443,14 +483,18 @@ function InboxPreview() {
                 <div className="mb-1.5 flex items-center gap-1.5 text-primary">
                   <Bot className="size-3.5" />
                   <span className="text-[10px] font-bold uppercase tracking-wider">
-                    BikriPilot AI (Auto-Replied to Page Messenger)
+                    {isBn ? "বিক্রিপাইলট AI (পেজ মেসেঞ্জারে স্বয়ংক্রিয় রিপ্লাই)" : "BikriPilot AI (Auto-Replied to Page Messenger)"}
                   </span>
                 </div>
                 <p className="leading-relaxed">
-                  Walaikum Assalam! Ji bhai, Premium Black Panjabi (Size L) stock-e ready ase. Price ৳1,650। Dhakar moddhe 24-48 ghontar moddhe Steadfast/Pathao-te Cash on Delivery paben।
+                  {isBn
+                    ? "ওয়ালাইকুম আসসালাম! জি ভাইয়া, প্রিমিয়াম ব্ল্যাক পাঞ্জাবি (সাইজ L) স্টকে রেডি আছে। মূল্য ১,৬৫০ টাকা। ঢাকার মধ্যে ২৪-৪৮ ঘণ্টার মধ্যে Steadfast/Pathao-তে ক্যাশ অন ডেলিভারি পাবেন।"
+                    : "Walaikum Assalam! Ji bhai, Premium Black Panjabi (Size L) stock-e ready ase. Price ৳1,650। Dhakar moddhe 24-48 ghontar moddhe Steadfast/Pathao-te Cash on Delivery paben।"}
                 </p>
                 <p className="mt-1 font-bold text-primary">
-                  Order confirm korte ki apnar phone number ar delivery address diben?
+                  {isBn
+                    ? "অর্ডার কনফার্ম করতে আপনার মোবাইল নম্বর ও ডেলিভারি ঠিকানা লিখে দিন।"
+                    : "Order confirm korte ki apnar phone number ar delivery address diben?"}
                 </p>
               </div>
             </div>
@@ -463,15 +507,15 @@ function InboxPreview() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 dark:bg-blue-500/20 px-2.5 py-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400">
                 <MessengerLogo className="size-3" />
-                <span>Meta Page Webhook Active</span>
+                <span>{isBn ? "মেটা পেজ ওয়েবহুক সক্রিয়" : "Meta Page Webhook Active"}</span>
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
                 <WhatsAppLogo className="size-3" />
-                <span>WhatsApp Cloud API Ready</span>
+                <span>{isBn ? "হোয়াটসঅ্যাপ ক্লাউড API প্রস্তুত" : "WhatsApp Cloud API Ready"}</span>
               </span>
             </div>
             <span className="text-[11px] font-medium text-muted-foreground">
-              Direct connection with your business page
+              {isBn ? "আপনার পেজের সাথে সরাসরি সংযোগ" : "Direct connection with your business page"}
             </span>
           </div>
         </div>
@@ -483,7 +527,7 @@ function InboxPreview() {
 /* =========================================================================
    2. CHAT TO ORDER PREVIEW
    ========================================================================= */
-function OrderExtractionPreview() {
+function OrderExtractionPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Left: Raw Chat Text */}
@@ -491,21 +535,38 @@ function OrderExtractionPreview() {
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div className="flex items-center gap-2">
             <MessengerLogo className="size-4" />
-            <span className="text-xs font-bold text-foreground">FB Page Inbox</span>
+            <span className="text-xs font-bold text-foreground">
+              {isBn ? "ফেসবুক পেজ ইনবক্স" : "FB Page Inbox"}
+            </span>
           </div>
           <span className="rounded bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">
-            Page Customer Message
+            {isBn ? "পেজ কাস্টমার মেসেজ" : "Page Customer Message"}
           </span>
         </div>
         <div className="mt-4 rounded-xl border border-border/60 bg-muted/50 p-4 font-mono text-xs leading-relaxed text-foreground">
-          &quot;Bhai amar nam <strong className="font-semibold text-primary">Tanvir Ahmed</strong>, phone{" "}
-          <strong className="font-semibold text-primary">01711234567</strong>. Delivery address:{" "}
-          <strong className="font-semibold text-primary">House 12, Road 4, Sector 7, Uttara, Dhaka</strong>. 1 piece{" "}
-          <strong className="font-semibold text-primary">Black Panjabi L size</strong> pathayen, cash on delivery te.&quot;
+          {isBn ? (
+            <>
+              &quot;ভাই আমার নাম <strong className="font-semibold text-primary">তানভীর আহমেদ</strong>, ফোন{" "}
+              <strong className="font-semibold text-primary">০১৭১১২৩৪৫৬৭</strong>। ডেলিভারি ঠিকানা:{" "}
+              <strong className="font-semibold text-primary">বাড়ি ১২, রোড ৪, সেক্টর ৭, উত্তরা, ঢাকা</strong>। ১ পিস{" "}
+              <strong className="font-semibold text-primary">ব্ল্যাক পাঞ্জাবি L সাইজ</strong> পাঠাবেন, ক্যাশ অন ডেলিভারিতে।&quot;
+            </>
+          ) : (
+            <>
+              &quot;Bhai amar nam <strong className="font-semibold text-primary">Tanvir Ahmed</strong>, phone{" "}
+              <strong className="font-semibold text-primary">01711234567</strong>. Delivery address:{" "}
+              <strong className="font-semibold text-primary">House 12, Road 4, Sector 7, Uttara, Dhaka</strong>. 1 piece{" "}
+              <strong className="font-semibold text-primary">Black Panjabi L size</strong> pathayen, cash on delivery te.&quot;
+            </>
+          )}
         </div>
         <div className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 p-3 text-xs text-emerald-700 dark:text-emerald-300 font-medium">
           <CheckCircle2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-          <span>AI automatically parsed 100% of customer address &amp; items.</span>
+          <span>
+            {isBn
+              ? "AI স্বয়ংক্রিয়ভাবে ১০০% নির্ভুল কাস্টমার ঠিকানা ও আইটেম বের করেছে।"
+              : "AI automatically parsed 100% of customer address & items."}
+          </span>
         </div>
       </div>
 
@@ -514,7 +575,9 @@ function OrderExtractionPreview() {
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div className="flex items-center gap-2">
             <ClipboardList className="size-4 text-primary" />
-            <span className="text-xs font-bold text-foreground">Auto-Extracted Order Draft</span>
+            <span className="text-xs font-bold text-foreground">
+              {isBn ? "স্বয়ংক্রিয় অর্ডার ড্রাফট" : "Auto-Extracted Order Draft"}
+            </span>
           </div>
           <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
             Order #OD-8812
@@ -523,31 +586,37 @@ function OrderExtractionPreview() {
 
         <div className="mt-4 space-y-2.5 text-xs">
           <div className="flex justify-between border-b border-border/40 pb-2">
-            <span className="text-muted-foreground font-medium">Customer:</span>
+            <span className="text-muted-foreground font-medium">{isBn ? "কাস্টমার:" : "Customer:"}</span>
             <span className="font-bold text-foreground">Tanvir Ahmed</span>
           </div>
           <div className="flex justify-between border-b border-border/40 pb-2">
-            <span className="text-muted-foreground font-medium">Phone:</span>
+            <span className="text-muted-foreground font-medium">{isBn ? "ফোন:" : "Phone:"}</span>
             <span className="font-mono font-bold text-foreground">01711-234567</span>
           </div>
           <div className="flex justify-between border-b border-border/40 pb-2">
-            <span className="text-muted-foreground font-medium">Address:</span>
+            <span className="text-muted-foreground font-medium">{isBn ? "ঠিকানা:" : "Address:"}</span>
             <span className="font-medium text-foreground text-right max-w-[65%]">
-              House 12, Road 4, Sector 7, Uttara, Dhaka
+              {isBn ? "বাড়ি ১২, রোড ৪, সেক্টর ৭, উত্তরা, ঢাকা" : "House 12, Road 4, Sector 7, Uttara, Dhaka"}
             </span>
           </div>
           <div className="flex justify-between border-b border-border/40 pb-2">
-            <span className="text-muted-foreground font-medium">Item:</span>
-            <span className="font-semibold text-foreground">Premium Cotton Panjabi (L) × 1</span>
+            <span className="text-muted-foreground font-medium">{isBn ? "পণ্য:" : "Item:"}</span>
+            <span className="font-semibold text-foreground">
+              {isBn ? "প্রিমিয়াম কটন পাঞ্জাবি (L) × ১" : "Premium Cotton Panjabi (L) × 1"}
+            </span>
           </div>
           <div className="flex justify-between pt-1 text-sm font-bold">
-            <span className="text-foreground">COD Total Amount:</span>
-            <span className="font-extrabold text-primary">৳1,730 (৳1,650 + ৳80 delivery)</span>
+            <span className="text-foreground">{isBn ? "সিওডি মোট টাকা:" : "COD Total Amount:"}</span>
+            <span className="font-extrabold text-primary">
+              {isBn ? "১,৭৩০ টাকা (১,৬৫০ + ৮০ ডেলিভারি)" : "৳1,730 (৳1,650 + ৳80 delivery)"}
+            </span>
           </div>
         </div>
 
         <div className="mt-5 rounded-xl border border-border/60 bg-muted/40 p-2.5 text-center text-xs text-muted-foreground font-medium">
-          Passed to Manual Approval queue for merchant review
+          {isBn
+            ? "মার্চেন্ট পর্যালোচনার জন্য ম্যানুয়াল অনুমোদন তালিকায় পাঠানো হয়েছে"
+            : "Passed to Manual Approval queue for merchant review"}
         </div>
       </div>
     </div>
@@ -557,7 +626,7 @@ function OrderExtractionPreview() {
 /* =========================================================================
    3. MANUAL APPROVED PREVIEW (MERCHANT ORDER APPROVAL)
    ========================================================================= */
-function ManualApprovalPreview() {
+function ManualApprovalPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="space-y-4">
       {/* Top Header Bar */}
@@ -567,18 +636,20 @@ function ManualApprovalPreview() {
             <UserCheck className="size-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-foreground">Manual Order Approval Queue</h4>
+            <h4 className="text-xs font-bold text-foreground">
+              {isBn ? "ম্যানুয়াল অর্ডার অনুমোদন কিউ" : "Manual Order Approval Queue"}
+            </h4>
             <p className="text-[10px] text-muted-foreground">
-              Review AI drafts before sending to courier dispatch
+              {isBn ? "কুরিয়ারে পাঠানোর আগে AI ড্রাফটটি যাচাই করুন" : "Review AI drafts before sending to courier dispatch"}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-amber-500/15 dark:bg-amber-500/25 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-300">
-            ● 1 Pending Approval
+            {isBn ? "● ১টি অপেক্ষমাণ" : "● 1 Pending Approval"}
           </span>
           <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-            ✓ 28 Approved Today
+            {isBn ? "✓ ২৮টি আজ অনুমোদিত" : "✓ 28 Approved Today"}
           </span>
         </div>
       </div>
@@ -590,15 +661,15 @@ function ManualApprovalPreview() {
             <span className="text-xs font-bold text-foreground">Order #OD-8812</span>
             <span className="ml-2 inline-flex items-center gap-1 rounded bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
               <MessengerLogo className="size-3" />
-              <span>From FB Page Inbox</span>
+              <span>{isBn ? "ফেসবুক পেজ ইনবক্স থেকে" : "From FB Page Inbox"}</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-              ✓ Address Verified
+              {isBn ? "✓ ঠিকানা যাচাইকৃত" : "✓ Address Verified"}
             </span>
             <span className="rounded-full bg-blue-500/15 dark:bg-blue-500/25 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300">
-              ✓ No Duplicate Order
+              {isBn ? "✓ ডুপ্লিকেট অর্ডার নেই" : "✓ No Duplicate Order"}
             </span>
           </div>
         </div>
@@ -606,24 +677,42 @@ function ManualApprovalPreview() {
         {/* Details Grid */}
         <div className="mt-4 grid gap-4 sm:grid-cols-3 text-xs">
           <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
-            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Buyer Details</p>
+            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+              {isBn ? "ক্রেতার বিবরণ" : "Buyer Details"}
+            </p>
             <p className="mt-1 font-bold text-foreground">Tanvir Ahmed</p>
             <p className="font-mono text-muted-foreground">01711-234567</p>
-            <p className="mt-1 text-[11px] text-foreground/80">Uttara Sector 7, Dhaka</p>
+            <p className="mt-1 text-[11px] text-foreground/80">
+              {isBn ? "উত্তরা সেক্টর ৭, ঢাকা" : "Uttara Sector 7, Dhaka"}
+            </p>
           </div>
 
           <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
-            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Ordered Products</p>
-            <p className="mt-1 font-semibold text-foreground">Premium Panjabi (L)</p>
-            <p className="text-[11px] text-muted-foreground">Qty: 1 · Price: ৳1,650</p>
-            <p className="mt-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Stock Status: 8 in stock</p>
+            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+              {isBn ? "অর্ডারকৃত পণ্য" : "Ordered Products"}
+            </p>
+            <p className="mt-1 font-semibold text-foreground">
+              {isBn ? "প্রিমিয়াম পাঞ্জাবি (L)" : "Premium Panjabi (L)"}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              {isBn ? "পরিমাণ: ১ · মূল্য: ৳১,৬৫০" : "Qty: 1 · Price: ৳1,650"}
+            </p>
+            <p className="mt-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+              {isBn ? "স্টক অবস্থা: ৮টি স্টকে আছে" : "Stock Status: 8 in stock"}
+            </p>
           </div>
 
           <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
-            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Payment &amp; COD</p>
+            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+              {isBn ? "পেমেন্ট ও সিওডি" : "Payment & COD"}
+            </p>
             <p className="mt-1 text-base font-extrabold text-primary">৳1,730</p>
-            <p className="text-[10px] text-muted-foreground">Delivery: ৳80 (Steadfast)</p>
-            <p className="mt-1 text-[10px] font-semibold text-foreground">Cash On Delivery (COD)</p>
+            <p className="text-[10px] text-muted-foreground">
+              {isBn ? "ডেলিভারি: ৮০ টাকা (Steadfast)" : "Delivery: ৳80 (Steadfast)"}
+            </p>
+            <p className="mt-1 text-[10px] font-semibold text-foreground">
+              {isBn ? "ক্যাশ অন ডেলিভারি (COD)" : "Cash On Delivery (COD)"}
+            </p>
           </div>
         </div>
 
@@ -631,17 +720,17 @@ function ManualApprovalPreview() {
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <FileCheck className="size-4 text-emerald-500" />
-            <span>Ready for merchant confirmation</span>
+            <span>{isBn ? "মার্চেন্ট নিশ্চিতকরণের জন্য প্রস্তুত" : "Ready for merchant confirmation"}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button className="inline-flex items-center gap-1 rounded-xl border border-danger/40 bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger/20 transition-colors">
               <XCircle className="size-3.5" />
-              <span>Reject</span>
+              <span>{isBn ? "বাতিল" : "Reject"}</span>
             </button>
             <button className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground shadow-xs hover:opacity-90 transition-opacity">
               <Check className="size-3.5" />
-              <span>✓ Approve &amp; Move to Courier</span>
+              <span>{isBn ? "✓ অনুমোদন ও কুরিয়ারে বুকিং" : "✓ Approve & Move to Courier"}</span>
             </button>
           </div>
         </div>
@@ -653,7 +742,7 @@ function ManualApprovalPreview() {
 /* =========================================================================
    4. FRAUD & RISK RADAR PREVIEW
    ========================================================================= */
-function RiskRadarPreview() {
+function RiskRadarPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="grid gap-6 md:grid-cols-12">
       {/* Left Risk Meter (5 cols) */}
@@ -661,15 +750,21 @@ function RiskRadarPreview() {
         <div className="relative grid size-32 place-items-center rounded-full border-8 border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/20">
           <div>
             <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">96%</p>
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Success Rate</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isBn ? "সফলতার হার" : "Success Rate"}
+            </p>
           </div>
         </div>
-        <h4 className="mt-4 text-sm font-bold text-foreground">Low Return Risk</h4>
+        <h4 className="mt-4 text-sm font-bold text-foreground">
+          {isBn ? "কম রিটার্ন ঝুঁকি" : "Low Return Risk"}
+        </h4>
         <p className="mt-1 text-xs text-muted-foreground">
-          Safe buyer across 18 partner shops on BikriPilot network.
+          {isBn
+            ? "বিক্রিপাইলট নেটওয়ার্কের ১৮টি পার্টনার দোকানে বিশ্বস্ত ক্রেতা।"
+            : "Safe buyer across 18 partner shops on BikriPilot network."}
         </p>
         <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-          <Check className="size-3.5" /> 100% COD Safe
+          <Check className="size-3.5" /> {isBn ? "১০০% COD নিরাপদ" : "100% COD Safe"}
         </span>
       </div>
 
@@ -679,30 +774,42 @@ function RiskRadarPreview() {
           <Search className="size-4 text-muted-foreground" />
           <span className="font-mono font-bold text-foreground">01711-234567</span>
           <span className="ml-auto rounded bg-primary-soft px-1.5 py-0.5 text-[10px] font-bold text-primary">
-            Verified
+            {isBn ? "যাচাইকৃত" : "Verified"}
           </span>
         </div>
 
         <div className="mt-5 space-y-3 text-xs">
           <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
             <div className="flex justify-between">
-              <span className="text-muted-foreground font-medium">Total Orders Across Network:</span>
-              <span className="font-bold text-foreground">34 Deliveries</span>
+              <span className="text-muted-foreground font-medium">
+                {isBn ? "নেটওয়ার্কে মোট অর্ডার:" : "Total Orders Across Network:"}
+              </span>
+              <span className="font-bold text-foreground">
+                {isBn ? "৩৪টি ডেলিভারি" : "34 Deliveries"}
+              </span>
             </div>
             <div className="mt-1 flex justify-between">
-              <span className="text-muted-foreground font-medium">Successful Deliveries:</span>
+              <span className="text-muted-foreground font-medium">
+                {isBn ? "সফল ডেলিভারি:" : "Successful Deliveries:"}
+              </span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400">33 (97.1%)</span>
             </div>
             <div className="mt-1 flex justify-between">
-              <span className="text-muted-foreground font-medium">Returns / Cancellations:</span>
-              <span className="font-bold text-foreground">1 (Customer was abroad)</span>
+              <span className="text-muted-foreground font-medium">
+                {isBn ? "রিটার্ন / বাতিল:" : "Returns / Cancellations:"}
+              </span>
+              <span className="font-bold text-foreground">
+                {isBn ? "১ (কাস্টমার বিদেশে ছিলেন)" : "1 (Customer was abroad)"}
+              </span>
             </div>
           </div>
 
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/20 p-3 text-emerald-800 dark:text-emerald-200">
-            <p className="font-bold text-xs">AI Recommendation:</p>
+            <p className="font-bold text-xs">{isBn ? "AI পরামর্শ:" : "AI Recommendation:"}</p>
             <p className="mt-0.5 text-[11px] leading-relaxed">
-              No need to take advance delivery charge. Customer has an exceptional track record of accepting parcels upon delivery.
+              {isBn
+                ? "অগ্রিম ডেলিভারি চার্জ নেওয়ার প্রয়োজন নেই। কাস্টমারের পার্সেল রিসিভ করার অসাধারণ ট্র্যাক রেকর্ড রয়েছে।"
+                : "No need to take advance delivery charge. Customer has an exceptional track record of accepting parcels upon delivery."}
             </p>
           </div>
         </div>
@@ -714,7 +821,7 @@ function RiskRadarPreview() {
 /* =========================================================================
    5. COURIER DISPATCH PREVIEW
    ========================================================================= */
-function CourierPreview() {
+function CourierPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="space-y-4">
       {/* Top Courier Stats */}
@@ -723,24 +830,30 @@ function CourierPreview() {
           <SteadfastLogo className="size-8 rounded-lg" />
           <div>
             <p className="text-[10px] font-medium text-muted-foreground">Steadfast Courier</p>
-            <p className="text-base font-extrabold text-foreground">84 Parcels</p>
-            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Live API Connected</p>
+            <p className="text-base font-extrabold text-foreground">{isBn ? "৮৪টি পার্সেল" : "84 Parcels"}</p>
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              {isBn ? "লাইভ API সংযুক্ত" : "Live API Connected"}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
           <PathaoLogo className="size-8 rounded-lg" />
           <div>
             <p className="text-[10px] font-medium text-muted-foreground">Pathao Courier</p>
-            <p className="text-base font-extrabold text-foreground">42 Parcels</p>
-            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Merchant Sync Active</p>
+            <p className="text-base font-extrabold text-foreground">{isBn ? "৪২টি পার্সেল" : "42 Parcels"}</p>
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              {isBn ? "মার্চেন্ট সিঙ্ক সক্রিয়" : "Merchant Sync Active"}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
           <RedXLogo className="size-8 rounded-lg" />
           <div>
             <p className="text-[10px] font-medium text-muted-foreground">RedX Courier</p>
-            <p className="text-base font-extrabold text-foreground">22 Parcels</p>
-            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Direct API Connected</p>
+            <p className="text-base font-extrabold text-foreground">{isBn ? "২২টি পার্সেল" : "22 Parcels"}</p>
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              {isBn ? "সরাসরি API সংযুক্ত" : "Direct API Connected"}
+            </p>
           </div>
         </div>
       </div>
@@ -748,19 +861,23 @@ function CourierPreview() {
       {/* Live Dispatches Table */}
       <div className="overflow-hidden rounded-2xl border border-border/70 dark:border-border bg-card shadow-2xs">
         <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2.5 text-xs font-bold text-foreground">
-          <span>Active Consignments (Real-time Webhook Tracking)</span>
-          <span className="text-primary font-semibold">Auto-reconciles COD to Hisab Khata</span>
+          <span>{isBn ? "চলমান পার্সেল (রিয়েল-টাইম ট্র্যাকিং)" : "Active Consignments (Real-time Webhook Tracking)"}</span>
+          <span className="text-primary font-semibold">
+            {isBn ? "COD টাকা সরাসরি হিসাব খাতায় যুক্ত হয়" : "Auto-reconciles COD to Hisab Khata"}
+          </span>
         </div>
         <div className="divide-y divide-border/40 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:px-4">
             <div>
               <span className="font-mono font-bold text-foreground">SF-902184</span>
-              <span className="ml-2 text-muted-foreground">Tanvir Ahmed (Uttara, Dhaka)</span>
+              <span className="ml-2 text-muted-foreground">
+                {isBn ? "তানভীর আহমেদ (উত্তরা, ঢাকা)" : "Tanvir Ahmed (Uttara, Dhaka)"}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-bold text-foreground">৳1,730 COD</span>
               <span className="rounded-full bg-blue-500/15 dark:bg-blue-500/25 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300">
-                Out for Delivery
+                {isBn ? "ডেলিভারির পথে" : "Out for Delivery"}
               </span>
             </div>
           </div>
@@ -768,12 +885,14 @@ function CourierPreview() {
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:px-4">
             <div>
               <span className="font-mono font-bold text-foreground">PT-441890</span>
-              <span className="ml-2 text-muted-foreground">Nusrat Jahan (Agrabad, CTG)</span>
+              <span className="ml-2 text-muted-foreground">
+                {isBn ? "নুসরাত জাহান (আগ্রাবাদ, চট্টগ্রাম)" : "Nusrat Jahan (Agrabad, CTG)"}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-bold text-foreground">৳2,850 COD</span>
               <span className="rounded-full bg-amber-500/15 dark:bg-amber-500/25 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
-                In Transit (Hub-2)
+                {isBn ? "ট্রানজিটে আছে (হাব-২)" : "In Transit (Hub-2)"}
               </span>
             </div>
           </div>
@@ -781,12 +900,14 @@ function CourierPreview() {
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:px-4">
             <div>
               <span className="font-mono font-bold text-foreground">RX-771203</span>
-              <span className="ml-2 text-muted-foreground">Farhan Kabir (Zindabazar, Sylhet)</span>
+              <span className="ml-2 text-muted-foreground">
+                {isBn ? "ফারহান কবির (জিন্দাবাজার, সিলেট)" : "Farhan Kabir (Zindabazar, Sylhet)"}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-bold text-emerald-600 dark:text-emerald-400">৳1,200 COD</span>
               <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-                ✓ Delivered &amp; Paid
+                {isBn ? "✓ ডেলিভার্ড ও পেইড" : "✓ Delivered & Paid"}
               </span>
             </div>
           </div>
@@ -794,12 +915,14 @@ function CourierPreview() {
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:px-4">
             <div>
               <span className="font-mono font-bold text-foreground">SF-905541</span>
-              <span className="ml-2 text-muted-foreground">Mehnaz Parvin (Dhanmondi, Dhaka)</span>
+              <span className="ml-2 text-muted-foreground">
+                {isBn ? "মেহনাজ পারভীন (ধানমন্ডি, ঢাকা)" : "Mehnaz Parvin (Dhanmondi, Dhaka)"}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-bold text-foreground">৳3,450 COD</span>
               <span className="rounded-full bg-primary/15 dark:bg-primary/25 px-2 py-0.5 text-[10px] font-bold text-primary dark:text-primary-light">
-                Ready for Pickup
+                {isBn ? "পিকআপের জন্য প্রস্তুত" : "Ready for Pickup"}
               </span>
             </div>
           </div>
@@ -812,60 +935,90 @@ function CourierPreview() {
 /* =========================================================================
    6. HISAB KHATA (LIVING LEDGER) PREVIEW
    ========================================================================= */
-function HisabKhataPreview() {
+function HisabKhataPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="space-y-4">
       {/* 4 Metric Cards - 2x2 on mobile, 4 across on desktop */}
       <div className="grid gap-2.5 sm:gap-3 grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
-          <p className="text-[11px] font-medium text-muted-foreground">Today&apos;s Sales</p>
+          <p className="text-[11px] font-medium text-muted-foreground">
+            {isBn ? "আজকের মোট বিক্রি" : "Today's Sales"}
+          </p>
           <p className="mt-1 text-xl font-extrabold text-foreground">৳42,850</p>
-          <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">+18% from yesterday</span>
+          <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+            {isBn ? "গতকাল থেকে +১৮%" : "+18% from yesterday"}
+          </span>
         </div>
         <div className="rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
-          <p className="text-[11px] font-medium text-muted-foreground">Courier COD Pending</p>
+          <p className="text-[11px] font-medium text-muted-foreground">
+            {isBn ? "কুরিয়ারের কাছে বকেয়া COD" : "Courier COD Pending"}
+          </p>
           <p className="mt-1 text-xl font-extrabold text-amber-600 dark:text-amber-400">৳1,14,200</p>
-          <span className="text-[10px] font-medium text-muted-foreground">Auto-matching daily</span>
+          <span className="text-[10px] font-medium text-muted-foreground">
+            {isBn ? "প্রতিদিন স্বয়ংক্রিয় মিলন" : "Auto-matching daily"}
+          </span>
         </div>
         <div className="rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
-          <p className="text-[11px] font-medium text-muted-foreground">bKash / Nagad Received</p>
+          <p className="text-[11px] font-medium text-muted-foreground">
+            {isBn ? "বিকাশ / নগদ প্রাপ্ত" : "bKash / Nagad Received"}
+          </p>
           <p className="mt-1 text-xl font-extrabold text-foreground">৳28,400</p>
-          <span className="text-[10px] font-semibold text-primary">Reconciled to orders</span>
+          <span className="text-[10px] font-semibold text-primary">
+            {isBn ? "অর্ডারের সাথে সমন্বিত" : "Reconciled to orders"}
+          </span>
         </div>
         <div className="rounded-2xl border border-primary/40 bg-primary-soft/40 dark:bg-primary-soft/20 p-4 shadow-2xs">
-          <p className="text-[11px] font-medium text-primary">Estimated Net Profit</p>
+          <p className="text-[11px] font-medium text-primary">
+            {isBn ? "আনুমানিক নিট লাভ" : "Estimated Net Profit"}
+          </p>
           <p className="mt-1 text-xl font-extrabold text-primary">৳18,650</p>
-          <span className="text-[10px] font-semibold text-primary">Real-time ledger</span>
+          <span className="text-[10px] font-semibold text-primary">
+            {isBn ? "রিয়েল-টাইম খাতা" : "Real-time ledger"}
+          </span>
         </div>
       </div>
 
       {/* Ledger Journal Entries */}
       <div className="rounded-2xl border border-border/70 dark:border-border bg-card p-4 shadow-2xs">
         <div className="flex items-center justify-between border-b border-border/60 pb-2 text-xs font-bold text-foreground">
-          <span>Recent Automated Entries (Hisab Khata)</span>
-          <span className="text-muted-foreground font-medium">Zero manual notebook entry</span>
+          <span>{isBn ? "সাম্প্রতিক স্বয়ংক্রিয় এন্ট্রি (হিসাব খাতা)" : "Recent Automated Entries (Hisab Khata)"}</span>
+          <span className="text-muted-foreground font-medium">
+            {isBn ? "খাতায় হাতে লেখার কোনো ঝামেলা নেই" : "Zero manual notebook entry"}
+          </span>
         </div>
         <div className="mt-3 space-y-2 text-xs">
           <div className="flex items-center justify-between rounded-xl bg-muted/40 p-2.5">
             <div>
-              <p className="font-bold text-foreground">Steadfast Courier COD Payout (Batch #SF-392)</p>
-              <p className="text-[10px] text-muted-foreground">Auto-deposited into City Bank Account</p>
+              <p className="font-bold text-foreground">
+                {isBn ? "Steadfast কুরিয়ার COD পে-আউট (ব্যাচ #SF-392)" : "Steadfast Courier COD Payout (Batch #SF-392)"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {isBn ? "ব্যাংক অ্যাকাউন্টে স্বয়ংক্রিয় জমা হয়েছে" : "Auto-deposited into City Bank Account"}
+              </p>
             </div>
             <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">+৳24,500</span>
           </div>
 
           <div className="flex items-center justify-between rounded-xl bg-muted/40 p-2.5">
             <div>
-              <p className="font-bold text-foreground">Order #OD-8812 Delivered (Tanvir Ahmed)</p>
-              <p className="text-[10px] text-muted-foreground">Customer COD cash received by courier</p>
+              <p className="font-bold text-foreground">
+                {isBn ? "অর্ডার #OD-8812 ডেলিভার্ড (তানভীর আহমেদ)" : "Order #OD-8812 Delivered (Tanvir Ahmed)"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {isBn ? "কাস্টমার ক্যাশ পরিশোধ করেছে" : "Customer COD cash received by courier"}
+              </p>
             </div>
             <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">+৳1,730</span>
           </div>
 
           <div className="flex items-center justify-between rounded-xl bg-muted/40 p-2.5">
             <div>
-              <p className="font-bold text-foreground">Courier Delivery Fee Deduction</p>
-              <p className="text-[10px] text-muted-foreground">Steadfast Delivery Charge (Inside Dhaka)</p>
+              <p className="font-bold text-foreground">
+                {isBn ? "কুরিয়ার ডেলিভারি ফি কর্তন" : "Courier Delivery Fee Deduction"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {isBn ? "Steadfast ডেলিভারি চার্জ (ঢাকা সিটি)" : "Steadfast Delivery Charge (Inside Dhaka)"}
+              </p>
             </div>
             <span className="font-mono font-bold text-rose-600 dark:text-rose-400">-৳80</span>
           </div>
@@ -878,7 +1031,7 @@ function HisabKhataPreview() {
 /* =========================================================================
    7. SMS & EMAIL AUTO NOTIFICATIONS PREVIEW
    ========================================================================= */
-function SmsEmailPreview() {
+function SmsEmailPreview({ isBn }: { isBn: boolean }) {
   return (
     <div className="grid gap-4 md:grid-cols-12 items-stretch">
       {/* Left: Trigger Rules (5 cols) */}
@@ -890,12 +1043,16 @@ function SmsEmailPreview() {
                 <BellRing className="size-4" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-foreground">Auto Status Broadcast</h4>
-                <p className="text-[10px] text-muted-foreground">Triggered on seller status update</p>
+                <h4 className="text-xs font-bold text-foreground">
+                  {isBn ? "স্বয়ংক্রিয় স্ট্যাটাস নোটিফিকেশন" : "Auto Status Broadcast"}
+                </h4>
+                <p className="text-[10px] text-muted-foreground">
+                  {isBn ? "অর্ডার স্ট্যাটাস পরিবর্তনের সাথে সাথে প্রেরিত" : "Triggered on seller status update"}
+                </p>
               </div>
             </div>
             <span className="rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-              ● 2 Rules Active
+              {isBn ? "● ২টি নিয়ম সক্রিয়" : "● 2 Rules Active"}
             </span>
           </div>
 
@@ -905,12 +1062,16 @@ function SmsEmailPreview() {
             <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
               <div className="flex items-center justify-between">
                 <span className="rounded bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">
-                  Status: Order Confirmed
+                  {isBn ? "স্ট্যাটাস: অর্ডার নিশ্চিত" : "Status: Order Confirmed"}
                 </span>
-                <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Auto-sent</span>
+                <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                  {isBn ? "স্বয়ংক্রিয় প্রেরিত" : "Auto-sent"}
+                </span>
               </div>
               <p className="mt-1.5 text-[11px] text-foreground font-medium">
-                Customer receives invoice confirmation &amp; breakdown.
+                {isBn
+                  ? "কাস্টমার ইনভয়েস নিশ্চিতকরণ ও হিসাব পেয়েছেন।"
+                  : "Customer receives invoice confirmation & breakdown."}
               </p>
               <div className="mt-2 flex flex-wrap gap-1">
                 <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-blue-600 dark:text-blue-400">
@@ -929,12 +1090,16 @@ function SmsEmailPreview() {
             <div className="rounded-xl border border-primary/40 bg-primary-soft/30 dark:bg-primary-soft/15 p-3">
               <div className="flex items-center justify-between">
                 <span className="rounded bg-primary/15 px-2 py-0.5 text-[10px] font-bold text-primary">
-                  Status: Courier Dispatched
+                  {isBn ? "স্ট্যাটাস: কুরিয়ারে বুকিং সম্পন্ন" : "Status: Courier Dispatched"}
                 </span>
-                <span className="text-[10px] font-bold text-primary">Priority</span>
+                <span className="text-[10px] font-bold text-primary">
+                  {isBn ? "অগ্রাধিকার" : "Priority"}
+                </span>
               </div>
               <p className="mt-1.5 text-[11px] text-foreground font-medium">
-                Consignment ID &amp; live Steadfast tracking link sent.
+                {isBn
+                  ? "কনসাইনমেন্ট আইডি ও লাইভ ট্র্যাকিং লিংক পাঠানো হয়েছে।"
+                  : "Consignment ID & live Steadfast tracking link sent."}
               </p>
               <div className="mt-2 flex flex-wrap gap-1">
                 <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-blue-600 dark:text-blue-400">
@@ -955,7 +1120,15 @@ function SmsEmailPreview() {
         </div>
 
         <div className="mt-3 rounded-xl border border-border/60 bg-muted/40 p-2 text-[10px] text-muted-foreground">
-          💡 <strong className="text-foreground">Seller Control:</strong> Channels auto-switch based on customer phone &amp; email.
+          {isBn ? (
+            <>
+              💡 <strong className="text-foreground">বিক্রেতার নিয়ন্ত্রণ:</strong> ফোন নম্বর ও ইমেইল অনুযায়ী স্বয়ংক্রিয় চ্যানেল নির্বাচন।
+            </>
+          ) : (
+            <>
+              💡 <strong className="text-foreground">Seller Control:</strong> Channels auto-switch based on customer phone &amp; email.
+            </>
+          )}
         </div>
       </div>
 
@@ -967,16 +1140,30 @@ function SmsEmailPreview() {
             <div className="flex items-center justify-between pb-2 border-b border-border/40">
               <div className="flex items-center gap-1.5 font-bold text-blue-600 dark:text-blue-400 text-[11px]">
                 <MessengerLogo className="size-3.5" />
-                <span>Facebook Page Inbox &amp; WhatsApp Auto-Update</span>
+                <span>
+                  {isBn
+                    ? "ফেসবুক পেজ ইনবক্স ও হোয়াটসঅ্যাপ স্বয়ংক্রিয় নোটিফিকেশন"
+                    : "Facebook Page Inbox & WhatsApp Auto-Update"}
+                </span>
               </div>
               <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:text-emerald-300">
-                ✓ Auto-Sent to Buyer
+                {isBn ? "✓ স্বয়ংক্রিয় প্রেরিত" : "✓ Auto-Sent to Buyer"}
               </span>
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-foreground">
-              &quot;📦 <strong>BikriPilot Store:</strong> প্রিয় Tanvir Ahmed, আপনার অর্ডার <strong>#OD-8812</strong> কুরিয়ারে হস্তান্তর করা হয়েছে!
-              <br />
-              কুরিয়ার: <strong>Steadfast</strong> · ট্র্যাকিং: <span className="font-mono font-bold text-primary">SF-902184</span> · COD: <strong>৳১,৭৩০</strong>&quot;
+              {isBn ? (
+                <>
+                  &quot;📦 <strong>BikriPilot Store:</strong> প্রিয় Tanvir Ahmed, আপনার অর্ডার <strong>#OD-8812</strong> কুরিয়ারে হস্তান্তর করা হয়েছে!
+                  <br />
+                  কুরিয়ার: <strong>Steadfast</strong> · ট্র্যাকিং: <span className="font-mono font-bold text-primary">SF-902184</span> · COD: <strong>৳১,৭৩০</strong>&quot;
+                </>
+              ) : (
+                <>
+                  &quot;📦 <strong>BikriPilot Store:</strong> Dear Tanvir Ahmed, your order <strong>#OD-8812</strong> has been dispatched!
+                  <br />
+                  Courier: <strong>Steadfast</strong> · Tracking: <span className="font-mono font-bold text-primary">SF-902184</span> · COD: <strong>৳1,730</strong>&quot;
+                </>
+              )}
             </p>
           </div>
 
@@ -985,16 +1172,28 @@ function SmsEmailPreview() {
             <div className="flex items-center justify-between pb-2 border-b border-border/40">
               <div className="flex items-center gap-1.5 font-bold text-purple-700 dark:text-purple-300 text-[11px]">
                 <Mail className="size-3.5" />
-                <span>Customer Order Email Receipt (If Email Available)</span>
+                <span>
+                  {isBn
+                    ? "কাস্টমার অর্ডার ইমেইল রসিদ (ইমেইল দেওয়া থাকলে)"
+                    : "Customer Order Email Receipt (If Email Available)"}
+                </span>
               </div>
               <span className="rounded bg-purple-500/15 px-1.5 py-0.5 text-[9px] font-bold text-purple-700 dark:text-purple-300">
-                ✓ HTML Tracking
+                {isBn ? "✓ ট্র্যাকিং সক্রিয়" : "✓ HTML Tracking"}
               </span>
             </div>
             <div className="mt-2 flex items-center justify-between text-[11px]">
               <div>
-                <p className="font-bold text-foreground">Subject: Order #OD-8812 Dispatched — BikriPilot Store</p>
-                <p className="text-[10px] text-muted-foreground">To: tanvir@email.com · Status: In Transit</p>
+                <p className="font-bold text-foreground">
+                  {isBn
+                    ? "বিষয়: অর্ডার #OD-8812 পাঠানো হয়েছে — BikriPilot Store"
+                    : "Subject: Order #OD-8812 Dispatched — BikriPilot Store"}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {isBn
+                    ? "প্রাপক: tanvir@email.com · অবস্থা: ডেলিভারির পথে"
+                    : "To: tanvir@email.com · Status: In Transit"}
+                </p>
               </div>
               <span className="font-mono font-bold text-primary">৳1,730 COD</span>
             </div>
@@ -1002,8 +1201,14 @@ function SmsEmailPreview() {
         </div>
 
         <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5 text-[10px] text-muted-foreground">
-          <span>Zero customer confusion · Auto-tracking on order status update</span>
-          <span className="font-bold text-emerald-600 dark:text-emerald-400">✓ Multi-Channel Sync</span>
+          <span>
+            {isBn
+              ? "কাস্টমারের কোনো বিভ্রান্তি নেই · স্ট্যাটাস পরিবর্তনের সাথে সাথে লাইভ ট্র্যাকিং"
+              : "Zero customer confusion · Auto-tracking on order status update"}
+          </span>
+          <span className="font-bold text-emerald-600 dark:text-emerald-400">
+            {isBn ? "✓ মাল্টি-চ্যানেল সিঙ্ক" : "✓ Multi-Channel Sync"}
+          </span>
         </div>
       </div>
     </div>

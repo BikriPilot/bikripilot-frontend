@@ -40,98 +40,144 @@ export async function LandingPage() {
     publicServerApi.getContent("FAQ"),
     publicServerApi.getContent("TESTIMONIAL"),
   ]);
+  const isBn = locale === "bn";
   const featureCards = [
     {
       key: "inbox",
       icon: Bot,
       color: "text-primary bg-primary/10 border-primary/20",
-      badge: "AI Powered",
-      points: [
-        "Replies to every customer message 24/7 — no human needs to stay online",
-        "AI takes orders automatically from conversations, zero manual entry",
-      ],
+      badge: isBn ? "AI চালিত" : "AI Powered",
+      points: isBn
+        ? [
+            "২৪/৭ প্রতিটি কাস্টমার মেসেজের উত্তর দেয় — কাউকে রাত জেগে অনলাইনে থাকতে হয় না",
+            "কথোপকথন থেকেই AI স্বয়ংক্রিয়ভাবে অর্ডার নেয়, কোনো ম্যানুয়াল টাইপিং ছাড়াই",
+          ]
+        : [
+            "Replies to every customer message 24/7 — no human needs to stay online",
+            "AI takes orders automatically from conversations, zero manual entry",
+          ],
     },
     {
       key: "orders",
       icon: ClipboardList,
       color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
-      badge: "One-Click",
-      points: [
-        "Extract customer name, phone, address and item directly from chat",
-        "Auto-generate complete order drafts in seconds",
-      ],
+      badge: isBn ? "এক ক্লিকে" : "One-Click",
+      points: isBn
+        ? [
+            "চ্যাট থেকেই সরাসরি নাম, ফোন, পূর্ণাঙ্গ ঠিকানা ও আইটেম স্বয়ংক্রিয় আলাদা করে",
+            "কয়েক সেকেন্ডেই স্বয়ংক্রিয় কমপ্লিট অর্ডার ড্রাফট তৈরি হয়",
+          ]
+        : [
+            "Extract customer name, phone, address and item directly from chat",
+            "Auto-generate complete order drafts in seconds",
+          ],
     },
     {
       key: "courier",
       icon: PackageCheck,
       color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-      badge: "Multi-Courier",
-      points: [
-        "Native integrations with Steadfast, Pathao, and RedX",
-        "Book parcels with a single tap without opening courier panels",
-      ],
+      badge: isBn ? "মাল্টি-কুরিয়ার" : "Multi-Courier",
+      points: isBn
+        ? [
+            "Steadfast, Pathao ও RedX-এর সাথে সরাসরি লাইভ ইন্টিগ্রেশন",
+            "কুরিয়ার প্যানেলে না ঢুকেই এক ট্যাপে পার্সেল বুকিং",
+          ]
+        : [
+            "Native integrations with Steadfast, Pathao, and RedX",
+            "Book parcels with a single tap without opening courier panels",
+          ],
     },
     {
       key: "risk",
       icon: ShieldCheck,
       color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
-      badge: "Fraud Shield",
-      points: [
-        "Network-wide delivery success score for customer phone numbers",
-        "Instant warnings on chronic order cancelers & fake orders",
-      ],
+      badge: isBn ? "ফ্রড শিল্ড" : "Fraud Shield",
+      points: isBn
+        ? [
+            "কাস্টমারের ফোন নম্বরের ওপর ভিত্তি করে ডেলিভারি সাকসেস স্কোর",
+            "অর্ডার বাতিলকারী ও ফেক অর্ডারে তাৎক্ষণিক সতর্কবার্তা",
+          ]
+        : [
+            "Network-wide delivery success score for customer phone numbers",
+            "Instant warnings on chronic order cancelers & fake orders",
+          ],
     },
     {
       key: "ledger",
       icon: WalletCards,
       color: "text-teal-500 bg-teal-500/10 border-teal-500/20",
-      badge: "Hisab Khata",
-      points: [
-        "Automated cash-flow records tied to orders and courier payouts",
-        "Real-time tracking of 'You Will Get' and 'You Will Give' dues",
-      ],
+      badge: isBn ? "ডিজিটাল খাতা" : "Hisab Khata",
+      points: isBn
+        ? [
+            "অর্ডার ও কুরিয়ার পেমেন্টের সাথে যুক্ত স্বয়ংক্রিয় ক্যাশ-ফ্লো রেকর্ড",
+            "পাবো ও দেবো হিসাবের রিয়েল-টাইম নিখুঁত ট্র্যাকিং",
+          ]
+        : [
+            "Automated cash-flow records tied to orders and courier payouts",
+            "Real-time tracking of 'You Will Get' and 'You Will Give' dues",
+          ],
     },
     {
       key: "comments",
       icon: MessageSquareText,
       color: "text-indigo-500 bg-indigo-500/10 border-indigo-500/20",
-      badge: "Social Sales",
-      points: [
-        "Automatically reply to product inquiries on Facebook posts",
-        "Auto-route public comments directly to private Messenger inbox",
-      ],
+      badge: isBn ? "সোশ্যাল সেলস" : "Social Sales",
+      points: isBn
+        ? [
+            "ফেসবুক পোস্টের প্রোডাক্ট কমেন্টে স্বয়ংক্রিয় প্রফেশনাল রিপ্লাই",
+            "পাবলিক কমেন্টকারীকে সরাসরি প্রাইভেট মেসেঞ্জারে নিয়ে আসার সুবিধা",
+          ]
+        : [
+            "Automatically reply to product inquiries on Facebook posts",
+            "Auto-route public comments directly to private Messenger inbox",
+          ],
     },
     {
       key: "automation",
       icon: Zap,
       color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
-      badge: "Smart Rules",
-      points: [
-        "Preset quick replies and FAQ automated responses",
-        "Keyword-based triggers for pricing, sizes, and stock availability",
-      ],
+      badge: isBn ? "স্মার্ট রুলস" : "Smart Rules",
+      points: isBn
+        ? [
+            "কাস্টম কুইক রিপ্লাই ও সাধারণ প্রশ্নের জন্য ইনস্ট্যান্ট অটোমেশন",
+            "দাম, সাইজ ও স্টক এভেইলেবিলিটি অনুযায়ী কি-ওয়ার্ড ভিত্তিক ট্রিগার",
+          ]
+        : [
+            "Preset quick replies and FAQ automated responses",
+            "Keyword-based triggers for pricing, sizes, and stock availability",
+          ],
     },
     {
       key: "team",
       icon: UsersRound,
       color: "text-rose-500 bg-rose-500/10 border-rose-500/20",
-      badge: "Collaboration",
-      points: [
-        "Role-based access controls for Owners, Managers, and Agents",
-        "Track individual teammate performance and response times",
-      ],
+      badge: isBn ? "টিম রোলস" : "Collaboration",
+      points: isBn
+        ? [
+            "মালিক, ম্যানেজার ও এজেন্টের জন্য রোল-ভিত্তিক নিরাপদ অ্যাক্সেস",
+            "টিম মেম্বারদের কাজের অগ্রগতি ও রেসপন্স টাইমের লাইভ হিসাব",
+          ]
+        : [
+            "Role-based access controls for Owners, Managers, and Agents",
+            "Track individual teammate performance and response times",
+          ],
     },
     {
       key: "reports",
       icon: BarChart3,
       color: "text-cyan-500 bg-cyan-500/10 border-cyan-500/20",
-      badge: "Analytics",
-      points: [
-        "Real-time dashboards for daily revenue, sales volume, and COD payouts",
-        "Courier delivery success rates and return analytics",
-      ],
+      badge: isBn ? "অ্যানালিটিক্স" : "Analytics",
+      points: isBn
+        ? [
+            "দৈনিক বিক্রি, অর্ডার ভলিউম ও সিওডি পেমেন্টের রিয়েল-টাইম ড্যাশবোর্ড",
+            "কুরিয়ার ডেলিভারি রেট ও রিটার্ন অ্যানালিটিক্স",
+          ]
+        : [
+            "Real-time dashboards for daily revenue, sales volume, and COD payouts",
+            "Courier delivery success rates and return analytics",
+          ],
     },
-  ] as const;
+  ];
 
   const withoutBikriPilot = [
     localized(
@@ -266,11 +312,13 @@ export async function LandingPage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="font-bold text-sm text-foreground dark:text-white">FB Page &amp; WhatsApp Inbox</p>
+                      <p className="font-bold text-sm text-foreground dark:text-white">
+                        {isBn ? "ফেসবুক পেজ ও হোয়াটসঅ্যাপ ইনবক্স" : "FB Page & WhatsApp Inbox"}
+                      </p>
                       <span className="rounded-full bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 text-[9px] font-bold text-blue-600 dark:text-blue-400">Meta API</span>
                     </div>
                     <p className="text-xs text-muted-foreground dark:text-slate-400">
-                      Connected to your Facebook Page 24/7
+                      {isBn ? "আপনার পেজের সাথে ২৪/৭ সংযুক্ত" : "Connected to your Facebook Page 24/7"}
                     </p>
                   </div>
                 </div>
@@ -282,14 +330,14 @@ export async function LandingPage() {
                 <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-muted dark:bg-slate-800/90 dark:border dark:border-white/5 p-3">
                   <div className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
                     <MessengerLogo className="size-3" />
-                    <span>Customer on FB Page</span>
+                    <span>{isBn ? "ফেসবুক পেজের কাস্টমার" : "Customer on FB Page"}</span>
                   </div>
                   <span className="text-foreground dark:text-slate-100">{t("mockQuestion")}</span>
                 </div>
                 <div className="max-w-[88%] rounded-2xl rounded-bl-sm bg-primary-soft dark:bg-primary/20 dark:border dark:border-primary/30 p-3 text-foreground dark:text-slate-100">
                   <span className="mb-1 flex items-center gap-1.5 text-xs font-bold text-primary dark:text-indigo-300">
                     <Bot className="size-3.5" />
-                    BikriPilot AI (Page Auto-Reply)
+                    {isBn ? "বিক্রিপাইলট AI (স্বয়ংক্রিয় রিপ্লাই)" : "BikriPilot AI (Page Auto-Reply)"}
                   </span>
                   <span>{t("mockReply")}</span>
                 </div>
@@ -353,7 +401,7 @@ export async function LandingPage() {
       >
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Four Simple Steps
+            {isBn ? "সহজ চারটি ধাপ" : "Four Simple Steps"}
           </h2>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
             {t("howHeroDesc")}
@@ -362,40 +410,72 @@ export async function LandingPage() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {([
             {
-              num: "01", key: "connect", badge: "Step 1",
+              num: "01",
+              key: "connect",
+              badge: isBn ? "ধাপ ১" : "Step 1",
               badgeColor: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
-              details: [
-                "Official Meta Graph API authorization",
-                "Zero password sharing — secure OAuth handshake",
-                "Tokens encrypted on server using AES-256-GCM",
-              ],
+              details: isBn
+                ? [
+                    "অফিসিয়াল মেটা গ্রাফ API অথরাইজেশন",
+                    "কোনো পাসওয়ার্ড শেয়ারিং ছাড়াই নিরাপদ OAuth হ্যান্ডশেক",
+                    "সার্ভারে AES-256-GCM এনক্রিপশনের মাধ্যমে টোকেন সংরক্ষিত",
+                  ]
+                : [
+                    "Official Meta Graph API authorization",
+                    "Zero password sharing — secure OAuth handshake",
+                    "Tokens encrypted on server using AES-256-GCM",
+                  ],
             },
             {
-              num: "02", key: "catalogue", badge: "Step 2",
+              num: "02",
+              key: "catalogue",
+              badge: isBn ? "ধাপ ২" : "Step 2",
               badgeColor: "bg-violet-500/15 text-violet-400 border-violet-500/30",
-              details: [
-                "Store product names, SKU variations, and pricing once",
-                "Connect Steadfast, Pathao, or RedX API credentials",
-                "Ready in less than 5 minutes",
-              ],
+              details: isBn
+                ? [
+                    "পণ্যের নাম, ভ্যারিয়েশন ও মূল্য একবার সেট করলেই প্রস্তুত",
+                    "Steadfast, Pathao বা RedX API ক্রেডেনশিয়াল সংযোগ",
+                    "মাত্র ৫ মিনিটেরও কম সময়ে সেটআপ সম্পন্ন",
+                  ]
+                : [
+                    "Store product names, SKU variations, and pricing once",
+                    "Connect Steadfast, Pathao, or RedX API credentials",
+                    "Ready in less than 5 minutes",
+                  ],
             },
             {
-              num: "03", key: "reply", badge: "Step 3",
+              num: "03",
+              key: "reply",
+              badge: isBn ? "ধাপ ৩" : "Step 3",
               badgeColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-              details: [
-                "AI generates intelligent reply suggestions in Bangla & Banglish",
-                "One-click customer order extraction right in the conversation",
-                "Instant delivery risk check against fake or high-return buyers",
-              ],
+              details: isBn
+                ? [
+                    "বাংলা ও বাংলিশে AI বুদ্ধিমান ড্রাফট রিপ্লাই তৈরি করে",
+                    "চ্যাট থেকেই এক ক্লিকে কাস্টমারের অর্ডার এক্সট্র্যাক্ট",
+                    "ফেক অর্ডার ও রিটার্নকারী ক্রেতা আগে থেকেই শনাক্ত",
+                  ]
+                : [
+                    "AI generates intelligent reply suggestions in Bangla & Banglish",
+                    "One-click customer order extraction right in the conversation",
+                    "Instant delivery risk check against fake or high-return buyers",
+                  ],
             },
             {
-              num: "04", key: "deliver", badge: "Step 4",
+              num: "04",
+              key: "deliver",
+              badge: isBn ? "ধাপ ৪" : "Step 4",
               badgeColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-              details: [
-                "One-tap consignment dispatch to your courier account",
-                "Automated customer tracking link and delivery updates",
-                "Courier COD payouts automatically reconciled into Hisab Khata",
-              ],
+              details: isBn
+                ? [
+                    "এক ট্যাপেই সরাসরি আপনার কুরিয়ার অ্যাকাউন্টে পার্সেল বুকিং",
+                    "স্বয়ংক্রিয় ট্র্যাকিং লিংক ও কাস্টমার ডেলিভারি আপডেট",
+                    "কুরিয়ারের COD টাকা সরাসরি হিসাব খাতায় জমা",
+                  ]
+                : [
+                    "One-tap consignment dispatch to your courier account",
+                    "Automated customer tracking link and delivery updates",
+                    "Courier COD payouts automatically reconciled into Hisab Khata",
+                  ],
             },
           ] as const).map((item) => (
             <div
@@ -447,15 +527,27 @@ export async function LandingPage() {
               <div className="mt-8 flex flex-col gap-3 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Check className="size-4 text-success" />
-                  <span>Zero manual copy-pasting of customer phone numbers &amp; addresses</span>
+                  <span>
+                    {isBn
+                      ? "ফোন নম্বর ও ঠিকানা ম্যানুয়ালি কপি-পেস্ট করার ঝামেলা নেই"
+                      : "Zero manual copy-pasting of customer phone numbers & addresses"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="size-4 text-success" />
-                  <span>Automatic delivery risk rating displayed before parcel booking</span>
+                  <span>
+                    {isBn
+                      ? "পার্সেল বুক করার আগেই কাস্টমারের ডেলিভারি রিস্ক রেটিং দেখা যায়"
+                      : "Automatic delivery risk rating displayed before parcel booking"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="size-4 text-success" />
-                  <span>Real-time sync with courier dispatch portals</span>
+                  <span>
+                    {isBn
+                      ? "কুরিয়ার পোর্টালের সাথে রিয়েল-টাইম তথ্য সিঙ্ক"
+                      : "Real-time sync with courier dispatch portals"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -470,15 +562,21 @@ export async function LandingPage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-xs font-bold text-foreground">FB Page &amp; WhatsApp Live Inbox</p>
+                      <p className="text-xs font-bold text-foreground">
+                        {isBn ? "লাইভ ফেসবুক পেজ ও হোয়াটসঅ্যাপ ইনবক্স" : "FB Page & WhatsApp Live Inbox"}
+                      </p>
                       <span className="rounded-full bg-blue-500/10 px-1.5 py-0.2 text-[9px] font-bold text-blue-600">Meta Webhook</span>
                     </div>
-                    <p className="text-[10px] text-muted-foreground">Automated customer replies for your Page</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {isBn ? "আপনার পেজের জন্য স্বয়ংক্রিয় কাস্টমার রিপ্লাই" : "Automated customer replies for your Page"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="size-2 rounded-full bg-success animate-pulse" />
-                  <span className="text-[10px] font-semibold text-success">24/7 Online</span>
+                  <span className="text-[10px] font-semibold text-success">
+                    {isBn ? "২৪/৭ লাইভ" : "24/7 Online"}
+                  </span>
                 </div>
               </div>
               {/* Messages area */}
@@ -487,7 +585,7 @@ export async function LandingPage() {
                 <div className="flex flex-col items-end">
                   <span className="mb-1 flex items-center gap-1 text-[10px] font-semibold text-blue-600">
                     <MessengerLogo className="size-3" />
-                    <span>Customer on Facebook Page</span>
+                    <span>{isBn ? "ফেসবুক পেজের কাস্টমার" : "Customer on Facebook Page"}</span>
                   </span>
                   <div className="max-w-[82%] rounded-2xl rounded-tr-sm bg-muted px-4 py-2.5 text-foreground shadow-xs">
                     <p className="font-medium leading-relaxed">{t("workflowMessage")}</p>
@@ -497,7 +595,9 @@ export async function LandingPage() {
                 <div className="flex flex-col items-start">
                   <div className="mb-1 flex items-center gap-1.5">
                     <Bot className="size-3.5 text-primary" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">BikriPilot AI (Page Auto-Reply)</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+                      {isBn ? "বিক্রিপাইলট AI (স্বয়ংক্রিয় রিপ্লাই)" : "BikriPilot AI (Page Auto-Reply)"}
+                    </span>
                   </div>
                   <div className="max-w-[82%] rounded-2xl rounded-tl-sm border border-primary/25 bg-primary-soft px-4 py-2.5 text-foreground shadow-xs">
                     <p className="font-medium leading-relaxed">{t("workflowReply")}</p>
@@ -515,7 +615,7 @@ export async function LandingPage() {
               {/* Fake input bar */}
               <div className="flex items-center gap-2 border-t bg-muted/30 px-4 py-2.5">
                 <div className="h-8 flex-1 rounded-full border bg-background px-3 text-[11px] text-muted-foreground flex items-center">
-                  Type a reply or let AI draft one…
+                  {isBn ? "মেসেজ লিখুন অথবা AI ড্রাফট তৈরি করতে দিন…" : "Type a reply or let AI draft one…"}
                 </div>
                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
                   <ArrowRight className="size-3.5" />
@@ -612,11 +712,13 @@ export async function LandingPage() {
         <div className="mt-14 sm:mt-16 rounded-2xl border bg-card/60 p-5 sm:p-7 text-center">
           <div className="inline-flex items-center gap-1.5 rounded-full border bg-muted/80 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
             <Layers className="size-3" />
-            <span>Official Integrations</span>
+            <span>{isBn ? "অফিসিয়াল ইন্টিগ্রেশন" : "Official Integrations"}</span>
           </div>
           <h3 className="mt-2 text-lg font-bold sm:text-xl">{t("worksWith")}</h3>
           <p className="mx-auto mt-1 max-w-xl text-xs text-muted-foreground">
-            Direct API integrations, webhook automations &amp; courier partnerships
+            {isBn
+              ? "সরাসরি API ইন্টিগ্রেশন, ওয়েবহুক অটোমেশন ও কুরিয়ার পার্টনারশিপ"
+              : "Direct API integrations, webhook automations & courier partnerships"}
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
             {PARTNERS.map((partner) => {
@@ -660,10 +762,14 @@ export async function LandingPage() {
             {/* Right: Title and Description */}
             <div className="flex flex-col justify-center max-w-3xl">
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl text-foreground">
-                Keep the path from chat to cash clear.
+                {isBn
+                  ? "চ্যাট থেকে ক্যাশ — সোশ্যাল বিক্রয় আরও সহজ।"
+                  : "Keep the path from chat to cash clear."}
               </h2>
               <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
-                An integrated operating system designed for modern social commerce sellers and growing retail brands.
+                {isBn
+                  ? "সোশ্যাল কমার্স বিক্রেতা ও ব্র্যান্ডের জন্য তৈরি একটি সম্পূর্ণ অপারেটিং সিস্টেম।"
+                  : "An integrated operating system designed for modern social commerce sellers and growing retail brands."}
               </p>
             </div>
           </div>

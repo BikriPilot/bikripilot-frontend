@@ -104,10 +104,10 @@ export default function TeamPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border/80 bg-card px-3.5 text-xs font-semibold text-muted-foreground transition-all hover:border-primary/50 hover:bg-muted hover:text-foreground shadow-2xs"
-              title="টিম মেম্বার অ্যাড করার আগে রোল ও পারমিশন গাইড পড়ুন"
+              title={t("teamRolesDocsTitle")}
             >
               <BookOpen className="size-4 text-primary" />
-              <span>রোল ও পারমিশন গাইড (Docs)</span>
+              <span>{t("teamRolesDocsGuide")}</span>
               <ExternalLink className="size-3.5 opacity-70" />
             </Link>
             {can("team.manage") ? (
@@ -133,10 +133,10 @@ export default function TeamPage() {
               <BookOpen className="size-4 shrink-0 text-primary mt-0.5" />
               <div className="space-y-1">
                 <p className="font-semibold text-foreground">
-                  টিম মেম্বার যোগ করার পূর্বে তাদের রোল ও পারমিশন জেনে নিন
+                  {t("teamNoticeTitle")}
                 </p>
                 <p className="text-[11.5px] leading-relaxed">
-                  সঠিক দায়িত্ব বণ্টন ও শপের সুরক্ষার জন্য আমন্ত্রণ পাঠানোর আগে প্রতিটি রোলের এক্সেস লেভেল যাচাই করা জরুরি।
+                  {t("teamNoticeDesc")}
                 </p>
                 <Link
                   href="/docs?tab=seller-invitation"
@@ -144,7 +144,7 @@ export default function TeamPage() {
                   rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-1 font-semibold text-primary hover:underline"
                 >
-                  <span>সম্পূর্ণ রোলস ও পারমিশন ডক পড়ুন (Team Roles & Permissions)</span>
+                  <span>{t("teamRolesDocsLink")}</span>
                   <ExternalLink className="size-3" />
                 </Link>
               </div>

@@ -13,7 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "Features — BikriPilot",
@@ -22,109 +22,164 @@ export const metadata = {
 };
 
 export default async function FeaturesPage() {
-  const t = await getTranslations("landing");
+  const [locale, t] = await Promise.all([getLocale(), getTranslations("landing")]);
+  const isBn = locale === "bn";
 
   const featureCards = [
     {
       key: "inbox",
       icon: Bot,
       color: "text-primary bg-primary/10 border-primary/20",
-      badge: "AI Powered",
-      points: [
-        "Instant draft suggestions in Bangla, English & Banglish",
-        "Unified inbox for Facebook Messenger & comments",
-        "24/7 automated inquiry handling & instant customer replies",
-      ],
+      badge: isBn ? "AI চালিত" : "AI Powered",
+      points: isBn
+        ? [
+            "বাংলা, ইংরেজি ও বাংলিশে তাৎক্ষণিক AI ড্রাফট রিপ্লাই",
+            "ফেসবুক মেসেঞ্জার ও পোস্ট কমেন্টের জন্য ইউনিফাইড ইনবক্স",
+            "২৪/৭ স্বয়ংক্রিয় গ্রাহক অনুসন্ধান ও তাৎক্ষণিক উত্তর",
+          ]
+        : [
+            "Instant draft suggestions in Bangla, English & Banglish",
+            "Unified inbox for Facebook Messenger & comments",
+            "24/7 automated inquiry handling & instant customer replies",
+          ],
     },
     {
       key: "orders",
       icon: ClipboardList,
       color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
-      badge: "One-Click",
-      points: [
-        "Extract customer name, phone, address and item directly from chat",
-        "Auto-generate complete order drafts in seconds",
-        "Prevents order loss and saves hours of manual data entry",
-      ],
+      badge: isBn ? "এক ক্লিকে" : "One-Click",
+      points: isBn
+        ? [
+            "চ্যাট থেকে সরাসরি নাম, ফোন নম্বর, ঠিকানা ও প্রডাক্ট সংগ্রহ",
+            "কয়েক সেকেন্ডের মধ্যে স্বয়ংক্রিয় পূর্ণাঙ্গ অর্ডার ড্রাফট তৈরি",
+            "অর্ডার হারানোর ঝুঁকি দূর ও ঘণ্টার পর ঘণ্টা ডেটা এন্ট্রি সাশ্রয়",
+          ]
+        : [
+            "Extract customer name, phone, address and item directly from chat",
+            "Auto-generate complete order drafts in seconds",
+            "Prevents order loss and saves hours of manual data entry",
+          ],
     },
     {
       key: "courier",
       icon: PackageCheck,
       color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-      badge: "Multi-Courier",
-      points: [
-        "Native integrations with Steadfast, Pathao, and RedX",
-        "Book parcels with a single tap without opening courier panels",
-        "Automated consignment tracking and status sync",
-      ],
+      badge: isBn ? "মাল্টি-কুরিয়ার" : "Multi-Courier",
+      points: isBn
+        ? [
+            "Steadfast, Pathao ও RedX-এর সাথে সরাসরি লাইভ ইন্টিগ্রেশন",
+            "কুরিয়ার প্যানেল না খুলেই এক ট্যাপে পার্সেল বুকিং",
+            "স্বয়ংক্রিয় কনসাইনমেন্ট ট্র্যাকিং ও ডেলিভারি স্ট্যাটাস সিঙ্ক",
+          ]
+        : [
+            "Native integrations with Steadfast, Pathao, and RedX",
+            "Book parcels with a single tap without opening courier panels",
+            "Automated consignment tracking and status sync",
+          ],
     },
     {
       key: "risk",
       icon: ShieldCheck,
       color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
-      badge: "Fraud Shield",
-      points: [
-        "Network-wide delivery success score for customer phone numbers",
-        "Instant warnings on chronic order cancelers & fake orders",
-        "Significantly lowers returned shipment (RTO) costs",
-      ],
+      badge: isBn ? "ফ্রড শিল্ড" : "Fraud Shield",
+      points: isBn
+        ? [
+            "কাস্টমারের ফোন নম্বরের ওপর ভিত্তি করে ডেলিভারি সাকসেস স্কোর",
+            "অর্ডার বাতিলকারী ও ফেক অর্ডারে তাৎক্ষণিক সতর্কবার্তা",
+            "পার্সেল রিটার্নের অতিরিক্ত খরচ ও ক্ষতি উল্লেখযোগ্যভাবে হ্রাস",
+          ]
+        : [
+            "Network-wide delivery success score for customer phone numbers",
+            "Instant warnings on chronic order cancelers & fake orders",
+            "Significantly lowers returned shipment (RTO) costs",
+          ],
     },
     {
       key: "ledger",
       icon: WalletCards,
       color: "text-teal-500 bg-teal-500/10 border-teal-500/20",
-      badge: "Hisab Khata",
-      points: [
-        "Automated cash-flow records tied to orders and courier payouts",
-        "Real-time tracking of 'You Will Get' and 'You Will Give' dues",
-        "One-click customer due reminders via SMS",
-      ],
+      badge: isBn ? "ডিজিটাল খাতা" : "Hisab Khata",
+      points: isBn
+        ? [
+            "অর্ডার ও কুরিয়ার পে-আউটের সাথে সরাসরি যুক্ত ক্যাশ-ফ্লো হিসাব",
+            "পাবো ও দেবো বকেয়া টাকার নিখুঁত রিয়েল-টাইম ট্র্যাকিং",
+            "এসএমএসের মাধ্যমে এক ক্লিকে কাস্টমার বকেয়া তাগাদা",
+          ]
+        : [
+            "Automated cash-flow records tied to orders and courier payouts",
+            "Real-time tracking of 'You Will Get' and 'You Will Give' dues",
+            "One-click customer due reminders via SMS",
+          ],
     },
     {
       key: "comments",
       icon: MessageSquareText,
       color: "text-indigo-500 bg-indigo-500/10 border-indigo-500/20",
-      badge: "Social Sales",
-      points: [
-        "Automatically reply to product inquiries on Facebook posts",
-        "Auto-route public comments directly to private Messenger inbox",
-        "Boost customer engagement and sales conversions",
-      ],
+      badge: isBn ? "সোশ্যাল সেলস" : "Social Sales",
+      points: isBn
+        ? [
+            "ফেসবুক পোস্টের প্রোডাক্ট কমেন্টে স্বয়ংক্রিয় প্রফেশনাল রিপ্লাই",
+            "পাবলিক কমেন্টকারীকে সরাসরি প্রাইভেট মেসেঞ্জারে রূপান্তর",
+            "কাস্টমার এনগেজমেন্ট ও সেলস কনভার্সন বৃদ্ধি",
+          ]
+        : [
+            "Automatically reply to product inquiries on Facebook posts",
+            "Auto-route public comments directly to private Messenger inbox",
+            "Boost customer engagement and sales conversions",
+          ],
     },
     {
       key: "automation",
       icon: Zap,
       color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
-      badge: "Smart Rules",
-      points: [
-        "Preset quick replies and FAQ automated responses",
-        "Keyword-based triggers for pricing, sizes, and stock availability",
-        "Zero setup complexity, active 24/7",
-      ],
+      badge: isBn ? "স্মার্ট রুলস" : "Smart Rules",
+      points: isBn
+        ? [
+            "কাস্টম কুইক রিপ্লাই ও সাধারণ প্রশ্নের জন্য ইনস্ট্যান্ট অটোমেশন",
+            "দাম, সাইজ ও স্টক এভেইলেবিলিটি অনুযায়ী কি-ওয়ার্ড ভিত্তিক ট্রিগার",
+            "কোনো জটিল সেটআপ ছাড়াই ২৪/৭ কার্যকর",
+          ]
+        : [
+            "Preset quick replies and FAQ automated responses",
+            "Keyword-based triggers for pricing, sizes, and stock availability",
+            "Zero setup complexity, active 24/7",
+          ],
     },
     {
       key: "team",
       icon: UsersRound,
       color: "text-rose-500 bg-rose-500/10 border-rose-500/20",
-      badge: "Collaboration",
-      points: [
-        "Role-based access controls for Owners, Managers, and Agents",
-        "Keep sensitive business metrics and credentials protected",
-        "Track individual teammate performance and response times",
-      ],
+      badge: isBn ? "টিম রোলস" : "Collaboration",
+      points: isBn
+        ? [
+            "মালিক, ম্যানেজার ও এজেন্টের জন্য রোল-ভিত্তিক নিরাপদ অ্যাক্সেস",
+            "ব্যবসায়িক সংবেদনশীল তথ্য ও ক্রেডেনশিয়াল শতভাগ সুরক্ষিত",
+            "টিম মেম্বারদের কাজের অগ্রগতি ও রেসপন্স টাইমের লাইভ হিসাব",
+          ]
+        : [
+            "Role-based access controls for Owners, Managers, and Agents",
+            "Keep sensitive business metrics and credentials protected",
+            "Track individual teammate performance and response times",
+          ],
     },
     {
       key: "reports",
       icon: BarChart3,
       color: "text-cyan-500 bg-cyan-500/10 border-cyan-500/20",
-      badge: "Analytics",
-      points: [
-        "Real-time dashboards for daily revenue, sales volume, and COD payouts",
-        "Courier delivery success rates and return analytics",
-        "Export clean CSV reports anytime for accounting",
-      ],
+      badge: isBn ? "অ্যানালিটিক্স" : "Analytics",
+      points: isBn
+        ? [
+            "দৈনিক বিক্রি, অর্ডার ভলিউম ও সিওডি পেমেন্টের রিয়েল-টাইম ড্যাশবোর্ড",
+            "কুরিয়ার ডেলিভারি সাকসেস রেট ও রিটার্ন অ্যানালিটিক্স",
+            "হিসাব নিকাশের সুবিধার্থে যেকোনো সময় পরিচ্ছন্ন CSV এক্সপোর্ট",
+          ]
+        : [
+            "Real-time dashboards for daily revenue, sales volume, and COD payouts",
+            "Courier delivery success rates and return analytics",
+            "Export clean CSV reports anytime for accounting",
+          ],
     },
-  ] as const;
+  ];
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
@@ -188,13 +243,15 @@ export default async function FeaturesPage() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
             <Layers className="size-3.5" />
-            <span>Official Integrations</span>
+            <span>{isBn ? "অফিসিয়াল ইন্টিগ্রেশন" : "Official Integrations"}</span>
           </div>
           <h2 className="mt-3 text-2xl font-bold sm:text-3xl">
             {t("worksWith")}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Seamlessly connected with your essential commerce, delivery, and payment channels.
+            {isBn
+              ? "আপনার প্রয়োজনীয় সোশ্যাল কমার্স, ডেলিভারি ও পেমেন্ট চ্যানেলের সাথে সরাসরি সংযুক্ত।"
+              : "Seamlessly connected with your essential commerce, delivery, and payment channels."}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 font-semibold text-sm">
             {[

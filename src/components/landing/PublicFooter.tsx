@@ -7,7 +7,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Logo } from "@/components/common/Logo";
 import { FacebookLogo, LinkedInLogo } from "@/components/landing/IntegrationLogos";
 import type { PublicConfig } from "@/types/publicConfig";
@@ -17,7 +17,11 @@ export async function PublicFooter({
 }: {
   config: PublicConfig | null;
 }) {
-  const t = await getTranslations("landing");
+  const [locale, t] = await Promise.all([
+    getLocale(),
+    getTranslations("landing"),
+  ]);
+  const isBn = locale === "bn";
 
   return (
     <footer className="border-t bg-card text-card-foreground">
@@ -42,7 +46,7 @@ export async function PublicFooter({
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 px-2.5 py-1">
                   <ShieldCheck className="size-3 text-emerald-600" />
-                  <span>AES-256 Secured</span>
+                  <span>{isBn ? "AES-256 সুরক্ষিত" : "AES-256 Secured"}</span>
                 </span>
               </div>
 
@@ -141,7 +145,7 @@ export async function PublicFooter({
                   </li>
                   <li>
                     <Link href="/how-it-works" className="hover:text-foreground transition-colors">
-                      Workflow Guide
+                      {isBn ? "কাজের নিয়ম ও গাইড" : "Workflow Guide"}
                     </Link>
                   </li>
                 </ul>
@@ -170,7 +174,7 @@ export async function PublicFooter({
                   </li>
                   <li>
                     <Link href="/privacy" className="hover:text-foreground transition-colors">
-                      Security & Data
+                      {isBn ? "নিরাপত্তা ও ডেটা পলিসি" : "Security & Data"}
                     </Link>
                   </li>
                 </ul>
@@ -249,7 +253,7 @@ export async function PublicFooter({
               <span>{t("footerStatus")}</span>
             </div>
             <span>·</span>
-            <span>Cloud Infrastructure</span>
+            <span>{isBn ? "ক্লাউড ইনফ্রাস্ট্রাকচার" : "Cloud Infrastructure"}</span>
           </div>
         </div>
       </div>

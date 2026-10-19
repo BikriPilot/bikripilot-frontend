@@ -23,7 +23,7 @@ export function ErrorState({
     message ||
     errObj?.message ||
     (isMaintenance
-      ? "সিস্টেম রক্ষণাবেক্ষণের কাজ চলছে। সাময়িক অসুবিধার জন্য আমরা আন্তরিকভাবে দুঃখিত।"
+      ? t("maintenanceMessage")
       : undefined);
 
   if (isMaintenance) {
@@ -33,7 +33,7 @@ export function ErrorState({
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-warning/20 text-warning">
             <Wrench size={24} />
           </div>
-          <h3 className="text-lg font-bold text-foreground">সিস্টেম রক্ষণাবেক্ষণ চলছে</h3>
+          <h3 className="text-lg font-bold text-foreground">{t("maintenanceTitle")}</h3>
           {displayMessage ? (
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">{displayMessage}</p>
           ) : null}

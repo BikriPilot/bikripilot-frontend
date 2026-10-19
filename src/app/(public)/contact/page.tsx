@@ -5,7 +5,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { FacebookLogo, LinkedInLogo } from "@/components/landing/IntegrationLogos";
 import { ContactFormClient } from "./ContactFormClient";
 
@@ -16,7 +16,11 @@ export const metadata = {
 };
 
 export default async function ContactPage() {
-  const t = await getTranslations("landing");
+  const [locale, t] = await Promise.all([
+    getLocale(),
+    getTranslations("landing"),
+  ]);
+  const isBn = locale === "bn";
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,9 +111,13 @@ export default async function ContactPage() {
                   {/* Support Desk Email */}
                   <div className="flex items-start justify-between rounded-xl border bg-muted/30 p-3.5">
                     <div>
-                      <p className="font-semibold text-foreground">Technical Support Desk</p>
+                      <p className="font-semibold text-foreground">
+                        {isBn ? "টেকনিক্যাল সাপোর্ট ডেস্ক" : "Technical Support Desk"}
+                      </p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        For bugs, shop onboarding & integration help
+                        {isBn
+                          ? "বাগ রিপোর্ট, শপ অনবোর্ডিং ও ইন্টিগ্রেশন সহায়তা"
+                          : "For bugs, shop onboarding & integration help"}
                       </p>
                     </div>
                     <a
@@ -123,9 +131,13 @@ export default async function ContactPage() {
                   {/* Founder Desk Email */}
                   <div className="flex items-start justify-between rounded-xl border bg-muted/30 p-3.5">
                     <div>
-                      <p className="font-semibold text-foreground">Founder & Executive Desk</p>
+                      <p className="font-semibold text-foreground">
+                        {isBn ? "ফাউন্ডার ও এক্সিকিউটিভ ডেস্ক" : "Founder & Executive Desk"}
+                      </p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        For partnerships, custom plans & feedback
+                        {isBn
+                          ? "পার্টনারশিপ, কাস্টম প্ল্যান ও ব্যবসায়িক ফিডব্যাক"
+                          : "For partnerships, custom plans & feedback"}
                       </p>
                     </div>
                     <a
@@ -157,7 +169,7 @@ export default async function ContactPage() {
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 px-2 py-1">
                     <ShieldCheck className="size-3 text-emerald-600" />
-                    <span>AES-256 Secured</span>
+                    <span>{isBn ? "AES-256 সুরক্ষিত" : "AES-256 Secured"}</span>
                   </span>
                 </div>
               </div>
@@ -184,13 +196,13 @@ export default async function ContactPage() {
                         Tarek Monowar
                       </h3>
                       <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                        Founder
+                        {isBn ? "প্রতিষ্ঠাতা" : "Founder"}
                       </span>
                     </div>
 
                     <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1.5 font-medium">
                       <MapPin className="size-3.5 text-primary/70 shrink-0" />
-                      <span>Sylhet, Bangladesh</span>
+                      <span>{isBn ? "সিলেট, বাংলাদেশ" : "Sylhet, Bangladesh"}</span>
                     </p>
 
                     {/* Action Links: Personal LinkedIn & Direct Email */}
@@ -203,7 +215,7 @@ export default async function ContactPage() {
                         className="inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-muted/40 px-3.5 py-2 text-xs font-semibold text-foreground transition-all hover:border-[#0A66C2]/40 hover:bg-[#0A66C2]/10 hover:text-[#0A66C2]"
                       >
                         <LinkedInLogo className="size-3.5" />
-                        <span>LinkedIn Profile</span>
+                        <span>{isBn ? "লিংকডইন প্রোফাইল" : "LinkedIn Profile"}</span>
                       </a>
                       <a
                         href="mailto:founder@bikripilot.com"

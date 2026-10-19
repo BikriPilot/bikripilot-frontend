@@ -28,6 +28,11 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         .catch(() => {});
     }
     router.refresh();
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "test") {
+      try {
+        window.location.reload();
+      } catch {}
+    }
   };
   return (
     <div

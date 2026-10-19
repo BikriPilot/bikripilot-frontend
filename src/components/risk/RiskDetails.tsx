@@ -141,7 +141,7 @@ export function RiskDetails({
     if (!shopId) return;
     const cleanKey = fraudbdKeyInput.trim();
     if (!cleanKey) {
-      toast.error('Please enter a valid FraudBD API key');
+      toast.error(t('enterValidFraudbdKey'));
       return;
     }
     setIsSavingKey(true);
@@ -290,7 +290,10 @@ export function RiskDetails({
                 </p>
                 {hasSearched && (
                   <p className="text-[11px] text-muted-foreground">
-                    {totalDeliveredAcrossAll} delivered / {totalParcelsAcrossAll} total parcels
+                    {t('deliveredSummary', {
+                      delivered: totalDeliveredAcrossAll,
+                      total: totalParcelsAcrossAll,
+                    })}
                   </p>
                 )}
               </div>
@@ -320,8 +323,11 @@ export function RiskDetails({
                 <span className="text-[9px] text-muted-foreground font-medium">
                   {hasSearched
                     ? totalParcelsAcrossAll > 0
-                      ? `${totalDeliveredAcrossAll} / ${totalParcelsAcrossAll} delivered`
-                      : '0 orders / No history'
+                      ? t('deliveredSummary', {
+                          delivered: totalDeliveredAcrossAll,
+                          total: totalParcelsAcrossAll,
+                        })
+                      : t('noParcelHistory')
                     : t('awaitingSearch')}
                 </span>
               </div>
@@ -387,11 +393,11 @@ export function RiskDetails({
                 {hasSearched ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                     <CheckCircle2 size={12} />
-                    <span>Verified</span>
+                    <span>{t('verified')}</span>
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground border">
-                    <span>Auto Ready</span>
+                    <span>{t('autoReady')}</span>
                   </span>
                 )}
               </div>
@@ -441,7 +447,7 @@ export function RiskDetails({
               {combinedSuccessPercent !== null && (
                 <div className="space-y-1.5 pt-1">
                   <div className="flex justify-between text-xs font-medium">
-                    <span className="text-muted-foreground">Delivery Success Confidence</span>
+                    <span className="text-muted-foreground">{t('deliveryConfidence')}</span>
                     <span
                       className={
                         combinedSuccessPercent >= 80
@@ -453,10 +459,10 @@ export function RiskDetails({
                     >
                       {combinedSuccessPercent}% (
                       {combinedSuccessPercent >= 80
-                        ? 'Excellent'
+                        ? t('confidenceExcellent')
                         : combinedSuccessPercent >= 60
-                          ? 'Moderate'
-                          : 'Risky'}
+                          ? t('confidenceModerate')
+                          : t('confidenceRisky')}
                       )
                     </span>
                   </div>
@@ -512,7 +518,7 @@ export function RiskDetails({
                   </span>
                 ) : hasFraudbd ? (
                   <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                    Key Connected
+                    {t('keyConnected')}
                   </span>
                 ) : null}
               </div>
@@ -563,7 +569,7 @@ export function RiskDetails({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline"
                       >
-                        <span>Get key at fraudbd.com</span>
+                        <span>{t('getKeyFraudbd')}</span>
                         <ExternalLink size={11} />
                       </a>
 
@@ -574,7 +580,7 @@ export function RiskDetails({
                             onClick={() => setShowKeyEditor(false)}
                             className="rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-muted"
                           >
-                            Cancel
+                            {t('cancelBtn')}
                           </button>
                         )}
                         <button
@@ -594,7 +600,7 @@ export function RiskDetails({
                   <div className="flex items-center justify-between text-xs text-muted-foreground border-b pb-3">
                     <span className="font-mono text-[11px] flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
                       <CheckCircle2 size={13} />
-                      <span>Shop API Key: Active</span>
+                      <span>{t('shopApiKeyActive')}</span>
                     </span>
                     <button
                       type="button"
@@ -613,7 +619,7 @@ export function RiskDetails({
                         <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-xs text-rose-700 dark:text-rose-400">
                           <div className="flex items-center gap-2 font-semibold">
                             <XCircle size={15} />
-                            <span>FraudBD API Error</span>
+                            <span>{t('fraudbdApiError')}</span>
                           </div>
                           <p className="mt-1 text-[11px] opacity-90">{fraudbdReport.error}</p>
                         </div>
@@ -624,7 +630,7 @@ export function RiskDetails({
                             <span>{t('fraudReportsAlert', { count: fraudbdReport.fraudReports })}</span>
                           </div>
                           <p className="text-[11px] text-rose-700 dark:text-rose-400 leading-relaxed">
-                            Caution: Other merchants in Bangladesh have registered fraud reports against this customer.
+                            {t('fraudReportAlertNotice')}
                           </p>
                         </div>
                       ) : (
@@ -637,7 +643,7 @@ export function RiskDetails({
                       {!fraudbdReport.error && (
                         <div className="rounded-xl border bg-muted/30 p-3 space-y-2">
                           <span className="text-xs font-semibold text-foreground">
-                            External Courier History (via FraudBD)
+                            {t('externalCourierHistoryTitle')}
                           </span>
 
                           <div className="grid grid-cols-3 gap-2 text-xs">
@@ -686,7 +692,7 @@ export function RiskDetails({
                           className="w-full inline-flex items-center justify-center gap-2 rounded-xl border bg-background py-2 text-xs font-semibold text-foreground hover:bg-muted disabled:opacity-50 transition-colors shadow-2xs cursor-pointer"
                         >
                           <RotateCw size={13} className={isCheckingFraudbd ? 'animate-spin' : ''} />
-                          <span>{isCheckingFraudbd ? t('checkingFraudbd') : 'Re-check FraudBD (1 Credit)'}</span>
+                          <span>{isCheckingFraudbd ? t('checkingFraudbd') : t('recheckFraudbdBtn')}</span>
                         </button>
                       )}
                     </div>
@@ -696,7 +702,7 @@ export function RiskDetails({
                       <div className="rounded-xl border bg-muted/40 p-3 space-y-1.5">
                         <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
                           <Sparkles size={14} className="text-primary" />
-                          <span>Credit Protection Active</span>
+                          <span>{t('creditProtectionActive')}</span>
                         </div>
                         <p className="text-[11px] text-muted-foreground leading-relaxed">
                           {t('fraudbdSkippedNotice')}
@@ -771,7 +777,7 @@ export function RiskDetails({
             </div>
 
             <div className="flex justify-between items-center pt-2.5 border-t text-xs font-semibold">
-              <span className="text-muted-foreground">Network Success Rate</span>
+              <span className="text-muted-foreground">{t('networkSuccessRate')}</span>
               <span className="text-primary font-mono">
                 {platformSuccessPercent !== null ? `${platformSuccessPercent}%` : 'N/A'}
               </span>
@@ -793,9 +799,7 @@ export function RiskDetails({
                     <p className="text-[11px] text-muted-foreground truncate">
                       {isCourierLive
                         ? t('courierConnected')
-                        : activeCourierProvider === 'STEADFAST'
-                          ? 'Steadfast Connection'
-                          : `${activeCourierProvider} Connection`}
+                        : t('courierConnection', { provider: activeCourierProvider })}
                     </p>
                   </div>
                 </div>
@@ -810,7 +814,7 @@ export function RiskDetails({
                   {isCourierLive ? (
                     <>
                       <CheckCircle2 size={10} />
-                      <span>Connected</span>
+                      <span>{t('connectedStatus')}</span>
                     </>
                   ) : (
                     <>
@@ -857,7 +861,7 @@ export function RiskDetails({
             </div>
 
             <div className="flex justify-between items-center pt-2.5 border-t text-xs font-semibold">
-              <span className="text-muted-foreground">Courier Success Rate</span>
+              <span className="text-muted-foreground">{t('courierSuccessRate')}</span>
               <span className="text-blue-600 dark:text-blue-400 font-mono">
                 {courierSuccessPercent !== null ? `${courierSuccessPercent}%` : 'N/A'}
               </span>
@@ -894,7 +898,7 @@ export function RiskDetails({
 
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div className="rounded-xl bg-muted/40 p-2.5 border">
-                  <span className="text-muted-foreground text-[10px] block">Shop Orders</span>
+                  <span className="text-muted-foreground text-[10px] block">{t('shopOrders')}</span>
                   <p className="mt-1 font-bold text-base text-foreground font-mono">
                     {shopOrders}
                   </p>
@@ -902,7 +906,7 @@ export function RiskDetails({
 
                 <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/20 p-2.5">
                   <span className="text-emerald-700 dark:text-emerald-400 text-[10px] block">
-                    Delivered
+                    {t('delivered')}
                   </span>
                   <p className="mt-1 font-bold text-base text-emerald-600 dark:text-emerald-400 font-mono">
                     {shopDelivered}
@@ -911,7 +915,7 @@ export function RiskDetails({
 
                 <div className="rounded-xl bg-rose-500/5 border border-rose-500/20 p-2.5">
                   <span className="text-rose-700 dark:text-rose-400 text-[10px] block">
-                    Returned
+                    {t('returnedCount')}
                   </span>
                   <p className="mt-1 font-bold text-base text-rose-600 dark:text-rose-400 font-mono">
                     {shopReturned}
@@ -921,7 +925,7 @@ export function RiskDetails({
             </div>
 
             <div className="flex justify-between items-center pt-2.5 border-t text-xs font-semibold">
-              <span className="text-muted-foreground">Shop Success Rate</span>
+              <span className="text-muted-foreground">{t('shopSuccessRate')}</span>
               <span className="font-semibold text-emerald-600 dark:text-emerald-400 font-mono">
                 {shopSuccessPercent !== null ? `${shopSuccessPercent}%` : 'N/A'}
               </span>

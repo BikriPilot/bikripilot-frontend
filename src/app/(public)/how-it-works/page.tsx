@@ -7,7 +7,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "How It Works — BikriPilot",
@@ -16,50 +16,75 @@ export const metadata = {
 };
 
 export default async function HowItWorksPage() {
-  const t = await getTranslations("landing");
+  const [locale, t] = await Promise.all([getLocale(), getTranslations("landing")]);
+  const isBn = locale === "bn";
 
   const steps = [
     {
       num: "01",
       key: "connect",
-      badge: "Step 1",
-      details: [
-        "Official Meta Graph API authorization",
-        "Zero password sharing — secure OAuth handshake",
-        "Tokens encrypted on server using AES-256-GCM",
-      ],
+      badge: isBn ? "ধাপ ১" : "Step 1",
+      details: isBn
+        ? [
+            "অফিসিয়াল মেটা গ্রাফ API অথরাইজেশন",
+            "কোনো পাসওয়ার্ড শেয়ারিং ছাড়াই নিরাপদ OAuth হ্যান্ডশেক",
+            "সার্ভারে AES-256-GCM এনক্রিপশনের মাধ্যমে টোকেন সংরক্ষিত",
+          ]
+        : [
+            "Official Meta Graph API authorization",
+            "Zero password sharing — secure OAuth handshake",
+            "Tokens encrypted on server using AES-256-GCM",
+          ],
     },
     {
       num: "02",
       key: "catalogue",
-      badge: "Step 2",
-      details: [
-        "Store product names, SKU variations, and pricing once",
-        "Connect Steadfast, Pathao, or RedX API credentials",
-        "Ready in less than 5 minutes",
-      ],
+      badge: isBn ? "ধাপ ২" : "Step 2",
+      details: isBn
+        ? [
+            "পণ্যের নাম, ভ্যারিয়েশন ও মূল্য একবার সেট করলেই প্রস্তুত",
+            "Steadfast, Pathao বা RedX API ক্রেডেনশিয়াল সংযোগ",
+            "মাত্র ৫ মিনিটেরও কম সময়ে সেটআপ সম্পন্ন",
+          ]
+        : [
+            "Store product names, SKU variations, and pricing once",
+            "Connect Steadfast, Pathao, or RedX API credentials",
+            "Ready in less than 5 minutes",
+          ],
     },
     {
       num: "03",
       key: "reply",
-      badge: "Step 3",
-      details: [
-        "AI generates intelligent reply suggestions in Bangla & Banglish",
-        "One-click customer order extraction right in the conversation",
-        "Instant delivery risk check against fake or high-return buyers",
-      ],
+      badge: isBn ? "ধাপ ৩" : "Step 3",
+      details: isBn
+        ? [
+            "বাংলা ও বাংলিশে AI বুদ্ধিমান ড্রাফট রিপ্লাই তৈরি করে",
+            "চ্যাট থেকেই এক ক্লিকে কাস্টমারের অর্ডার এক্সট্র্যাক্ট",
+            "ফেক অর্ডার ও রিটার্নকারী ক্রেতা আগে থেকেই শনাক্ত",
+          ]
+        : [
+            "AI generates intelligent reply suggestions in Bangla & Banglish",
+            "One-click customer order extraction right in the conversation",
+            "Instant delivery risk check against fake or high-return buyers",
+          ],
     },
     {
       num: "04",
       key: "deliver",
-      badge: "Step 4",
-      details: [
-        "One-tap consignment dispatch to your courier account",
-        "Automated customer tracking link and delivery updates",
-        "Courier COD payouts automatically reconciled into Hisab Khata",
-      ],
+      badge: isBn ? "ধাপ ৪" : "Step 4",
+      details: isBn
+        ? [
+            "এক ট্যাপেই সরাসরি আপনার কুরিয়ার অ্যাকাউন্টে পার্সেল বুকিং",
+            "স্বয়ংক্রিয় ট্র্যাকিং লিংক ও কাস্টমার ডেলিভারি আপডেট",
+            "কুরিয়ারের COD টাকা সরাসরি হিসাব খাতায় জমা",
+          ]
+        : [
+            "One-tap consignment dispatch to your courier account",
+            "Automated customer tracking link and delivery updates",
+            "Courier COD payouts automatically reconciled into Hisab Khata",
+          ],
     },
-  ] as const;
+  ];
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
@@ -129,15 +154,27 @@ export default async function HowItWorksPage() {
             <div className="mt-8 flex flex-col gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Check className="size-4 text-success" />
-                <span>Zero manual copy-pasting of customer phone numbers & addresses</span>
+                <span>
+                  {isBn
+                    ? "ফোন নম্বর ও ঠিকানা ম্যানুয়ালি কপি-পেস্ট করার ঝামেলা নেই"
+                    : "Zero manual copy-pasting of customer phone numbers & addresses"}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Check className="size-4 text-success" />
-                <span>Automatic delivery risk rating displayed before parcel booking</span>
+                <span>
+                  {isBn
+                    ? "পার্সেল বুক করার আগেই কাস্টমারের ডেলিভারি রিস্ক রেটিং দেখা যায়"
+                    : "Automatic delivery risk rating displayed before parcel booking"}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Check className="size-4 text-success" />
-                <span>Real-time sync with courier dispatch portals</span>
+                <span>
+                  {isBn
+                    ? "কুরিয়ার পোর্টালের সাথে রিয়েল-টাইম তথ্য সিঙ্ক"
+                    : "Real-time sync with courier dispatch portals"}
+                </span>
               </div>
             </div>
           </div>
@@ -145,14 +182,14 @@ export default async function HowItWorksPage() {
           <div className="grid gap-3 text-sm font-sans">
             <div className="rounded-2xl border bg-card p-4 shadow-xs text-foreground">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Customer Message
+                {isBn ? "কাস্টমার মেসেজ" : "Customer Message"}
               </p>
               <p className="mt-1 font-medium">{t("workflowMessage")}</p>
             </div>
             <div className="ml-6 rounded-2xl border border-primary/30 bg-primary-soft p-4 shadow-xs sm:ml-10 text-foreground">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-primary">
-                  AI Assistant Draft
+                  {isBn ? "AI অ্যাসিস্ট্যান্ট ড্রাফট" : "AI Assistant Draft"}
                 </span>
                 <Bot className="size-3.5 text-primary" />
               </div>
@@ -175,10 +212,14 @@ export default async function HowItWorksPage() {
       <section className="mt-20">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Why social sellers switch to BikriPilot
+            {isBn
+              ? "সোশ্যাল বিক্রেতারা কেন বিক্রিপাইলট বেছে নিচ্ছেন"
+              : "Why social sellers switch to BikriPilot"}
           </h2>
           <p className="mt-3 text-base text-muted-foreground">
-            Compare the traditional manual chaos with BikriPilot&apos;s automated operating system.
+            {isBn
+              ? "ম্যানুয়াল হিসাব ও মেসেজ সামলানোর ঝক্কির সাথে বিক্রিপাইলটের অটোমেশনের তুলনা করুন।"
+              : "Compare the traditional manual chaos with BikriPilot's automated operating system."}
           </p>
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-2">

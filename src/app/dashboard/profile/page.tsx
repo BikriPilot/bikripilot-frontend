@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
 import {
   ShieldCheck,
@@ -27,6 +27,8 @@ import { BD_DISTRICTS } from "@/constants/districts";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
+  const locale = useLocale();
+  const isBn = locale === "bn";
   const t = useTranslations("step8");
   const tDistricts = useTranslations("districts");
   const searchParams = useSearchParams();
@@ -51,7 +53,11 @@ export default function ProfilePage() {
     setResendingEmail(true);
     try {
       await authApi.resendVerification();
-      toast.success("Verification email sent! Please check your inbox and spam folder.");
+      toast.success(
+        isBn
+          ? "ভেরিফিকেশন ইমেইল পাঠানো হয়েছে! আপনার ইনবক্স ও স্প্যাম ফোল্ডার চেক করুন।"
+          : "Verification email sent! Please check your inbox and spam folder.",
+      );
     } catch {
       toast.error(t("genericError"));
     } finally {
@@ -80,7 +86,9 @@ export default function ProfilePage() {
     event.preventDefault();
     if (!name.trim() || !phone.trim() || !district) {
       toast.error(
-        "Please fill in all required fields: Name, Phone, and District.",
+        isBn
+          ? "অনুগ্রহ করে সব আবশ্যক তথ্য (নাম, ফোন নম্বর ও জেলা) পূরণ করুন।"
+          : "Please fill in all required fields: Name, Phone, and District.",
       );
       return;
     }
@@ -137,12 +145,18 @@ export default function ProfilePage() {
   const changePassword = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!password) {
-      setPasswordError("Please enter your current password.");
+      setPasswordError(
+        isBn
+          ? "অনুগ্রহ করে আপনার বর্তমান পাসওয়ার্ড লিখুন।"
+          : "Please enter your current password.",
+      );
       return;
     }
     if (!isPasswordSecure(newPassword)) {
       setPasswordError(
-        "New password must be at least 8 characters and include a letter, a number, and a special character.",
+        isBn
+          ? "নতুন পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে এবং তাতে অন্তত একটি ইংরেজি বর্ণ, একটি সংখ্যা ও একটি বিশেষ চিহ্ন থাকতে হবে।"
+          : "New password must be at least 8 characters and include a letter, a number, and a special character.",
       );
       return;
     }
@@ -189,19 +203,21 @@ export default function ProfilePage() {
                     {t("securityTitle")}
                   </h2>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Essential seller credentials required for sales channels.
+                    {isBn
+                      ? "সেলস চ্যানেল ও অর্ডার অটোমেশনের জন্য প্রয়োজনীয় বিক্রেতার ব্যক্তিগত তথ্য।"
+                      : "Essential seller credentials required for sales channels."}
                   </p>
                 </div>
               </div>
               {isProfileComplete ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                   <CheckCircle2 size={12} />
-                  <span>Complete</span>
+                  <span>{isBn ? "সম্পূর্ণ প্রস্তুত" : "Complete"}</span>
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                   <AlertTriangle size={12} />
-                  <span>Action Required</span>
+                  <span>{isBn ? "তথ্য অসম্পূর্ণ (পূরণ করুন)" : "Action Required"}</span>
                 </span>
               )}
             </div>
@@ -214,7 +230,7 @@ export default function ProfilePage() {
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   autoComplete="name"
-                  placeholder="Your full name"
+                  placeholder={isBn ? "আপনার পূর্ণ নাম" : "Your full name"}
                   required
                 />
                 <Field
@@ -236,7 +252,7 @@ export default function ProfilePage() {
                     {user.emailVerified ? (
                       <span className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                         <CheckCircle2 size={12} />
-                        Verified
+                        {isBn ? "যাচাইকৃত" : "Verified"}
                       </span>
                     ) : (
                       <button
@@ -245,7 +261,13 @@ export default function ProfilePage() {
                         disabled={resendingEmail}
                         className="shrink-0 text-[11px] font-semibold text-amber-600 dark:text-amber-400 hover:underline disabled:opacity-50"
                       >
-                        {resendingEmail ? "Sending..." : "Verify email →"}
+                        {resendingEmail
+                          ? isBn
+                            ? "পাঠানো হচ্ছে..."
+                            : "Sending..."
+                          : isBn
+                            ? "ইমেইল ভেরিফাই করুন →"
+                            : "Verify email →"}
                       </button>
                     )}
                   </div>
@@ -265,7 +287,7 @@ export default function ProfilePage() {
                     onChange={(event) => setDistrict(event.target.value)}
                     required
                   >
-                    <option value="">Select district (জেলা নির্বাচন করুন)</option>
+                    <option value="">{isBn ? "জেলা নির্বাচন করুন" : "Select district"}</option>
                     {BD_DISTRICTS.map((dist) => (
                       <option key={dist} value={dist}>
                         {tDistricts(dist as never)} ({dist})
@@ -278,13 +300,13 @@ export default function ProfilePage() {
               {/* Row 3: Address & Postal Code (Balanced 50/50 columns, no overflow) */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
-                  label={`${t("address")} (Optional)`}
+                  label={`${t("address")} (${isBn ? "ঐচ্ছিক" : "Optional"})`}
                   value={address}
                   onChange={(event) => setAddress(event.target.value)}
-                  placeholder="Street, area, house details"
+                  placeholder={isBn ? "রাস্তা, এলাকা, বাড়ি ও ফ্ল্যাট নম্বর" : "Street, area, house details"}
                 />
                 <Field
-                  label={`${t("postalCode")} (Optional)`}
+                  label={`${t("postalCode")} (${isBn ? "ঐচ্ছিক" : "Optional"})`}
                   value={postalCode}
                   onChange={(event) => setPostalCode(event.target.value)}
                   placeholder="1200"
@@ -325,7 +347,9 @@ export default function ProfilePage() {
                     {t("twoFactor")}
                   </h2>
                   <p className="text-[11px] text-muted-foreground">
-                    TOTP Google Authenticator or Microsoft Authenticator
+                    {isBn
+                      ? "Google Authenticator বা Microsoft Authenticator অ্যাপ"
+                      : "TOTP Google Authenticator or Microsoft Authenticator"}
                   </p>
                 </div>
               </div>
@@ -345,7 +369,9 @@ export default function ProfilePage() {
             {!user.twoFactorEnabled && !setup ? (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-0.5">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Protect your business account with two-factor authentication. Each login will require a 6-digit code from your phone.
+                  {isBn
+                    ? "টু-ফ্যাক্টর অথেনটিকেশন দিয়ে আপনার শপ সুরক্ষিত রাখুন। প্রতিবার লগইন করতে মোবাইলের অথেনটিকেটর অ্যাপ থেকে ৬ সংখ্যার ওটিপি কোড লাগবে।"
+                    : "Protect your business account with two-factor authentication. Each login will require a 6-digit code from your phone."}
                 </p>
                 <button
                   type="button"
@@ -371,7 +397,9 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-3">
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Scan this QR code with Google Authenticator or enter secret key:
+                      {isBn
+                        ? "Google Authenticator অ্যাপ দিয়ে এই QR কোডটি স্ক্যান করুন অথবা সিক্রেট কোডটি লিখুন:"
+                        : "Scan this QR code with Google Authenticator or enter secret key:"}
                     </p>
                     <code className="block break-all rounded bg-background p-2 font-mono text-[11px] font-semibold border">
                       {setup.secretBase32}
@@ -393,7 +421,7 @@ export default function ProfilePage() {
                     onClick={() => setSetup(null)}
                     className="min-h-9 rounded-lg border px-3 text-xs font-semibold hover:bg-muted"
                   >
-                    Cancel
+                    {isBn ? "বাতিল" : "Cancel"}
                   </button>
                   <button
                     type="button"
@@ -411,14 +439,16 @@ export default function ProfilePage() {
             {user.twoFactorEnabled && !disableOpen && (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-0.5">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Two-factor authentication is active. Your account is secured with 6-digit authenticator codes.
+                  {isBn
+                    ? "টু-ফ্যাক্টর নিরাপত্তা সক্রিয় রয়েছে। আপনার অ্যাকাউন্ট ৬-সংখ্যার অথেনটিকেটর কোড দিয়ে সুরক্ষিত।"
+                    : "Two-factor authentication is active. Your account is secured with 6-digit authenticator codes."}
                 </p>
                 <button
                   type="button"
                   onClick={() => setDisableOpen(true)}
                   className="min-h-8 shrink-0 rounded-lg border border-danger/30 bg-danger/10 px-3 text-xs font-semibold text-danger hover:bg-danger/20 transition-colors"
                 >
-                  Disable 2FA
+                  {isBn ? "2FA নিষ্ক্রিয় করুন" : "Disable 2FA"}
                 </button>
               </div>
             )}
@@ -449,14 +479,14 @@ export default function ProfilePage() {
                     onClick={() => setDisableOpen(false)}
                     className="min-h-9 rounded-lg border px-3 text-xs font-semibold hover:bg-muted"
                   >
-                    Cancel
+                    {isBn ? "বাতিল" : "Cancel"}
                   </button>
                   <button
                     type="submit"
                     disabled={disableBusy || disableCode.length !== 6}
                     className="min-h-9 rounded-lg bg-danger px-4 text-xs font-semibold text-white hover:bg-danger/90 disabled:opacity-50"
                   >
-                    {disableBusy ? t("loading") : "Disable 2FA"}
+                    {disableBusy ? t("loading") : isBn ? "2FA নিষ্ক্রিয় করুন" : "Disable 2FA"}
                   </button>
                 </div>
               </form>
@@ -478,7 +508,9 @@ export default function ProfilePage() {
                     {t("changePassword")}
                   </h2>
                   <p className="text-[11px] text-muted-foreground">
-                    Update your login credentials securely.
+                    {isBn
+                      ? "আপনার অ্যাকাউন্টের লগইন পাসওয়ার্ড পরিবর্তন করুন।"
+                      : "Update your login credentials securely."}
                   </p>
                 </div>
               </div>
@@ -536,7 +568,9 @@ export default function ProfilePage() {
                 {t("activeSessions")}
               </h2>
               <p className="text-xs text-muted-foreground">
-                Devices currently signed into this account
+                {isBn
+                  ? "যেসব ডিভাইসে আপনার এই অ্যাকাউন্ট বর্তমানে লগইন রয়েছে"
+                  : "Devices currently signed into this account"}
               </p>
             </div>
           </div>

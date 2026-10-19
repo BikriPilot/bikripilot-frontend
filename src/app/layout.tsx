@@ -52,7 +52,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen antialiased">
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider key={locale} locale={locale} messages={messages}>
           <Providers>
             <VisitTracker />
             {children}

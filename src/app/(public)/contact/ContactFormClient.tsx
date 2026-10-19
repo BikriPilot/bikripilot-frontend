@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
+import { useLocale } from "next-intl";
 import {
   Send,
   UploadCloud,
@@ -37,6 +38,8 @@ interface ContactTranslations {
 }
 
 export function ContactFormClient({ t }: { t: ContactTranslations }) {
+  const locale = useLocale();
+  const isBn = locale === "bn";
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,7 +64,11 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     for (let i = 0; i < incomingFiles.length; i++) {
       const file = incomingFiles[i];
       if (file.size > MAX_FILE_SIZE) {
-        setError(`"${file.name}" exceeds the 25MB size limit.`);
+        setError(
+          isBn
+            ? `"${file.name}" ফাইলের সাইজ ২৫ মেগাবাইটের বেশি।`
+            : `"${file.name}" exceeds the 25MB size limit.`
+        );
         continue;
       }
       validFiles.push(file);
@@ -107,17 +114,29 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
 
     // Validation: email and phone are mandatory
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError("Please provide a valid email address.");
+      setError(
+        isBn
+          ? "অনুগ্রহ করে একটি সঠিক ইমেইল অ্যাড্রেস লিখুন।"
+          : "Please provide a valid email address."
+      );
       return;
     }
 
     if (!phone.trim() || phone.trim().length < 8) {
-      setError("Please provide a valid phone or WhatsApp number (at least 8 digits).");
+      setError(
+        isBn
+          ? "অনুগ্রহ করে একটি সঠিক ফোন বা হোয়াটসঅ্যাপ নম্বর দিন (কমপক্ষে ৮ ডিজিট)।"
+          : "Please provide a valid phone or WhatsApp number (at least 8 digits)."
+      );
       return;
     }
 
     if (!message.trim() || message.trim().length < 5) {
-      setError("Please write a detailed message explaining your question or issue.");
+      setError(
+        isBn
+          ? "অনুগ্রহ করে আপনার প্রশ্ন বা বার্তা বিস্তারিত লিখুন।"
+          : "Please write a detailed message explaining your question or issue."
+      );
       return;
     }
 
@@ -129,7 +148,11 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
       const generatedTicket = `BP-${Math.floor(100000 + Math.random() * 900000)}`;
       setSuccessTicket(generatedTicket);
     } catch {
-      setError("Failed to send message. Please try again or reach us via WhatsApp directly.");
+      setError(
+        isBn
+          ? "মেসেজ পাঠানো সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন বা সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করুন।"
+          : "Failed to send message. Please try again or reach us via WhatsApp directly."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -166,18 +189,18 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
 
         <div className="mt-6 rounded-xl border bg-muted/40 p-4 text-xs space-y-2">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Email:</span>
+            <span className="text-muted-foreground">{isBn ? "ইমেইল:" : "Email:"}</span>
             <span className="font-semibold text-foreground">{email}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Phone / WhatsApp:</span>
+            <span className="text-muted-foreground">{isBn ? "ফোন / হোয়াটসঅ্যাপ:" : "Phone / WhatsApp:"}</span>
             <span className="font-semibold text-foreground">{phone}</span>
           </div>
           {files.length > 0 && (
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Attachments:</span>
+              <span className="text-muted-foreground">{isBn ? "সংযুক্ত ফাইল:" : "Attachments:"}</span>
               <span className="font-semibold text-foreground">
-                {files.length} {files.length === 1 ? "file" : "files"} uploaded
+                {files.length} {isBn ? "টি ফাইল সংযুক্ত" : files.length === 1 ? "file uploaded" : "files uploaded"}
               </span>
             </div>
           )}
@@ -224,7 +247,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="e.g. Tanvir Ahmed"
+            placeholder={isBn ? "উদা: তানভীর আহমেদ" : "e.g. Tanvir Ahmed"}
             className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
           />
         </div>
@@ -242,7 +265,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="tanvir@example.com"
+              placeholder={isBn ? "উদা: tanvir@example.com" : "tanvir@example.com"}
               className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
             />
           </div>
@@ -258,7 +281,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+880 1700-000000"
+              placeholder={isBn ? "উদা: ০১৭১১-২৩৪৫৬৭" : "+880 1700-000000"}
               className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
             />
           </div>
@@ -294,12 +317,16 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
             rows={4}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Tell us what you need help with. Please include Facebook Page URL or courier provider if applicable..."
+            placeholder={
+              isBn
+                ? "আপনার কী সহায়তা প্রয়োজন বিস্তারিত জানান। প্রযোজ্য ক্ষেত্রে ফেসবুক পেজ লিংক বা কুরিয়ার পার্টনার উল্লেখ করুন..."
+                : "Tell us what you need help with. Please include Facebook Page URL or courier provider if applicable..."
+            }
             className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors resize-y min-h-[100px]"
           />
         </div>
 
-        {/* Image / Video Attachment Upload (Audio request: keu jodi image ba video pathate pare) */}
+        {/* Image / Video Attachment Upload */}
         <div>
           <label className="block text-xs font-semibold text-foreground mb-1.5">
             {t.contactAttachLabel}
@@ -330,7 +357,9 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
               <UploadCloud className="size-5" />
             </div>
             <p className="mt-2 text-xs font-medium text-foreground">
-              Click to upload or drag and drop image / video files
+              {isBn
+                ? "ক্লিক করে বা ড্র্যাগ অ্যান্ড ড্রপ করে ছবি / ভিডিও আপলোড করুন"
+                : "Click to upload or drag and drop image / video files"}
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground">
               {t.contactAttachDesc}
@@ -369,7 +398,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
                         removeFile(idx);
                       }}
                       className="grid size-6 shrink-0 place-items-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                      title="Remove file"
+                      title={isBn ? "ফাইলটি মুছুন" : "Remove file"}
                     >
                       <X className="size-3.5" />
                     </button>
@@ -400,7 +429,9 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
         </button>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          🔒 Official Meta Partner · 256-bit encrypted · We never share your data
+          {isBn
+            ? "🔒 অফিশিয়াল মেটা পার্টনার · ২৫৬-বিট এনক্রিপশন · আপনার গোপনীয়তা শতভাগ সুরক্ষিত"
+            : "🔒 Official Meta Partner · 256-bit encrypted · We never share your data"}
         </p>
       </form>
     </div>

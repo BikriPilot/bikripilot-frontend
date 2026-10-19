@@ -169,7 +169,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
             >
               <ShieldCheck size={14} />
-              <span className="hidden sm:inline">Admin</span>
+              <span className="hidden sm:inline">{t("admin", { fallback: "Admin" })}</span>
             </Link>
           )}
           <LanguageSwitcher compact />
@@ -313,7 +313,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   className="flex min-h-12 items-center gap-3 rounded-lg px-3 text-primary font-medium hover:bg-muted"
                 >
                   <ShieldCheck size={18} />
-                  <span>Admin Panel</span>
+                  <span>{t("adminPanel", { fallback: "Admin Panel" })}</span>
                 </Link>
               )}
               <Link

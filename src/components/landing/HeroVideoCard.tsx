@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 import {
   CheckCircle2,
   Maximize2,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 export function HeroVideoCard({ url }: { url?: string | null }) {
+  const isBn = useLocale() === "bn";
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Extract YouTube ID or fallback to high-quality demo video
@@ -82,7 +84,9 @@ export function HeroVideoCard({ url }: { url?: string | null }) {
             {/* Top Badge: "Meet BikriPilot AI" (styled like Image 1) */}
             <div className="absolute top-3.5 right-3.5 z-10">
               <div className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-black/60 px-3 py-1.5 backdrop-blur-md">
-                <span className="text-[11px] font-semibold text-white/90">Meet New</span>
+                <span className="text-[11px] font-semibold text-white/90">
+                  {isBn ? "নতুন" : "Meet New"}
+                </span>
                 <span className="rounded-md bg-primary px-1.5 py-0.5 text-[11px] font-black text-white">
                   BikriPilot
                 </span>
@@ -91,7 +95,10 @@ export function HeroVideoCard({ url }: { url?: string | null }) {
 
             {/* Floating Feature Pills (matching Image 1) */}
             <div className="absolute bottom-13 right-3.5 z-10 hidden flex-wrap justify-end gap-1.5 sm:flex max-w-[280px]">
-              {["AI Inbox", "Auto Orders", "Courier Sync", "Fraud Shield"].map((pill) => (
+              {(isBn
+                ? ["AI ইনবক্স", "অটো অর্ডার", "কুরিয়ার সিঙ্ক", "ফ্রড গার্ড"]
+                : ["AI Inbox", "Auto Orders", "Courier Sync", "Fraud Shield"]
+              ).map((pill) => (
                 <span
                   key={pill}
                   className="rounded-lg border border-white/15 bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-md shadow-xs"
@@ -162,15 +169,17 @@ export function HeroVideoCard({ url }: { url?: string | null }) {
               <Star key={i} className="size-4 fill-amber-400" />
             ))}
           </div>
-          <span className="text-xs font-bold text-foreground">4.9/5 Rating</span>
+          <span className="text-xs font-bold text-foreground">
+            {isBn ? "৪.৯/৫ স্টার রেটিং" : "4.9/5 Rating"}
+          </span>
           <span className="hidden text-xs text-muted-foreground sm:inline">
-            · 2,500+ BD Sellers
+            {isBn ? "· ২,৫০০+ দেশীয় সেলার" : "· 2,500+ BD Sellers"}
           </span>
         </div>
 
         <div className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
           <ShieldCheck className="size-4 text-emerald-600" />
-          <span>Meta Verified Tech Partner</span>
+          <span>{isBn ? "মেটা ভেরিফায়েড টেক পার্টনার" : "Meta Verified Tech Partner"}</span>
         </div>
       </div>
     </div>
