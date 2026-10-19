@@ -25,6 +25,7 @@ import type {
   VisitorSummaryDTO,
   WebhookEventDTO,
   AdminOverrideDTO,
+  AdminSupportEmailDTO,
 } from "@/types/admin";
 
 type Query = Record<string, string | number | boolean | undefined>;
@@ -174,4 +175,38 @@ export const adminApi = {
   usage: (params?: Query) => getPage<AdminUsageRowDTO>("/admin/usage", params),
   aiUsage: (params?: Query) =>
     getPage<AdminAiUsageRowDTO>("/admin/ai-usage", params),
+  supportEmails: (params?: Query) =>
+    getData<{
+      items: AdminSupportEmailDTO[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      };
+      counts: {
+        total: number;
+        open: number;
+        inProgress: number;
+        resolved: number;
+        closed: number;
+        expiredThirtyDays: number;
+      };
+    }>("/admin/support-emails", params),
+  supportEmail: (id: string) =>
+    getData<AdminSupportEmailDTO>(`/admin/support-emails/${id}`),
+  updateSupportEmail: (
+    id: string,
+    body: { status?: string; adminNote?: string | null },
+  ) => send<AdminSupportEmailDTO>("patch", `/admin/support-emails/${id}`, body),
+  deleteSupportEmail: (id: string) =>
+    send<{ success: boolean; deletedTicket: string }>(
+      "delete",
+      `/admin/support-emails/${id}`,
+    ),
+  cleanupExpiredSupportEmails: () =>
+    send<{ deletedCount: number; filesDeleted: number; cutoff: string }>(
+      "post",
+      "/admin/support-emails/cleanup",
+    ),
 };

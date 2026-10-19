@@ -13,6 +13,7 @@ import {
   Loader2,
   RotateCcw,
 } from "lucide-react";
+import { publicApi } from "@/lib/api/public.api";
 
 interface ContactTranslations {
   contactFormTitle: string;
@@ -112,6 +113,15 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     e.preventDefault();
     setError(null);
 
+    if (!fullName.trim() || fullName.trim().length < 2) {
+      setError(
+        isBn
+          ? "অনুগ্রহ করে আপনার পুরো নাম লিখুন।"
+          : "Please provide your full name."
+      );
+      return;
+    }
+
     // Validation: email and phone are mandatory
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
       setError(
@@ -143,16 +153,26 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     setIsSubmitting(true);
 
     try {
-      // Simulate ticket generation and submission
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      const generatedTicket = `BP-${Math.floor(100000 + Math.random() * 900000)}`;
-      setSuccessTicket(generatedTicket);
-    } catch {
-      setError(
-        isBn
-          ? "মেসেজ পাঠানো সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন বা সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করুন।"
-          : "Failed to send message. Please try again or reach us via WhatsApp directly."
-      );
+      const formData = new FormData();
+      formData.append("name", fullName.trim());
+      formData.append("email", email.trim().toLowerCase());
+      formData.append("phone", phone.trim());
+      formData.append("topic", topic.trim());
+      formData.append("message", message.trim());
+      for (const file of files) {
+        formData.append("attachments", file);
+      }
+
+      const res = await publicApi.submitContact(formData);
+      setSuccessTicket(res.ticketNumber);
+    } catch (err: unknown) {
+      const errorMsg =
+        err instanceof Error && err.message
+          ? err.message
+          : isBn
+            ? "মেসেজ পাঠানো সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন বা সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করুন।"
+            : "Failed to send message. Please try again or reach us via WhatsApp directly.";
+      setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }

@@ -23,10 +23,10 @@
     "callSupport": "সহায়তায় কল করুন",
     "maintenanceTitle": "সিস্টেম রক্ষণাবেক্ষণ চলছে",
     "maintenanceMessage": "সিস্টেম আপগ্রেড ও রক্ষণাবেক্ষণের কাজ চলছে। সাময়িক অসুবিধার জন্য আমরা আন্তরিকভাবে দুঃখিত।",
-    "passwordReqMin": "কমপক্ষে ৮টি অক্ষর",
-    "passwordReqLetter": "কমপক্ষে ১টি ইংরেজি বর্ণ (Letter)",
-    "passwordReqNumber": "কমপক্ষে ১টি সংখ্যা (0-9)",
-    "passwordReqSpecial": "কমপক্ষে ১টি স্পেশাল ক্যারেক্টার (@, #, $, %, ইত্যাদি)",
+    "passwordReqMin": "কমপক্ষে 8টি অক্ষর",
+    "passwordReqLetter": "কমপক্ষে 1টি ইংরেজি বর্ণ (Letter)",
+    "passwordReqNumber": "কমপক্ষে 1টি সংখ্যা (0-9)",
+    "passwordReqSpecial": "কমপক্ষে 1টি স্পেশাল ক্যারেক্টার (@, #, $, %, ইত্যাদি)",
     "passwordReqStrength": "পাসওয়ার্ডের নিরাপত্তা",
     "passwordWeak": "দুর্বল ও অনিরাপদ",
     "passwordMedium": "মাঝারি",
@@ -2509,7 +2509,7 @@
     "shopApiKeyActive": "শপ API কি: সক্রিয়",
     "fraudbdApiError": "FraudBD এপিআই ত্রুটি",
     "fraudReportAlertNotice": "সতর্কতা: বাংলাদেশের অন্যান্য অনলাইন বিক্রেতারা এই কাস্টমারের বিরুদ্ধে ফ্রড বা রিটার্ন রিপোর্ট করেছেন।",
-    "recheckFraudbdBtn": "পুনরায় ফ্রড চেক করুন (১ ক্রেডিট)",
+    "recheckFraudbdBtn": "পুনরায় ফ্রড চেক করুন (1 ক্রেডিট)",
     "creditProtectionActive": "ক্রেডিট সুরক্ষা সক্রিয়",
     "networkSuccessRate": "প্ল্যাটফর্ম নেটওয়ার্ক রেট",
     "connectedStatus": "সংযুক্ত",
@@ -2565,6 +2565,7 @@
       "payments": "পেমেন্ট",
       "coupons": "কুপন",
       "announcements": "ঘোষণা",
+      "supportEmails": "সাপোর্ট ইমেইল",
       "content": "ওয়েবসাইট কনটেন্ট",
       "settings": "সেটিংস",
       "system": "সিস্টেম",
@@ -2623,6 +2624,10 @@
       "announcements": {
         "title": "ঘোষণা",
         "description": "শপের জন্য লক্ষ্যভিত্তিক ঘোষণা প্রকাশ করুন।"
+      },
+      "supportEmails": {
+        "title": "সাপোর্ট ইমেইল",
+        "description": "গ্রাহকদের পাঠানো সাপোর্ট বার্তা ও যোগাযোগ ফর্মের তথ্য পরিচালনা করুন।"
       },
       "content": {
         "title": "ওয়েবসাইট কনটেন্ট",

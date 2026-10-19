@@ -384,3 +384,30 @@ export interface AdminAiUsageRowDTO {
   blocked: number;
   failed: number;
 }
+
+export interface SupportEmailAttachment {
+  url: string;
+  publicId?: string;
+  name: string;
+  size: number;
+  type: "image" | "video";
+}
+
+export type SupportTicketStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+
+export interface AdminSupportEmailDTO {
+  id: string;
+  ticketNumber: string;
+  name: string;
+  email: string;
+  phone: string;
+  topic: string;
+  message: string;
+  attachments?: SupportEmailAttachment[] | null;
+  status: SupportTicketStatus;
+  adminNote?: string | null;
+  ip?: string | null;
+  userAgent?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

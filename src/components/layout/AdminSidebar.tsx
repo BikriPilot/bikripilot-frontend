@@ -11,6 +11,7 @@ import {
   FileText,
   Flag,
   LayoutDashboard,
+  Mail,
   PackageSearch,
   Settings2,
   Store,
@@ -48,6 +49,7 @@ const navGroups: {
   {
     key: "operations",
     items: [
+      { key: "supportEmails", href: "/admin/support-emails", icon: Mail },
       { key: "announcements", href: "/admin/announcements", icon: FileText },
       { key: "content", href: "/admin/content", icon: FileText },
       { key: "settings", href: "/admin/settings", icon: Settings2 },

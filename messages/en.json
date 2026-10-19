@@ -2565,6 +2565,7 @@
       "payments": "Payments",
       "coupons": "Coupons",
       "announcements": "Announcements",
+      "supportEmails": "Support Email",
       "content": "Website content",
       "settings": "Settings",
       "system": "System",
@@ -2623,6 +2624,10 @@
       "announcements": {
         "title": "Announcements",
         "description": "Publish targeted announcements for shops."
+      },
+      "supportEmails": {
+        "title": "Support Email",
+        "description": "Review and manage incoming contact inquiries and customer support emails."
       },
       "content": {
         "title": "Website content",

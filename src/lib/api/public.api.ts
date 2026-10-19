@@ -52,4 +52,18 @@ export const publicApi = {
         };
       }>(`/public/data-deletion/${encodeURIComponent(code)}`)
     ).data.data,
+  submitContact: async (formData: FormData) =>
+    (
+      await api.post<{
+        data: {
+          id: string;
+          ticketNumber: string;
+          createdAt: string;
+        };
+      }>("/public/contact", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).data.data,
 };
