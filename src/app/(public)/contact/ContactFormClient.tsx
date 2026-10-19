@@ -9,10 +9,10 @@ import {
   FileVideo,
   X,
   CheckCircle2,
-  AlertCircle,
   Loader2,
   RotateCcw,
 } from "lucide-react";
+import { toast } from "sonner";
 import { publicApi } from "@/lib/api/public.api";
 
 interface ContactTranslations {
@@ -48,7 +48,6 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successTicket, setSuccessTicket] = useState<string | null>(null);
 
@@ -57,15 +56,21 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
   // File size limit: 25MB
   const MAX_FILE_SIZE = 25 * 1024 * 1024;
 
+  const isFormValid = Boolean(
+    fullName.trim().length >= 2 &&
+      /^\S+@\S+\.\S+$/.test(email.trim()) &&
+      phone.trim().length >= 8 &&
+      message.trim().length >= 5
+  );
+
   const handleFiles = (incomingFiles: FileList | null) => {
     if (!incomingFiles || incomingFiles.length === 0) return;
-    setError(null);
 
     const validFiles: File[] = [];
     for (let i = 0; i < incomingFiles.length; i++) {
       const file = incomingFiles[i];
       if (file.size > MAX_FILE_SIZE) {
-        setError(
+        toast.error(
           isBn
             ? `"${file.name}" ফাইলের সাইজ ২৫ মেগাবাইটের বেশি।`
             : `"${file.name}" exceeds the 25MB size limit.`
@@ -111,10 +116,9 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(null);
 
     if (!fullName.trim() || fullName.trim().length < 2) {
-      setError(
+      toast.error(
         isBn
           ? "অনুগ্রহ করে আপনার পুরো নাম লিখুন।"
           : "Please provide your full name."
@@ -124,7 +128,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
 
     // Validation: email and phone are mandatory
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError(
+      toast.error(
         isBn
           ? "অনুগ্রহ করে একটি সঠিক ইমেইল অ্যাড্রেস লিখুন।"
           : "Please provide a valid email address."
@@ -133,7 +137,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     }
 
     if (!phone.trim() || phone.trim().length < 8) {
-      setError(
+      toast.error(
         isBn
           ? "অনুগ্রহ করে একটি সঠিক ফোন বা হোয়াটসঅ্যাপ নম্বর দিন (কমপক্ষে ৮ ডিজিট)।"
           : "Please provide a valid phone or WhatsApp number (at least 8 digits)."
@@ -142,7 +146,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     }
 
     if (!message.trim() || message.trim().length < 5) {
-      setError(
+      toast.error(
         isBn
           ? "অনুগ্রহ করে আপনার প্রশ্ন বা বার্তা বিস্তারিত লিখুন।"
           : "Please write a detailed message explaining your question or issue."
@@ -164,6 +168,11 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
       }
 
       const res = await publicApi.submitContact(formData);
+      toast.success(
+        isBn
+          ? "আপনার বার্তা সফলভাবে পাঠানো হয়েছে!"
+          : "Your message has been sent successfully!"
+      );
       setSuccessTicket(res.ticketNumber);
     } catch (err: unknown) {
       const errorMsg =
@@ -172,7 +181,7 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
           : isBn
             ? "মেসেজ পাঠানো সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন বা সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করুন।"
             : "Failed to send message. Please try again or reach us via WhatsApp directly.";
-      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -185,7 +194,6 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
     setTopic("general");
     setMessage("");
     setFiles([]);
-    setError(null);
     setSuccessTicket(null);
   };
 
@@ -249,18 +257,11 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
         </p>
       </div>
 
-      {error && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-xs text-destructive">
-          <AlertCircle className="size-4 shrink-0 mt-0.5" />
-          <span>{error}</span>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         {/* Full Name */}
         <div>
           <label htmlFor="contact-name" className="block text-xs font-semibold text-foreground mb-1.5">
-            {t.contactNameLabel}
+            {t.contactNameLabel} <span className="text-primary">*</span>
           </label>
           <input
             id="contact-name"
@@ -432,8 +433,8 @@ export function ContactFormClient({ t }: { t: ContactTranslations }) {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 disabled:opacity-60 cursor-pointer"
+          disabled={isSubmitting || !isFormValid}
+          className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isSubmitting ? (
             <>
